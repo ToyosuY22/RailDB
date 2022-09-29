@@ -1,0 +1,19 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+daphne = "~=3.0"
+django = "~=4.1"
+django-environ = "~=0.9"
+django-redis = "~=5.2"
+psycopg2 = "~=2.9"
+
+[dev-packages]
+autopep8 = "*"
+djlint = "*"
+flake8 = "*"
+
+[requires]
+python_version = "3.10"

@@ -1,0 +1,23 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>
+      {% block subtitle %}
+      {% endblock subtitle %}
+    | Raildb</title>
+    <meta name="description" content="鉄道要覧に準拠した鉄道乗車記録サービス" />
+    <meta name="keywords" content="データベース, 鉄道" />
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta name="robots" content="all,follow" />
+    {% block flame_head %}
+    {% endblock flame_head %}
+  </head>
+  <body>
+    {% block flame %}
+    {% endblock flame %}
+  </body>
+</html>
