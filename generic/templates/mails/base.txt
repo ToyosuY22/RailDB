@@ -1,0 +1,9 @@
+{% if to_name %}{{ to_name }} 様{% else %}RailDB 新規登録者 様{% endif %}
+
+{% block body %}{% endblock body %}
+
+----------------------------------
+このメールは自動送信されています。返信はできません。
+
+お問い合わせ：とよすY-22
+https:/twitter.com/ToyosuY22

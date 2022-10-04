@@ -4,8 +4,11 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
+celery = "~=5.2"
 daphne = "~=3.0"
 django = "~=4.1"
+django-bootstrap5 = "~=22.1"
+django-celery-results = "~=2.4"
 django-environ = "~=0.9"
 django-redis = "~=5.2"
 psycopg2 = "~=2.9"

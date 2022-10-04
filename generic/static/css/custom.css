@@ -1,1 +1,8 @@
-/* your styles go here */
+:root {
+    /* Add fot-udkakugo-large-pr6n */
+    --bs-font-sans-serif: fot-udkakugo-large-pr6n, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+.brand-text {
+    font-family: "Poppins";
+}

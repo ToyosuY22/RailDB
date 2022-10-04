@@ -5,19 +5,19 @@ document.addEventListener('DOMContentLoaded', function () {
     // ------------------------------------------------------- //
     // Search Box
     // ------------------------------------------------------ //
-    const navBar = document.querySelector('.navbar');
-    const searchBtn = document.getElementById('search'),
-          searchBox = document.querySelector('.search-box'),
-          searchClose = document.querySelector('.dismiss');
+    // const navBar = document.querySelector('.navbar');
+    // const searchBtn = document.getElementById('search'),
+    //       searchBox = document.querySelector('.search-box'),
+    //       searchClose = document.querySelector('.dismiss');
 
-    if (navBar) {
-        searchBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            searchBox.classList.add('fadedIn');
-        });
+    // if (navBar) {
+    //     searchBtn.addEventListener('click', (e) => {
+    //         e.preventDefault();
+    //         searchBox.classList.add('fadedIn');
+    //     });
 
-        searchClose.addEventListener('click', () => searchBox.classList.remove('fadedIn'));
-    }
+    //     searchClose.addEventListener('click', () => searchBox.classList.remove('fadedIn'));
+    // }
 
 
 

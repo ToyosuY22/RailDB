@@ -14,6 +14,16 @@ services:
       - raildb_db
       - raildb_cache
 
+  raildb_celery:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    volumes:
+      - ./:/code/
+    command: 'pipenv run celery -A raildb worker -l INFO'
+    depends_on:
+      - raildb
+
   raildb_db:
     image: postgres:latest
     volumes:

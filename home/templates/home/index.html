@@ -1,14 +1,32 @@
 {% extends "flame.html" %}
 {% block subtitle %}
-    Home
+    ホーム
 {% endblock subtitle %}
 {% block label %}
-    Home
+    ホーム
 {% endblock label %}
+{% block menu_home %}
+    active
+{% endblock menu_home %}
 {% block body %}
     <div class="card">
-        <div class="card-body">
-            <p class="card-text">鋭意開発中</p>
+        <div class="card-header">
+            <h1>ようこそ RailDB へ！</h1>
         </div>
+        <div class="card-body">
+            <p class="card-text">
+                RailDB は、乗りつぶしファンのための鉄道乗車記録サービスです。
+                日本全国の鉄道／軌道等の事業者／路線／駅データを閲覧することができます。
+                また、アカウントを作成してログインすると、乗りつぶしの記録をつけることができます。
+            </p>
+        </div>
+        {% if not request.user.is_authenticated %}
+        <div class="card-footer text-end">
+            <a href="{% url 'home:signin' %}" class="btn btn-primary">
+                <i class="fa-solid fa-right-to-bracket"></i>
+                ログイン／新規登録
+            </a>
+        </div>
+        {% endif %}
     </div>
 {% endblock body %}

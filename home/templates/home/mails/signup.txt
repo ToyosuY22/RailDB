@@ -1,0 +1,10 @@
+{% extends 'mails/base.txt' %}
+{% block body %}
+RailDB のアカウントを作成しました。
+
+メールアドレス
+{{ user.email }}
+
+表示名
+{{ user.display_name }}
+{% endblock body %}

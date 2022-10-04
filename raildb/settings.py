@@ -25,6 +25,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Take environment variables from .env file
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
+# このサイトの URL
+BASE_URL = env('BASE_URL')
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
@@ -47,6 +50,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # third party
+    'django_bootstrap5',
+    'django_celery_results',
     # raildb
     'home',
 ]
@@ -88,6 +94,12 @@ WSGI_APPLICATION = 'raildb.wsgi.application'
 DATABASES = {
     'default': env.db()
 }
+
+
+# Substituting a custom User model¶
+# https://docs.djangoproject.com/en/4.1/topics/auth/customizing/#auth-custom-user
+
+AUTH_USER_MODEL = 'home.User'
 
 
 # Password validation
@@ -151,3 +163,25 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CACHES = {
     'default': env.cache(),
 }
+
+
+# Celery
+# https://docs.celeryq.dev/en/stable/django/first-steps-with-django.html
+
+CELERY_BROKER_URL = env('CELERY_BROKER_URL')
+CELERY_TIMEZONE = 'Asia/Tokyo'
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = 30 * 60
+CELERY_RESULT_BACKEND = 'django-db'
+CELERY_CACHE_BACKEND = 'django-cache'
+
+
+# Email
+# https://docs.djangoproject.com/en/4.1/topics/email/
+# TODO: DEBUG = False の場合は SMTP で送信
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')
+
+
+# Email トークンの有効時間を指定（分単位）
+EMAIL_TOKEN_EXP = 5
