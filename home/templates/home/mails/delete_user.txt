@@ -1,0 +1,5 @@
+{% extends 'mails/base.txt' %}
+{% block body %}
+RailDB アカウントを削除しました。
+ご利用ありがとうございました。
+{% endblock body %}

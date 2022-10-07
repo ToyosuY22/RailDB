@@ -1,6 +1,5 @@
 from django import forms
 from django.contrib.auth import get_user_model, password_validation
-from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 
 from home.models import EmailToken
@@ -58,13 +57,13 @@ class PasswordResetForm(forms.Form):
     )
 
 
-class DNameUpdForm(forms.ModelForm):
+class UpdateDisplayNameForm(forms.ModelForm):
     class Meta:
         model = get_user_model()
         fields = ['display_name']
 
 
-class PWUpdForm(forms.Form):
+class UpdatePasswordForm(forms.Form):
     old_password = forms.CharField(
         label='現在のパスワード',
         strip=False,
@@ -77,3 +76,24 @@ class PWUpdForm(forms.Form):
         widget=forms.PasswordInput(attrs={"autocomplete": "new-password"}),
         help_text=password_validation.password_validators_help_text_html()
     )
+
+
+class DeleteUserForm(forms.Form):
+    check = forms.CharField(
+        label='入力欄',
+        help_text='"delete" と入力してください',
+        max_length=20
+    )
+
+    def clean_check(self):
+        # 値を取得
+        check = self.cleaned_data.get('check')
+
+        # 入力値が間違っていた場合は拒否
+        if check != 'delete':
+            raise ValidationError(
+                '入力値が誤っています', code='invalid'
+            )
+
+        # 問題なければ入力された値をそのまま帰す
+        return check

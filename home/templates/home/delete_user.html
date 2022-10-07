@@ -1,11 +1,10 @@
 {% extends "flame.html" %}
-{% load static %}
 {% load django_bootstrap5 %}
 {% block subtitle %}
-    表示名変更
+    アカウント削除
 {% endblock subtitle %}
 {% block label %}
-    表示名変更
+    <span class="text-danger">アカウント削除</span>
 {% endblock label %}
 {% block menu_profile %}
     active
@@ -17,14 +16,17 @@
     </a>
     <div class="card mt-3">
         <div class="card-body">
-            <div class="alert alert-info" role="alert">表示名を変更します。新しい表示名を入力してください。</div>
-            <p>現在の表示名</p>
-            <p>{{ request.user.display_name }}</p>
+            <div class="alert alert-danger" role="alert">
+                アカウントを削除すると二度と取り消すことはできません。
+                削除する場合は入力欄に "<strong>delete</strong>" と入力してください。
+            </div>
+            <p class="text-danger">削除しようとしているアカウントのメールアドレスをよく確認してください。</p>
+            <p>{{ request.user.email }}</p>
             <form method="post" class="form">
                 {% csrf_token %}
                 {% bootstrap_form form %}
                 <div class="mt-3 d-grid d-md-flex justify-content-md-end">
-                    {% bootstrap_button button_type="submit" content="表示名変更" %}
+                    {% bootstrap_button button_type="submit" content="アカウント削除" %}
                 </div>
             </form>
         </div>

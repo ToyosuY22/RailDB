@@ -6,6 +6,9 @@
 {% block label %}
     Eメールアドレス変更
 {% endblock label %}
+{% block menu_profile %}
+    active
+{% endblock menu_profile %}
 {% block body %}
     <a href="{% url 'home:profile' %}" class="btn btn-secondary">
         <i class="fa-solid fa-user"></i>

@@ -72,9 +72,9 @@ class EmailToken(models.Model):
         path = {
             self.KindChoices.SIGNUP:
                 reverse('home:signup', kwargs={'token_id': self.id}),
-            self.KindChoices.PWRESET:
+            self.KindChoices.PASSWORD_RESET:
                 reverse('home:password_reset', kwargs={'token_id': self.id}),
-            self.KindChoices.EMAILUPD:
+            self.KindChoices.EMAIL_UPDATE:
                 reverse('home:update_email', kwargs={'token_id': self.id}),
         }
         return f'{settings.BASE_URL}{path.get(self.kind)}'
@@ -117,12 +117,12 @@ class EmailToken(models.Model):
 
     class KindChoices(models.TextChoices):
         SIGNUP = 'signup', 'アカウント新規登録'
-        PWRESET = 'pwreset', 'パスワード再設定'
-        EMAILUPD = 'emailupd', 'Eメールアドレス変更'
+        PASSWORD_RESET = 'password_reset', 'パスワード再設定'
+        EMAIL_UPDATE = 'email_update', 'Eメールアドレス変更'
 
     kind = models.CharField(
         verbose_name='種別',
-        max_length=10,
+        max_length=20,
         choices=KindChoices.choices
     )
 

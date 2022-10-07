@@ -30,15 +30,17 @@
         {% endif %}
     </div>
     <!--  スマホ向けメニュー -->
-    <div class="row">
-        <div class="col">
-            <div class="d-grid d-xl-none">
-                <a href="{% url 'home:profile' %}" class="btn btn-outline-primary">
-                    <i class="fa-solid fa-user fa-3x my-2"></i>
-                    <p class="my-0">プロフィール</p>
-                </a>
+    {% if request.user.is_authenticated %}
+        <div class="row">
+            <div class="col">
+                <div class="d-grid d-xl-none">
+                    <a href="{% url 'home:profile' %}" class="btn btn-outline-primary">
+                        <i class="fa-solid fa-user fa-3x my-2"></i>
+                        <p class="my-0">プロフィール</p>
+                    </a>
+                </div>
             </div>
+            <div class="col"></div>
         </div>
-        <div class="col"></div>
-    </div>
+    {% endif %}
 {% endblock body %}

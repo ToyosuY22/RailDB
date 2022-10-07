@@ -163,7 +163,7 @@ class PasswordResetEmailView(generic.FormView):
             is_active=True
         ).exists():
             # 種別を登録
-            form.instance.kind = EmailToken.KindChoices.PWRESET
+            form.instance.kind = EmailToken.KindChoices.PASSWORD_RESET
 
             # Eメールトークンを作成
             form.instance.save()
@@ -201,7 +201,7 @@ class PasswordResetView(generic.FormView):
             get_object_or_404(EmailToken, id=kwargs.get('token_id'))
 
         # 有効性を判定
-        if token.validate(EmailToken.KindChoices.PWRESET):
+        if token.validate(EmailToken.KindChoices.PASSWORD_RESET):
             self.token = token
         else:
             # token が見つかっても無効だった場合は 404
@@ -263,7 +263,7 @@ class UpdateEmailEmailView(auth_mixins.LoginRequiredMixin, generic.FormView):
 
     def form_valid(self, form):
         # 種別を登録
-        form.instance.kind = EmailToken.KindChoices.EMAILUPD
+        form.instance.kind = EmailToken.KindChoices.EMAIL_UPDATE
 
         # 作成ユーザーを登録
         form.instance.created_user = self.request.user
@@ -300,7 +300,7 @@ class UpdateEmailView(auth_mixins.LoginRequiredMixin, generic.RedirectView):
             get_object_or_404(EmailToken, id=kwargs.get('token_id'))
 
         # 有効性を判定
-        if not token.validate(EmailToken.KindChoices.EMAILUPD):
+        if not token.validate(EmailToken.KindChoices.EMAIL_UPDATE):
             raise Http404
 
         with transaction.atomic():
@@ -330,7 +330,7 @@ class UpdateDisplayNameView(auth_mixins.LoginRequiredMixin, generic.UpdateView):
     """表示名変更
     """
     template_name = 'home/update_display_name.html'
-    form_class = forms.DNameUpdForm
+    form_class = forms.UpdateDisplayNameForm
     model = get_user_model()
     success_url = reverse_lazy('home:profile')
 
@@ -352,7 +352,7 @@ class UpdatePasswordView(auth_mixins.LoginRequiredMixin, generic.FormView):
     """パスワード変更
     """
     template_name = 'home/update_password.html'
-    form_class = forms.PWUpdForm
+    form_class = forms.UpdatePasswordForm
     success_url = reverse_lazy('home:profile')
 
     def form_valid(self, form):
@@ -393,5 +393,35 @@ class UpdatePasswordView(auth_mixins.LoginRequiredMixin, generic.FormView):
 
         # 成功メッセージを追加
         messages.warning(self.request, 'パスワードを変更しました。')
+
+        return super().form_valid(form)
+
+
+class DeleteUserView(auth_mixins.LoginRequiredMixin, generic.FormView):
+    """アカウント削除
+    """
+    template_name = 'home/delete_user.html'
+    form_class = forms.DeleteUserForm
+    success_url = reverse_lazy('home:index')
+
+    def form_valid(self, form):
+        # ログイン中のユーザーを取得
+        user = self.request.user
+
+        # 削除する前にメールアドレスを取得
+        email = user.email
+
+        # ユーザーを削除
+        user.delete()
+
+        # Email を送信
+        send_email(
+            'アカウントを削除しました',
+            email,
+            'home/mails/delete_user.txt'
+        )
+
+        # 成功メッセージを追加
+        messages.error(self.request, 'アカウントを削除しました。')
 
         return super().form_valid(form)

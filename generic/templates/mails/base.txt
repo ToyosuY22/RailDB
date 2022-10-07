@@ -1,4 +1,4 @@
-{% if to_name %}{{ to_name }} 様{% else %}RailDB 新規登録者 様{% endif %}
+{% if to_name %}{{ to_name }} 様{% endif %}
 
 {% block body %}{% endblock body %}
 

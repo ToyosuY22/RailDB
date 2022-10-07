@@ -66,4 +66,9 @@ urlpatterns = [
         views.UpdatePasswordView.as_view(),
         name='update_password'
     ),
+    path(
+        'delete_user',
+        views.DeleteUserView.as_view(),
+        name='delete_user'
+    ),
 ]
