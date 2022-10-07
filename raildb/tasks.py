@@ -6,7 +6,7 @@ from django.template.loader import render_to_string
 from celery import shared_task
 
 
-def send_email(subject, to, template, context):
+def send_email(subject, to, template, context={}):
     """非同期処理でメールを送信
 
     shared_task つき関数には json-like なデータしか投げられないため、

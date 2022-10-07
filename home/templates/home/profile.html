@@ -26,7 +26,8 @@
                     <tr>
                         <td>{{ request.user.email }}</td>
                         <td class="text-end">
-                            <a href="#" class="btn btn-warning btn-sm text-nowrap">変更</a>
+                            <a href="{% url 'home:update_email_email' %}"
+                               class="btn btn-warning btn-sm text-nowrap">変更</a>
                         </td>
                     </tr>
                     <tr class="table-info">
@@ -35,7 +36,8 @@
                     <tr>
                         <td>{{ request.user.display_name }}</td>
                         <td class="text-end">
-                            <a href="#" class="btn btn-warning btn-sm text-nowrap">変更</a>
+                            <a href="{% url 'home:update_display_name' %}"
+                               class="btn btn-warning btn-sm text-nowrap">変更</a>
                         </td>
                     </tr>
                     <tr class="table-info">
@@ -44,7 +46,8 @@
                     <tr>
                         <td>表示されません</td>
                         <td class="text-end">
-                            <a href="#" class="btn btn-warning btn-sm text-nowrap">変更</a>
+                            <a href="{% url 'home:update_password' %}"
+                               class="btn btn-warning btn-sm text-nowrap">変更</a>
                         </td>
                     </tr>
                     <tr class="table-danger">

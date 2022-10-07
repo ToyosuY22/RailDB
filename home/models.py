@@ -15,7 +15,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         verbose_name_plural = 'ユーザー'
 
     def __str__(self):
-        return f'{self.nickname}（{self.email}）'
+        return f'{self.display_name}（{self.email}）'
 
     def clean(self):
         super().clean()
@@ -73,7 +73,9 @@ class EmailToken(models.Model):
             self.KindChoices.SIGNUP:
                 reverse('home:signup', kwargs={'token_id': self.id}),
             self.KindChoices.PWRESET:
-                reverse('home:pwreset', kwargs={'token_id': self.id}),
+                reverse('home:password_reset', kwargs={'token_id': self.id}),
+            self.KindChoices.EMAILUPD:
+                reverse('home:update_email', kwargs={'token_id': self.id}),
         }
         return f'{settings.BASE_URL}{path.get(self.kind)}'
 
@@ -116,11 +118,12 @@ class EmailToken(models.Model):
     class KindChoices(models.TextChoices):
         SIGNUP = 'signup', 'アカウント新規登録'
         PWRESET = 'pwreset', 'パスワード再設定'
+        EMAILUPD = 'emailupd', 'Eメールアドレス変更'
 
     kind = models.CharField(
         verbose_name='種別',
         max_length=10,
-        choices=[KindChoices]
+        choices=KindChoices.choices
     )
 
     created_datetime = models.DateTimeField(
@@ -131,4 +134,11 @@ class EmailToken(models.Model):
     is_used = models.BooleanField(
         verbose_name='使用済み',
         default=False
+    )
+
+    created_user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        verbose_name='作成ユーザー',
+        null=True, blank=True
     )

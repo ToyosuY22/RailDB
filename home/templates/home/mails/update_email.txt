@@ -1,0 +1,4 @@
+{% extends 'mails/base.txt' %}
+{% block body %}
+RailDB アカウントの E メールアドレスを再設定しました。
+{% endblock body %}

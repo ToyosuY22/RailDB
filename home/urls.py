@@ -32,18 +32,38 @@ urlpatterns = [
         name='signout'
     ),
     path(
-        'pwreset_email',
-        views.PWResetEmailView.as_view(),
-        name='pwreset_email'
+        'password_reset_email',
+        views.PasswordResetEmailView.as_view(),
+        name='password_reset_email'
     ),
     path(
-        'pwreset/<uuid:token_id>',
-        views.PWResetView.as_view(),
-        name='pwreset'
+        'password_reset/<uuid:token_id>',
+        views.PasswordResetView.as_view(),
+        name='password_reset'
     ),
     path(
         'profile',
         views.ProfileView.as_view(),
         name='profile'
+    ),
+    path(
+        'update_email_email',
+        views.UpdateEmailEmailView.as_view(),
+        name='update_email_email'
+    ),
+    path(
+        'update_email/<uuid:token_id>',
+        views.UpdateEmailView.as_view(),
+        name='update_email'
+    ),
+    path(
+        'update_display_name',
+        views.UpdateDisplayNameView.as_view(),
+        name='update_display_name'
+    ),
+    path(
+        'update_password',
+        views.UpdatePasswordView.as_view(),
+        name='update_password'
     ),
 ]

@@ -43,7 +43,7 @@ class SignupEmailView(generic.FormView):
     """アカウント新規登録（Eメールアドレス入力）
     """
     template_name = 'home/signup_email.html'
-    form_class = forms.SignupEmailForm
+    form_class = forms.EmailTokenUniqueForm
     success_url = reverse_lazy('home:index')
 
     def form_valid(self, form):
@@ -147,11 +147,11 @@ class SignoutView(auth_views.LogoutView):
         return super().get(request, *args, **kwargs)
 
 
-class PWResetEmailView(generic.FormView):
+class PasswordResetEmailView(generic.FormView):
     """パスワード再設定（Eメールアドレス入力）
     """
-    template_name = 'home/pwreset_email.html'
-    form_class = forms.PWResetEmailForm
+    template_name = 'home/password_reset_email.html'
+    form_class = forms.EmailTokenForm
     success_url = reverse_lazy('home:index')
 
     def form_valid(self, form):
@@ -172,7 +172,7 @@ class PWResetEmailView(generic.FormView):
             send_email(
                 'パスワード再設定の手続きを続行してください',
                 form.instance.email,
-                'home/mails/pwreset_email.txt',
+                'home/mails/password_reset_email.txt',
                 {'token': form.instance},
             )
 
@@ -187,11 +187,11 @@ class PWResetEmailView(generic.FormView):
         return super().form_valid(form)
 
 
-class PWResetView(generic.FormView):
+class PasswordResetView(generic.FormView):
     """パスワード再設定
     """
-    template_name = 'home/pwreset.html'
-    form_class = forms.PWResetForm
+    template_name = 'home/password_reset.html'
+    form_class = forms.PasswordResetForm
     success_url = reverse_lazy('home:index')
 
     def setup(self, request, *args, **kwargs):
@@ -238,7 +238,7 @@ class PWResetView(generic.FormView):
         send_email(
             'パスワードを再設定しました',
             self.token.email,
-            'home/mails/pwreset.txt',
+            'home/mails/password_reset.txt',
             {'user': user},
         )
 
@@ -252,3 +252,146 @@ class ProfileView(auth_mixins.LoginRequiredMixin, generic.TemplateView):
     """プロフィール
     """
     template_name = 'home/profile.html'
+
+
+class UpdateEmailEmailView(auth_mixins.LoginRequiredMixin, generic.FormView):
+    """Eメールアドレス変更（Eメールアドレス入力）
+    """
+    template_name = 'home/update_email_email.html'
+    form_class = forms.EmailTokenUniqueForm
+    success_url = reverse_lazy('home:index')
+
+    def form_valid(self, form):
+        # 種別を登録
+        form.instance.kind = EmailToken.KindChoices.EMAILUPD
+
+        # 作成ユーザーを登録
+        form.instance.created_user = self.request.user
+
+        # Eメールトークンを作成
+        form.instance.save()
+
+        # Email を送信
+        send_email(
+            'Eメールアドレス変更の手続きを続行してください',
+            form.instance.email,
+            'home/mails/update_email_email.txt',
+            {'token': form.instance},
+        )
+
+        # 成功メッセージを追加
+        messages.warning(
+            self.request,
+            'Eメールアドレス変更用Eメールを送信しました。'
+            'メールの指示に従い、手続きを続けてください。'
+        )
+
+        return super().form_valid(form)
+
+
+class UpdateEmailView(auth_mixins.LoginRequiredMixin, generic.RedirectView):
+    """Eメールアドレス変更
+    """
+    url = reverse_lazy('home:profile')
+
+    def get(self, request, *args, **kwargs):
+        # Eメールトークンを取得
+        token = \
+            get_object_or_404(EmailToken, id=kwargs.get('token_id'))
+
+        # 有効性を判定
+        if not token.validate(EmailToken.KindChoices.EMAILUPD):
+            raise Http404
+
+        with transaction.atomic():
+            # Eメールアドレスを変更
+            user = token.created_user
+            user.email = token.email
+            user.save()
+
+            # トークンを無効化
+            token.is_used = True
+            token.save()
+
+        # Email を送信
+        send_email(
+            'Eメールアドレスを変更しました',
+            token.email,
+            'home/mails/update_email.txt'
+        )
+
+        # メッセージを追加
+        messages.success(request, 'Eメールアドレスを変更しました！')
+
+        return super().get(request, *args, **kwargs)
+
+
+class UpdateDisplayNameView(auth_mixins.LoginRequiredMixin, generic.UpdateView):
+    """表示名変更
+    """
+    template_name = 'home/update_display_name.html'
+    form_class = forms.DNameUpdForm
+    model = get_user_model()
+    success_url = reverse_lazy('home:profile')
+
+    def get_object(self, queryset=None):
+        # ログインしている自身の User についてのみ変更可能
+        return self.request.user
+
+    def form_valid(self, form):
+        # 保存
+        request = super().form_valid(form)
+
+        # 成功メッセージを追加
+        messages.warning(self.request, '表示名を変更しました！')
+
+        return request
+
+
+class UpdatePasswordView(auth_mixins.LoginRequiredMixin, generic.FormView):
+    """パスワード変更
+    """
+    template_name = 'home/update_password.html'
+    form_class = forms.PWUpdForm
+    success_url = reverse_lazy('home:profile')
+
+    def form_valid(self, form):
+        # ログイン中のユーザーを取得
+        user = self.request.user
+
+        # フォームの値を取得
+        old_password = form.cleaned_data.get('old_password')
+        new_password = form.cleaned_data.get('new_password')
+
+        # 古いパスワードが一致していなかった場合は拒否
+        if not self.request.user.check_password(old_password):
+            form.add_error('old_password', ValidationError(
+                '古いパスワードが誤っています。', code='invalid')
+            )
+            form.add_error('new_password', ValidationError(
+                'もう一度入力してください。', code='invalid'
+            ))
+            return super().form_invalid(form)
+
+        # 新しいパスワードが制約に適合しない場合は拒否
+        try:
+            validate_password(new_password, user)
+        except ValidationError as e:
+            form.add_error('old_password', ValidationError(
+                'もう一度入力してください。', code='invalid'
+            ))
+            form.add_error('new_password', e)
+            return super().form_invalid(form)
+
+        # 問題なければ新しいパスワードを設定
+        user.set_password(new_password)
+        user.save()
+
+        # set_password() を実行するとログアウトしてしまうので
+        # 自動的にログインさせる
+        login(self.request, user)
+
+        # 成功メッセージを追加
+        messages.warning(self.request, 'パスワードを変更しました。')
+
+        return super().form_valid(form)
