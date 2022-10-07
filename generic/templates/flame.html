@@ -85,7 +85,13 @@
                     {% if request.user.is_authenticated %}
                         <h1 class="h4 mb-2">{{ request.user.display_name }}</h1>
                         <p class="fw-light mb-0 lh-1">
+                            {% if request.user.is_superuser %}
+                            <span class="badge text-bg-danger">システム管理者</span>
+                            {% elif request.user.is_staff %}
+                            <span class="badge text-bg-warning">スタッフ</span>
+                            {% else %}
                             <span class="badge text-bg-primary">ログイン済</span>
+                            {% endif %}
                         </p>
                     {% else %}
                         <h1 class="h4 mb-2">ゲスト</h1>
@@ -95,7 +101,8 @@
                     {% endif %}
                 </div>
             </div>
-            <!-- Sidebar Navidation Menus--><span class="text-uppercase text-gray-400 text-xs letter-spacing-0 mx-3 px-2 heading">メニュー</span>
+            <!-- Sidebar Navidation Menus-->
+            <span class="text-uppercase text-gray-400 text-xs letter-spacing-0 mx-3 px-2 heading">メニュー</span>
             <ul class="list-unstyled py-4">
                 <li class="sidebar-item{% block menu_home %}{% endblock menu_home %}">
                     <a class="sidebar-link" href="{% url 'home:index' %}">
@@ -112,6 +119,22 @@
                     </li>
                 {% endif %}
             </ul>
+            {% if request.user.is_authenticated %}
+                {% if request.user.is_staff %}
+                    <span class="text-uppercase text-gray-400 text-xs letter-spacing-0 mx-3 px-2 heading">スタッフ向け</span>
+                {% endif %}
+                {% if request.user.is_superuser %}
+                    <span class="text-uppercase text-gray-400 text-xs letter-spacing-0 mx-3 px-2 heading">システム管理者向け</span>
+                    <ul class="list-unstyled py-4">
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="{% url 'admin:index' %}">
+                                <i class="fa-solid fa-database"></i>
+                                <span class="ps-2">管理サイト</span>
+                            </a>
+                        </li>
+                    </ul>
+                {% endif %}
+            {% endif %}
         </nav>
         <div class="content-inner w-100">
             <!-- Page Header-->
