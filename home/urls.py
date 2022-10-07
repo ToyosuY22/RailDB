@@ -31,4 +31,14 @@ urlpatterns = [
         views.SignoutView.as_view(),
         name='signout'
     ),
+    path(
+        'pwreset_email',
+        views.PWResetEmailView.as_view(),
+        name='pwreset_email'
+    ),
+    path(
+        'pwreset/<uuid:token_id>',
+        views.PWResetView.as_view(),
+        name='pwreset'
+    ),
 ]

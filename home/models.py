@@ -2,10 +2,8 @@ import datetime
 import uuid
 
 from django.conf import settings
-from django.contrib.auth import get_user_model
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin, UserManager
-from django.core.exceptions import ValidationError
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
@@ -67,17 +65,6 @@ class EmailToken(models.Model):
     def __str__(self):
         return self.email
 
-    def clean(self):
-        super().clean()
-        # すでに与えられたEメールアドレスが使用されている場合は拒否
-        user_model = get_user_model()
-        if user_model.objects.filter(email=self.email).exists():
-            raise ValidationError({
-                'email': ValidationError(
-                    'このEメールアドレスはすでに使用されています', code='invalid'
-                )
-            })
-
     @property
     def url(self):
         """Eメールトークンに対応する URL を取得する
@@ -85,7 +72,8 @@ class EmailToken(models.Model):
         path = {
             self.KindChoices.SIGNUP:
                 reverse('home:signup', kwargs={'token_id': self.id}),
-            self.KindChoices.PWRESET: 'todo'
+            self.KindChoices.PWRESET:
+                reverse('home:pwreset', kwargs={'token_id': self.id}),
         }
         return f'{settings.BASE_URL}{path.get(self.kind)}'
 

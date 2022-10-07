@@ -1,10 +1,10 @@
 {% extends "flame.html" %}
 {% load django_bootstrap5 %}
 {% block subtitle %}
-    アカウント新規登録
+    パスワード再設定
 {% endblock subtitle %}
 {% block label %}
-    アカウント新規登録
+    パスワード再設定
 {% endblock label %}
 {% block body %}
     <div class="container">
@@ -15,8 +15,12 @@
         <div class="card mt-3">
             <div class="card-body">
                 <div class="alert alert-info" role="alert">
-                    アカウントを新規登録します。
+                    パスワードを再設定します。
                     あなたのEメールアドレスを入力してください。
+                </div>
+                <div class="alert alert-warning" role="alert">
+                    Eメールアドレスが誤っていた場合はメールが送信されません。
+                    入力したEメールアドレスをよく確認してください。
                 </div>
                 <form method="post" class="form">
                     {% csrf_token %}
