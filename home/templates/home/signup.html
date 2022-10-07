@@ -8,26 +8,24 @@
     アカウント新規登録
 {% endblock label %}
 {% block body %}
-    <div class="container">
-        <div class="card mt-3">
-            <div class="card-body">
-                <div class="alert alert-info" role="alert">
-                    アカウントを新規登録します。
-                    表示名とパスワードを入力してください。
-                    どちらも後から変更できます。
-                </div>
-                <p>メールアドレス</p>
-                <p>{{ token.email }}</p>
-                <form method="post" class="form">
-                    {% csrf_token %}
-                    {% bootstrap_form form %}
-                    <input type="checkbox" id="password-check" />
-                    パスワードを表示する
-                    <div class="mt-3 d-grid d-md-flex justify-content-md-end">
-                        {% bootstrap_button button_type="submit" content="アカウント新規登録" %}
-                    </div>
-                </form>
+    <div class="card mt-3">
+        <div class="card-body">
+            <div class="alert alert-info" role="alert">
+                アカウントを新規登録します。
+                表示名とパスワードを入力してください。
+                どちらも後から変更できます。
             </div>
+            <p>メールアドレス</p>
+            <p>{{ token.email }}</p>
+            <form method="post" class="form">
+                {% csrf_token %}
+                {% bootstrap_form form %}
+                <input type="checkbox" id="password-check" />
+                パスワードを表示する
+                <div class="mt-3 d-grid d-md-flex justify-content-md-end">
+                    {% bootstrap_button button_type="submit" content="アカウント新規登録" %}
+                </div>
+            </form>
         </div>
     </div>
 {% endblock body %}

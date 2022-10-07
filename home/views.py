@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth import get_user_model, login
+from django.contrib.auth import mixins as auth_mixins
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
@@ -245,3 +246,9 @@ class PWResetView(generic.FormView):
         messages.success(self.request, 'パスワードを再設定しました！')
 
         return super().form_valid(form)
+
+
+class ProfileView(auth_mixins.LoginRequiredMixin, generic.TemplateView):
+    """プロフィール
+    """
+    template_name = 'home/profile.html'

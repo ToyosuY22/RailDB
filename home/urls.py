@@ -41,4 +41,9 @@ urlpatterns = [
         views.PWResetView.as_view(),
         name='pwreset'
     ),
+    path(
+        'profile',
+        views.ProfileView.as_view(),
+        name='profile'
+    ),
 ]

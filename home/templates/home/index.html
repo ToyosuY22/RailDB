@@ -21,12 +21,24 @@
             </p>
         </div>
         {% if not request.user.is_authenticated %}
-        <div class="card-footer text-end">
-            <a href="{% url 'home:signin' %}" class="btn btn-primary">
-                <i class="fa-solid fa-right-to-bracket"></i>
-                ログイン／新規登録
-            </a>
-        </div>
+            <div class="card-footer text-end">
+                <a href="{% url 'home:signin' %}" class="btn btn-primary">
+                    <i class="fa-solid fa-right-to-bracket"></i>
+                    ログイン／新規登録
+                </a>
+            </div>
         {% endif %}
+    </div>
+    <!--  スマホ向けメニュー -->
+    <div class="row">
+        <div class="col">
+            <div class="d-grid d-xl-none">
+                <a href="{% url 'home:profile' %}" class="btn btn-outline-primary">
+                    <i class="fa-solid fa-user fa-3x my-2"></i>
+                    <p class="my-0">プロフィール</p>
+                </a>
+            </div>
+        </div>
+        <div class="col"></div>
     </div>
 {% endblock body %}

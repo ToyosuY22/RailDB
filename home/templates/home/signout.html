@@ -7,22 +7,20 @@
     ログアウトしますか？
 {% endblock label %}
 {% block body %}
-    <div class="container">
-        <a href="{% url 'home:index' %}" class="btn btn-secondary">
-            <i class="fa-solid fa-house"></i>
-            ホームに戻る
-        </a>
-        <div class="card mt-3">
-            <div class="card-body">
-                <div class="alert alert-info" role="alert">「ログアウト」を選択すると、ログアウトします。</div>
-                <form method="post" class="form">
-                    {% csrf_token %}
-                    {% bootstrap_form form %}
-                    <div class="mt-3 d-grid d-md-flex justify-content-md-end">
-                        {% bootstrap_button button_type="submit" content="ログアウト" %}
-                    </div>
+    <a href="{% url 'home:index' %}" class="btn btn-secondary">
+        <i class="fa-solid fa-house"></i>
+        ホームに戻る
+    </a>
+    <div class="card mt-3">
+        <div class="card-body">
+            <div class="alert alert-info" role="alert">「ログアウト」を選択すると、ログアウトします。</div>
+            <form method="post" class="form">
+                {% csrf_token %}
+                {% bootstrap_form form %}
+                <div class="mt-3 d-grid d-md-flex justify-content-md-end">
+                    {% bootstrap_button button_type="submit" content="ログアウト" %}
                 </div>
-            </div>
+            </form>
         </div>
     </div>
 {% endblock body %}

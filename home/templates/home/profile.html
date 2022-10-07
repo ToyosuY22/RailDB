@@ -1,0 +1,64 @@
+{% extends "flame.html" %}
+{% block subtitle %}
+    プロフィール
+{% endblock subtitle %}
+{% block label %}
+    プロフィール
+{% endblock label %}
+{% block menu_profile %}
+    active
+{% endblock menu_profile %}
+{% block body %}
+    <a href="{% url 'home:index' %}" class="btn btn-secondary">
+        <i class="fa-solid fa-house"></i>
+        ホームに戻る
+    </a>
+    <div class="card mt-4">
+        <div class="card-header">
+            <h1>{{ request.user.display_name }} さんのプロフィール</h1>
+        </div>
+        <div class="card-body">
+            <table class="table">
+                <tbody>
+                    <tr class="table-info">
+                        <th colspan="2">メールアドレス</th>
+                    </tr>
+                    <tr>
+                        <td>{{ request.user.email }}</td>
+                        <td class="text-end">
+                            <a href="#" class="btn btn-warning btn-sm text-nowrap">変更</a>
+                        </td>
+                    </tr>
+                    <tr class="table-info">
+                        <th colspan="2">表示名</th>
+                    </tr>
+                    <tr>
+                        <td>{{ request.user.display_name }}</td>
+                        <td class="text-end">
+                            <a href="#" class="btn btn-warning btn-sm text-nowrap">変更</a>
+                        </td>
+                    </tr>
+                    <tr class="table-info">
+                        <th colspan="2">パスワード</th>
+                    </tr>
+                    <tr>
+                        <td>表示されません</td>
+                        <td class="text-end">
+                            <a href="#" class="btn btn-warning btn-sm text-nowrap">変更</a>
+                        </td>
+                    </tr>
+                    <tr class="table-danger">
+                        <th colspan="2">アカウント削除</th>
+                    </tr>
+                    <tr>
+                        <td>アカウントを削除する場合はこちら</td>
+                        <td class="text-end">
+                            <a href="#" class="btn btn-danger btn-sm text-nowrap">削除</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="text-secondary text-sm">ユーザーID：{{ request.user.id }}</p>
+        </div>
+    </div>
+{% endblock body %}

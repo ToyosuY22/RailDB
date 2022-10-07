@@ -165,6 +165,12 @@ CACHES = {
 }
 
 
+# Auth
+# https://docs.djangoproject.com/en/4.1/ref/settings/#login-redirect-url
+
+LOGIN_REDIRECT_URL = 'home:index'
+LOGIN_URL = 'home:signin'
+
 # Celery
 # https://docs.celeryq.dev/en/stable/django/first-steps-with-django.html
 
