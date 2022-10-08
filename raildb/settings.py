@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     # third party
     'django_bootstrap5',
     'django_celery_results',
+    'django_select2',
     # raildb
     'home',
 ]
@@ -171,6 +172,14 @@ CACHES = {
 LOGIN_REDIRECT_URL = 'home:index'
 LOGIN_URL = 'home:signin'
 
+
+# Email
+# https://docs.djangoproject.com/en/4.1/topics/email/
+# TODO: DEBUG = False の場合は SMTP で送信
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')
+
+
 # Celery
 # https://docs.celeryq.dev/en/stable/django/first-steps-with-django.html
 
@@ -182,11 +191,10 @@ CELERY_RESULT_BACKEND = 'django-db'
 CELERY_CACHE_BACKEND = 'django-cache'
 
 
-# Email
-# https://docs.djangoproject.com/en/4.1/topics/email/
-# TODO: DEBUG = False の場合は SMTP で送信
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')
+# django-select2
+# https://django-select2.readthedocs.io/en/latest/
+
+SELECT2_CACHE_BACKEND = 'default'
 
 
 # Email トークンの有効時間を指定（分単位）

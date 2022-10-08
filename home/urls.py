@@ -71,4 +71,34 @@ urlpatterns = [
         views.DeleteUserView.as_view(),
         name='delete_user'
     ),
+    path(
+        'manage_permissions',
+        views.ManagePermissionsView.as_view(),
+        name='manage_permissions'
+    ),
+    path(
+        'register_staff',
+        views.RegisterStaffView.as_view(),
+        name='register_staff'
+    ),
+    path(
+        'unregister_staff/<uuid:user_id>',
+        views.UnregisterStaffView.as_view(),
+        name='unregister_staff'
+    ),
+    path(
+        'create_group',
+        views.CreateGroupView.as_view(),
+        name='create_group'
+    ),
+    path(
+        'update_group/<int:group_id>',
+        views.UpdateGroupView.as_view(),
+        name='update_group'
+    ),
+    path(
+        'delete_group/<int:group_id>',
+        views.DeleteGroupView.as_view(),
+        name='delete_group'
+    ),
 ]

@@ -1,0 +1,23 @@
+{% extends "flame.html" %}
+{% block subtitle %}
+    403 Forbidden
+{% endblock subtitle %}
+{% block label %}
+    <span class="text-danger">404 Not Found</span>
+{% endblock label %}
+{% block body %}
+    <a href="{% url 'home:index' %}" class="btn btn-secondary mb-4">
+        <i class="fa-solid fa-house"></i>
+        ホームに戻る
+    </a>
+    <div class="card">
+        <div class="card-body">
+            <p class="card-text">このページは存在しません。</p>
+            <hr/>
+            <h2>連絡先</h2>
+            <p class="card-text">
+                とよすY-22（Twitter: <a href="https://twitter.com/ToyosuY22">@ToyosuY22</a>）
+            </p>
+        </div>
+    </div>
+{% endblock body %}

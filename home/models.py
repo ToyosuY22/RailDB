@@ -13,6 +13,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     class Meta:
         verbose_name = 'ユーザー'
         verbose_name_plural = 'ユーザー'
+        permissions = [
+            ('raildb_manage_users', 'ユーザー管理'),
+        ]
 
     def __str__(self):
         return f'{self.display_name}（{self.email}）'

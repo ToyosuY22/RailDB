@@ -1,0 +1,23 @@
+{% extends "flame.html" %}
+{% block subtitle %}
+    500 Internal Server Error
+{% endblock subtitle %}
+{% block label %}
+    <span class="text-danger">500 Internal Server Error</span>
+{% endblock label %}
+{% block body %}
+    <a href="{% url 'home:index' %}" class="btn btn-secondary mb-4">
+        <i class="fa-solid fa-house"></i>
+        ホームに戻る
+    </a>
+    <div class="card">
+        <div class="card-body">
+            <p class="card-text">エラーが発生しました。対応を希望する方は下記の連絡先までご連絡ください。</p>
+            <hr/>
+            <h2>連絡先</h2>
+            <p class="card-text">
+                とよすY-22（Twitter: <a href="https://twitter.com/ToyosuY22">@ToyosuY22</a>）
+            </p>
+        </div>
+    </div>
+{% endblock body %}

@@ -2,6 +2,7 @@ from django.contrib import messages
 from django.contrib.auth import get_user_model, login
 from django.contrib.auth import mixins as auth_mixins
 from django.contrib.auth import views as auth_views
+from django.contrib.auth.models import Group
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from django.db import transaction
@@ -326,7 +327,8 @@ class UpdateEmailView(auth_mixins.LoginRequiredMixin, generic.RedirectView):
         return super().get(request, *args, **kwargs)
 
 
-class UpdateDisplayNameView(auth_mixins.LoginRequiredMixin, generic.UpdateView):
+class UpdateDisplayNameView(
+        auth_mixins.LoginRequiredMixin, generic.UpdateView):
     """表示名変更
     """
     template_name = 'home/update_display_name.html'
@@ -340,12 +342,12 @@ class UpdateDisplayNameView(auth_mixins.LoginRequiredMixin, generic.UpdateView):
 
     def form_valid(self, form):
         # 保存
-        request = super().form_valid(form)
+        response = super().form_valid(form)
 
         # 成功メッセージを追加
         messages.warning(self.request, '表示名を変更しました！')
 
-        return request
+        return response
 
 
 class UpdatePasswordView(auth_mixins.LoginRequiredMixin, generic.FormView):
@@ -425,3 +427,203 @@ class DeleteUserView(auth_mixins.LoginRequiredMixin, generic.FormView):
         messages.error(self.request, 'アカウントを削除しました。')
 
         return super().form_valid(form)
+
+
+class ManagePermissionsView(
+        auth_mixins.UserPassesTestMixin, generic.TemplateView):
+    """ユーザー権限管理
+    """
+    template_name = 'home/manage_permissions.html'
+    raise_exception = True
+
+    def test_func(self):
+        # システム管理者のみアクセス可能
+        return self.request.user.is_authenticated \
+            and self.request.user.is_superuser
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user_model = get_user_model()
+
+        # スタッフ一覧（システム管理者を先に配置）
+        context['staff_list'] = \
+            user_model.objects.filter(is_staff=True).order_by('-is_superuser')
+
+        # グループ一覧
+        context['group_list'] = Group.objects.all()
+
+        return context
+
+
+class RegisterStaffView(auth_mixins.UserPassesTestMixin, generic.FormView):
+    """スタッフ権限付与
+    """
+    template_name = 'home/register_staff.html'
+    form_class = forms.RegisterStaffForm
+    success_url = reverse_lazy('home:manage_permissions')
+    raise_exception = True
+
+    def test_func(self):
+        # システム管理者のみアクセス可能
+        return self.request.user.is_authenticated \
+            and self.request.user.is_superuser
+
+    def form_valid(self, form):
+        # 与えられた email の User にスタッフ権限を与える
+        user_model = get_user_model()
+        user = user_model.objects.get(email=form.cleaned_data.get('email'))
+        user.is_staff = True
+        user.save()
+
+        # メッセージを追加
+        messages.success(
+            self.request,
+            f'{user} さんがスタッフになりました。'
+        )
+
+        return super().form_valid(form)
+
+
+class UnregisterStaffView(
+        auth_mixins.UserPassesTestMixin, generic.RedirectView):
+    """スタッフ解除
+    """
+    url = reverse_lazy('home:manage_permissions')
+    raise_exception = True
+
+    def test_func(self):
+        # システム管理者のみアクセス可能
+        return self.request.user.is_authenticated \
+            and self.request.user.is_superuser
+
+    def get(self, request, *args, **kwargs):
+        # URL からユーザーを取得
+        user = get_object_or_404(get_user_model(), id=kwargs.get('user_id'))
+
+        # スタッフ権限を剥奪
+        user.is_staff = False
+        user.save()
+
+        # メッセージを追加
+        messages.success(
+            request,
+            f'{user} のスタッフ権限を解除しました！'
+        )
+
+        return super().get(request, *args, **kwargs)
+
+
+class CreateGroupView(auth_mixins.UserPassesTestMixin, generic.CreateView):
+    """グループ作成
+    """
+    template_name = 'home/create_group.html'
+    form_class = forms.GroupForm
+    success_url = reverse_lazy('home:manage_permissions')
+    raise_exception = True
+    model = Group
+
+    def test_func(self):
+        # システム管理者のみアクセス可能
+        return self.request.user.is_authenticated \
+            and self.request.user.is_superuser
+
+    def form_valid(self, form):
+        with transaction.atomic():
+            # Group を保存
+            response = super().form_valid(form)
+
+            # 権限
+            self.object.permissions.set(
+                form.cleaned_data.get('permissions')
+            )
+
+            # メンバーを追加
+            for user in form.cleaned_data.get('user_list'):
+                user.groups.add(self.object)
+                user.save()
+
+        messages.success(
+            self.request,
+            f'グループ "{self.object}" を作成しました！'
+        )
+
+        return response
+
+
+class UpdateGroupView(auth_mixins.UserPassesTestMixin, generic.UpdateView):
+    """グループ編集
+    """
+    template_name = 'home/update_group.html'
+    form_class = forms.GroupForm
+    success_url = reverse_lazy('home:manage_permissions')
+    raise_exception = True
+    model = Group
+    pk_url_kwarg = 'group_id'
+
+    def test_func(self):
+        # システム管理者のみアクセス可能
+        return self.request.user.is_authenticated \
+            and self.request.user.is_superuser
+
+    def get_initial(self):
+        initial = super().get_initial()
+
+        initial.update({
+            'permissions': self.object.permissions.all(),
+            'user_list': self.object.user_set.all()
+        })
+
+        return initial
+
+    def form_valid(self, form):
+        with transaction.atomic():
+            # Group を保存
+            response = super().form_valid(form)
+
+            # 権限
+            self.object.permissions.set(
+                form.cleaned_data.get('permissions')
+            )
+
+            # 一旦メンバーを全解除
+            for user in self.object.user_set.all():
+                user.groups.remove(self.object)
+
+            # メンバーを追加
+            for user in form.cleaned_data.get('user_list'):
+                user.groups.add(self.object)
+                user.save()
+
+        messages.success(
+            self.request,
+            f'グループ "{self.object}" を編集しました！'
+        )
+
+        return response
+
+
+class DeleteGroupView(auth_mixins.UserPassesTestMixin, generic.RedirectView):
+    """グループ削除
+    """
+    url = reverse_lazy('home:manage_permissions')
+    raise_exception = True
+
+    def test_func(self):
+        # システム管理者のみアクセス可能
+        return self.request.user.is_authenticated \
+            and self.request.user.is_superuser
+
+    def get(self, request, *args, **kwargs):
+        # URL からグループを取得
+        group = get_object_or_404(Group, id=kwargs.get('group_id'))
+
+        # 削除
+        group.delete()
+
+        # メッセージを追加
+        messages.success(
+            request,
+            f'グループ "{group}" を削除しました！'
+        )
+
+        return super().get(request, *args, **kwargs)

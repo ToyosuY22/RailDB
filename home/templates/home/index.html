@@ -47,13 +47,20 @@
             <div class="row mt-2">
                 <div class="col-6">
                     <div class="d-grid d-xl-none">
+                        <a href="{% url 'home:manage_permissions' %}" class="btn btn-outline-danger">
+                            <i class="fa-solid fa-key fa-3x my-2"></i>
+                            <p class="my-0">権限管理</p>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="d-grid d-xl-none">
                         <a href="{% url 'admin:index' %}" class="btn btn-outline-danger">
                             <i class="fa-solid fa-database fa-3x my-2"></i>
                             <p class="my-0">管理サイト</p>
                         </a>
                     </div>
                 </div>
-                <div class="col-6"></div>
             </div>
         {% endif %}
     {% endif %}
