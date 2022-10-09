@@ -1,0 +1,10 @@
+{% extends 'mails/base.txt' %}
+{% block body %}
+まだ RailDB のアカウント作成は完了していません。
+こちらの URL からアカウントの新規作成を完了してください。
+
+なお、この URL は {{ settings.EMAIL_TOKEN_EXP }} 分後に無効となります。
+無効となった場合は、最初から手続きをやり直してください。
+
+{{ email_token.url }}
+{% endblock body %}

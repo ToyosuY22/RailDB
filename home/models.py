@@ -15,6 +15,7 @@ class RailDBUserManager(UserManager):
 
     https://github.com/django/django/blob/f0c06f8ab7904e1fd082f2de57337f6c7e05f177/django/contrib/auth/models.py#L136
     """
+
     def _create_user(self, email, password, **extra_fields):
         """
         Create and save a user with the given username, email, and password.
@@ -47,7 +48,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         verbose_name = 'ユーザー'
         verbose_name_plural = 'ユーザー'
         permissions = [
-            ('raildb_manage_users', 'ユーザー管理'),
+            ('raildb_manage_user', 'ユーザー管理'),
         ]
         ordering = ['-is_superuser', '-is_staff']
 
@@ -108,13 +109,28 @@ class EmailToken(models.Model):
         """
         path = {
             self.KindChoices.SIGNUP:
-                reverse('home:signup', kwargs={'token_id': self.id}),
+                reverse(
+                    'home:auth_signup',
+                    kwargs={'email_token_id': self.id}
+                ),
             self.KindChoices.PASSWORD_RESET:
-                reverse('home:password_reset', kwargs={'token_id': self.id}),
+                reverse(
+                    'home:auth_password_reset',
+                    kwargs={'email_token_id': self.id}
+                ),
             self.KindChoices.EMAIL_UPDATE:
-                reverse('home:update_email', kwargs={'token_id': self.id}),
+                reverse(
+                    'home:profile_email_update',
+                    kwargs={'email_token_id': self.id}
+                ),
         }
         return f'{settings.BASE_URL}{path.get(self.kind)}'
+
+    def use(self):
+        """Eメールトークンを使用済みにする
+        """
+        self.is_used = True
+        self.save()
 
     def validate(self, kind):
         """Eメールトークンの有効性を確認

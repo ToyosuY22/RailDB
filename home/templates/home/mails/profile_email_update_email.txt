@@ -1,0 +1,10 @@
+{% extends 'mails/base.txt' %}
+{% block body %}
+まだ E メールアドレスの変更は完了していません。
+こちらの URL から E メールアドレスの変更を完了してください。
+
+なお、この URL は {{ settings.EMAIL_TOKEN_EXP }} 分後に無効となります。
+無効となった場合は、最初から手続きをやり直してください。
+
+{{ email_token.url }}
+{% endblock body %}

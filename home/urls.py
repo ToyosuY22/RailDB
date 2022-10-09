@@ -6,144 +6,151 @@ app_name = 'home'
 
 
 urlpatterns = [
+    # views/base.py
     path(
         '',
-        views.IndexView.as_view(),
+        views.base.IndexView.as_view(),
         name='index'
     ),
+    # views/auth.py
     path(
-        'signin',
-        views.SigninView.as_view(),
-        name='signin'
+        'auth/signin',
+        views.auth.SigninView.as_view(),
+        name='auth_signin'
     ),
     path(
-        'signup_email',
-        views.SignupEmailView.as_view(),
-        name='signup_email'
+        'auth/signup_email',
+        views.auth.SignupEmailView.as_view(),
+        name='auth_signup_email'
     ),
     path(
-        'signup/<uuid:token_id>',
-        views.SignupView.as_view(),
-        name='signup'
+        'auth/signup/<uuid:email_token_id>',
+        views.auth.SignupView.as_view(),
+        name='auth_signup'
     ),
     path(
-        'signout',
-        views.SignoutView.as_view(),
-        name='signout'
+        'auth/signout',
+        views.auth.SignoutView.as_view(),
+        name='auth_signout'
     ),
     path(
-        'password_reset_email',
-        views.PasswordResetEmailView.as_view(),
-        name='password_reset_email'
+        'auth/password_reset_email',
+        views.auth.PasswordResetEmailView.as_view(),
+        name='auth_password_reset_email'
     ),
     path(
-        'password_reset/<uuid:token_id>',
-        views.PasswordResetView.as_view(),
-        name='password_reset'
+        'auth/password_reset/<uuid:email_token_id>',
+        views.auth.PasswordResetView.as_view(),
+        name='auth_password_reset'
     ),
+    # views/profile.py
     path(
         'profile',
-        views.ProfileView.as_view(),
+        views.profile.ProfileView.as_view(),
         name='profile'
     ),
     path(
-        'update_email_email',
-        views.UpdateEmailEmailView.as_view(),
-        name='update_email_email'
+        'profile/email_update_email',
+        views.profile.EmailUpdateEmailView.as_view(),
+        name='profile_email_update_email'
     ),
     path(
-        'update_email/<uuid:token_id>',
-        views.UpdateEmailView.as_view(),
-        name='update_email'
+        'profile/email_update/<uuid:email_token_id>',
+        views.profile.EmailUpdateView.as_view(),
+        name='profile_email_update'
     ),
     path(
-        'update_display_name',
-        views.UpdateDisplayNameView.as_view(),
-        name='update_display_name'
+        'profile/display_name_update',
+        views.profile.DisplayNameUpdateView.as_view(),
+        name='profile_display_name_update'
     ),
     path(
-        'update_password',
-        views.UpdatePasswordView.as_view(),
-        name='update_password'
+        'profile/password_update',
+        views.profile.PasswordUpdateView.as_view(),
+        name='profile_password_update'
     ),
     path(
-        'delete_user',
-        views.DeleteUserView.as_view(),
-        name='delete_user'
+        'profile/user_delete',
+        views.profile.UserDeleteView.as_view(),
+        name='profile_user_delete'
+    ),
+    # views/user.py
+    path(
+        'user/list',
+        views.user.ListView.as_view(),
+        name='user_list'
     ),
     path(
-        'manage_users',
-        views.ManageUsersView.as_view(),
-        name='manage_users'
+        'user/update/<uuid:pk>',
+        views.user.UpdateView.as_view(),
+        name='user_update'
     ),
     path(
-        'update_user_staff/<uuid:user_id>',
-        views.UpdateUserStaffView.as_view(),
-        name='update_user_staff'
+        'user/delete/<uuid:pk>',
+        views.user.DeleteView.as_view(),
+        name='user_delete'
+    ),
+    # views/permission.py
+    path(
+        'permission/management',
+        views.permission.ManagementView.as_view(),
+        name='permission_management'
     ),
     path(
-        'delete_user_staff/<uuid:user_id>',
-        views.DeleteUserStaffView.as_view(),
-        name='delete_user_staff'
+        'permission/staff_register',
+        views.permission.StaffRegisterView.as_view(),
+        name='permission_register_staff'
     ),
     path(
-        'manage_permissions',
-        views.ManagePermissionsView.as_view(),
-        name='manage_permissions'
+        'permission/staff_unregister/<uuid:pk>',
+        views.permission.StaffUnregisterView.as_view(),
+        name='permission_unregister_staff'
     ),
     path(
-        'register_staff',
-        views.RegisterStaffView.as_view(),
-        name='register_staff'
+        'permission/group_create',
+        views.permission.GroupCreateView.as_view(),
+        name='permission_create_group'
     ),
     path(
-        'unregister_staff/<uuid:user_id>',
-        views.UnregisterStaffView.as_view(),
-        name='unregister_staff'
+        'permission/group_update/<int:pk>',
+        views.permission.GroupUpdateView.as_view(),
+        name='permission_update_group'
     ),
     path(
-        'create_group',
-        views.CreateGroupView.as_view(),
-        name='create_group'
+        'permission/group_delete/<int:pk>',
+        views.permission.GroupDeleteView.as_view(),
+        name='permission_delete_group'
     ),
-    path(
-        'update_group/<int:group_id>',
-        views.UpdateGroupView.as_view(),
-        name='update_group'
-    ),
-    path(
-        'delete_group/<int:group_id>',
-        views.DeleteGroupView.as_view(),
-        name='delete_group'
-    ),
+    # views/news.py
     path(
         'news/list',
-        views.NewsListView.as_view(),
+        views.news.ListView.as_view(),
         name='news_list'
     ),
     path(
         'news/create',
-        views.NewsCreateView.as_view(),
+        views.news.CreateView.as_view(),
         name='news_create'
     ),
     path(
         'news/update/<uuid:pk>',
-        views.NewsUpdateView.as_view(),
+        views.news.UpdateView.as_view(),
         name='news_update'
     ),
     path(
         'news/delete/<uuid:pk>',
-        views.NewsDeleteView.as_view(),
+        views.news.DeleteView.as_view(),
         name='news_delete'
     ),
     path(
         'news/detail/<uuid:pk>',
-        views.NewsDetailView.as_view(),
+        views.news.DetailView.as_view(),
         name='news_detail'
     ),
+    # json.py
     path(
         'json/user',
-        views.JsonUser.as_view(),
+        views.json.UserAPI.as_view(),
         name='json_user'
     ),
 ]

@@ -70,7 +70,7 @@
                                     <i class="fa-solid fa-right-from-bracket"></i>
                                 </a>
                             {% else %}
-                                <a class="nav-link text-white" href="{% url 'home:signin' %}">
+                                <a class="nav-link text-white" href="{% url 'home:auth_signin' %}">
                                     <span class="d-none d-sm-inline">ログイン／新規登録</span>
                                     <i class="fa-solid fa-right-to-bracket"></i>
                                 </a>
@@ -136,9 +136,9 @@
                                 </a>
                             </li>
                         {% endif %}
-                        {% if perms.home.raildb_manage_users %}
-                            <li class="sidebar-item{% block menu_manage_users %}{% endblock menu_manage_users %}">
-                                <a class="sidebar-link" href="{% url 'home:manage_users' %}">
+                        {% if perms.home.raildb_manage_user %}
+                            <li class="sidebar-item{% block menu_manage_user %}{% endblock menu_manage_user %}">
+                                <a class="sidebar-link" href="{% url 'home:user_list' %}">
                                     <i class="fa-solid fa-users"></i>
                                     <span class="ps-2">ユーザー管理</span>
                                 </a>
@@ -149,8 +149,8 @@
                 {% if request.user.is_superuser %}
                     <span class="text-uppercase text-gray-400 text-xs letter-spacing-0 mx-3 px-2 heading">システム管理者向け</span>
                     <ul class="list-unstyled pt-4">
-                        <li class="sidebar-item{% block menu_manage_permissions %}{% endblock menu_manage_permissions %}">
-                            <a class="sidebar-link" href="{% url 'home:manage_permissions' %}">
+                        <li class="sidebar-item{% block menu_manage_permission %}{% endblock menu_manage_permission %}">
+                            <a class="sidebar-link" href="{% url 'home:permission_management' %}">
                                 <i class="fa-solid fa-key"></i>
                                 <span class="ps-2">権限管理</span>
                             </a>
@@ -216,7 +216,9 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="signout_modal_label">ログアウト</h1>
+                <h1 class="modal-title fs-5" id="signout_modal_label">
+                    ログアウト
+                </h1>
                 <button type="button"
                         class="btn-close"
                         data-bs-dismiss="modal"
@@ -230,10 +232,13 @@
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                     とじる
                 </button>
-                <a href="{% url 'home:signout' %}" class="btn btn-danger">
-                    <i class="fa-solid fa-right-from-bracket"></i>
-                    ログアウトする
-                </a>
+                <form method="post" action="{% url 'home:auth_signout' %}">
+                    {% csrf_token %}
+                    <button class="btn btn-danger" type="submit">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                        ログアウトする
+                    </button>
+                </form>
             </div>
         </div>
     </div>

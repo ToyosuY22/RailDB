@@ -23,7 +23,7 @@ env = environ.Env(
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Take environment variables from .env file
-environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+environ.Env.read_env(os.path.join(BASE_DIR, 'env', '.env'))
 
 # このサイトの URL
 BASE_URL = env('BASE_URL')
@@ -170,7 +170,7 @@ CACHES = {
 # https://docs.djangoproject.com/en/4.1/ref/settings/#login-redirect-url
 
 LOGIN_REDIRECT_URL = 'home:index'
-LOGIN_URL = 'home:signin'
+LOGIN_URL = 'home:auth_signin'
 
 
 # Email

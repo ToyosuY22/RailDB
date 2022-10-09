@@ -1,0 +1,99 @@
+{% extends "flame.html" %}
+{% block subtitle %}
+    ユーザー管理
+{% endblock subtitle %}
+{% block label %}
+    ユーザー管理
+{% endblock label %}
+{% block menu_manage_user %}
+    active
+{% endblock menu_manage_user %}
+{% block extrahead %}
+    <link rel="stylesheet"
+          type="text/css"
+          href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.css"/>
+{% endblock extrahead %}
+{% block body %}
+    <a href="{% url 'home:index' %}" class="btn btn-secondary">
+        <i class="fa-solid fa-house"></i>
+        ホームに戻る
+    </a>
+    <div class="card mt-3">
+        <div class="card-header">
+            <h1>ユーザー管理</h1>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive text-nowrap">
+                <table class="table" id="datatable_user">
+                    <thead>
+                        <tr>
+                            <th>Eメールアドレス</th>
+                            <th>表示名</th>
+                            <th>有効</th>
+                            <th>スタッフ</th>
+                            <th>システム管理者</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock body %}
+{% block extrascript %}
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.js"></script>
+    <script>
+    $(document).ready(function () {
+        var oTable = $('#datatable_user').dataTable({
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/1.12.1/i18n/ja.json"
+              },
+            "processing": true,
+            "serverSide": true,
+            "ajax": "{% url 'home:json_user' %}",
+            "columns": [
+                null,
+                null,
+                {"render":
+                    function(data) {
+                        if(data=='True') {
+                            return '<span class="text-success"><i class="fa-solid fa-check"></i></span>'
+                        } else {
+                            return '<span class="text-danger"><i class="fa-solid fa-xmark"></i></span'
+                        }
+                    },
+                    "searchable": false, "orderable": false
+                },
+                {"render":
+                    function(data) {
+                        if(data=='True') {
+                            return '<span class="text-success"><i class="fa-solid fa-check"></i></span>'
+                        } else {
+                            return '<span class="text-danger"><i class="fa-solid fa-xmark"></i></span'
+                        }
+                    },
+                    "searchable": false, "orderable": false
+                },
+                {"render":
+                    function(data) {
+                        if(data=='True') {
+                            return '<span class="text-success"><i class="fa-solid fa-check"></i></span>'
+                        } else {
+                            return '<span class="text-danger"><i class="fa-solid fa-xmark"></i></span'
+                        }
+                    },
+                    "searchable": false, "orderable": false
+                },
+                {
+                    "render":
+                        function(data) {
+                            return `<a href="/user/update/${data}" class="btn btn-warning btn-sm"><i class="fa-solid fa-pen-to-square"></i> 編集</a>`
+                        },
+                    "searchable": false, "orderable": false
+                }
+            ],
+        });
+    });
+    </script>
+{% endblock extrascript %}

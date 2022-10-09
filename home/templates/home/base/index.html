@@ -1,0 +1,184 @@
+{% extends "flame.html" %}
+{% block subtitle %}
+    ホーム
+{% endblock subtitle %}
+{% block label %}
+    ホーム
+{% endblock label %}
+{% block menu_home %}
+    active
+{% endblock menu_home %}
+{% block body %}
+    <div class="card">
+        <div class="card-header">
+            <h1>ようこそ RailDB へ！</h1>
+        </div>
+        <div class="card-body">
+            <p class="card-text">
+                RailDB は、乗りつぶしファンのための鉄道乗車記録サービスです。
+                日本全国の鉄道／軌道等の事業者／路線／駅データを閲覧することができます。
+                また、アカウントを作成してログインすると、乗りつぶしの記録をつけることができます。
+            </p>
+        </div>
+        {% if not request.user.is_authenticated %}
+            <div class="card-footer text-end">
+                <a href="{% url 'home:auth_signin' %}" class="btn btn-primary">
+                    <i class="fa-solid fa-right-to-bracket"></i>
+                    ログイン／新規登録
+                </a>
+            </div>
+        {% endif %}
+    </div>
+    <!--  スマホ向けメニュー -->
+    {% if request.user.is_authenticated %}
+        <div class="row mt-2">
+            <div class="col">
+                <div class="d-grid d-xl-none">
+                    <a href="{% url 'home:profile' %}" class="btn btn-outline-primary">
+                        <i class="fa-solid fa-user fa-3x my-2"></i>
+                        <p class="my-0">プロフィール</p>
+                    </a>
+                </div>
+            </div>
+            <div class="col"></div>
+        </div>
+        {% if request.user.is_staff %}
+            <div class="row mt-2">
+                <div class="col">
+                    {% if perms.home.raildb_manage_news %}
+                        <div class="d-grid d-xl-none">
+                            <a href="{% url 'home:news_list' %}" class="btn btn-outline-success">
+                                <i class="fa-solid fa-newspaper fa-3x my-2"></i>
+                                <p class="my-0">お知らせ管理</p>
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="col">
+                    {% if perms.home.raildb_manage_user %}
+                        <div class="d-grid d-xl-none">
+                            <a href="{% url 'home:user_list' %}" class="btn btn-outline-success">
+                                <i class="fa-solid fa-users fa-3x my-2"></i>
+                                <p class="my-0">ユーザー管理</p>
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
+        {% if request.user.is_superuser %}
+            <div class="row mt-2">
+                <div class="col">
+                    <div class="d-grid d-xl-none">
+                        <a href="{% url 'home:permission_management' %}"
+                           class="btn btn-outline-danger">
+                            <i class="fa-solid fa-key fa-3x my-2"></i>
+                            <p class="my-0">権限管理</p>
+                        </a>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="d-grid d-xl-none">
+                        <a href="{% url 'admin:index' %}" class="btn btn-outline-danger">
+                            <i class="fa-solid fa-database fa-3x my-2"></i>
+                            <p class="my-0">管理サイト</p>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    {% endif %}
+    <!-- お知らせ -->
+    <div class="card mt-4 mt-xl-0">
+        <div class="card-header">
+            <h1>お知らせ一覧</h1>
+        </div>
+        <div class="card-body">
+            <div class="d-block d-xl-none">
+                <!-- スマホ向け表示 -->
+                <table class="table">
+                    <tbody>
+                        {% for news in news_list %}
+                            <tr>
+                                <td>
+                                    <strong>{{ news.update_datetime|date:'Y/m/d' }}</strong>
+                                    {% if news.kind == 'important' %}
+                                        <span class="badge text-bg-danger">
+                                            <i class="fa-solid fa-circle-exclamation"></i>
+                                            重要
+                                        </span>
+                                    {% elif news.kind == 'update' %}
+                                        <span class="badge text-bg-warning">
+                                            <i class="fa-solid fa-circle-up"></i>
+                                            更新情報
+                                        </span>
+                                    {% elif news.kind == 'ordinary' %}
+                                        <span class="badge text-bg-primary">
+                                            <i class="fa-solid fa-newspaper"></i>
+                                            お知らせ
+                                        </span>
+                                    {% endif %}
+                                    <h3 class="mt-2">
+                                        <a href="{% url 'home:news_detail' news.id %}">{{ news.title }}</a>
+                                    </h3>
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td>お知らせはありません</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="d-none d-xl-block">
+                <!-- PC 向け表示 -->
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>更新日</th>
+                            <th>種別</th>
+                            <th width="80%">タイトル</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for news in news_list %}
+                            <tr>
+                                <th>{{ news.update_datetime|date:'Y/m/d' }}</th>
+                                <td>
+                                    {% if news.kind == 'important' %}
+                                        <span class="badge text-bg-danger">
+                                            <i class="fa-solid fa-circle-exclamation"></i>
+                                            重要
+                                        </span>
+                                    {% elif news.kind == 'update' %}
+                                        <span class="badge text-bg-warning">
+                                            <i class="fa-solid fa-circle-up"></i>
+                                            更新情報
+                                        </span>
+                                    {% elif news.kind == 'ordinary' %}
+                                        <span class="badge text-bg-primary">
+                                            <i class="fa-solid fa-newspaper"></i>
+                                            お知らせ
+                                        </span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <h3>
+                                        <a href="{% url 'home:news_detail' news.id %}">{{ news.title }}</a>
+                                    </h3>
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td>お知らせはありません</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock body %}

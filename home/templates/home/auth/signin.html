@@ -1,0 +1,43 @@
+{% extends "flame.html" %}
+{% load static %}
+{% load django_bootstrap5 %}
+{% block subtitle %}
+    ログイン
+{% endblock subtitle %}
+{% block label %}
+    ログイン
+{% endblock label %}
+{% block body %}
+    <a href="{% url 'home:index' %}" class="btn btn-secondary">
+        <i class="fa-solid fa-house"></i>
+        ホームに戻る
+    </a>
+    <div class="card mt-3">
+        <div class="card-body">
+            <div class="alert alert-info" role="alert">
+                登録したEメールアドレスとパスワードを入力してください。
+                まだアカウントを作成していない方は「アカウント作成」を選択してください。
+            </div>
+            <form method="post" class="form">
+                {% csrf_token %}
+                {% bootstrap_form form %}
+                <input type="checkbox" id="password-check" />
+                パスワードを表示する
+                <div class="mt-3 d-grid d-md-flex justify-content-md-end">
+                    {% bootstrap_button button_type="submit" content="ログイン" %}
+                </div>
+                <hr />
+                <div class="text-end">
+                    パスワードを忘れた方は<a href="{% url 'home:auth_password_reset_email' %}">こちら</a>
+                </div>
+            </form>
+        </div>
+        <div class="card-footer d-grid d-md-flex justify-content-md-end">
+            <a href="{% url 'home:auth_signup_email' %}"
+               class="btn btn-warning">アカウント新規登録</a>
+        </div>
+    </div>
+{% endblock body %}
+{% block extrascript %}
+    <script src="{% static 'home/check_password.js' %}"></script>
+{% endblock extrascript %}
