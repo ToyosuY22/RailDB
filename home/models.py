@@ -16,6 +16,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         permissions = [
             ('raildb_manage_users', 'ユーザー管理'),
         ]
+        ordering = ['-is_superuser', '-is_staff']
 
     def __str__(self):
         return f'{self.display_name}（{self.email}）'

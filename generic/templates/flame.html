@@ -127,6 +127,16 @@
             {% if request.user.is_authenticated %}
                 {% if request.user.is_staff %}
                     <span class="text-uppercase text-gray-400 text-xs letter-spacing-0 mx-3 px-2 heading">スタッフ向け</span>
+                    <ul class="list-unstyled pt-4">
+                        {% if perms.home.raildb_manage_users %}
+                            <li class="sidebar-item{% block menu_manage_users %}{% endblock menu_manage_users %}">
+                                <a class="sidebar-link" href="{% url 'home:manage_users' %}">
+                                    <i class="fa-solid fa-users"></i>
+                                    <span class="ps-2">ユーザー管理</span>
+                                </a>
+                            </li>
+                        {% endif %}
+                    </ul>
                 {% endif %}
                 {% if request.user.is_superuser %}
                     <span class="text-uppercase text-gray-400 text-xs letter-spacing-0 mx-3 px-2 heading">システム管理者向け</span>
@@ -202,7 +212,8 @@
                 <button type="button"
                         class="btn-close"
                         data-bs-dismiss="modal"
-                        aria-label="Close"></button>
+                        aria-label="Close">
+                </button>
             </div>
             <div class="modal-body">
                 ログアウトしますか？

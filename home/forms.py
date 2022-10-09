@@ -145,7 +145,8 @@ class GroupForm(forms.ModelForm):
     # raildb からはじまる codename のみ選択肢として表示
     permissions = PermissionMultipleChoiceField(
         label='権限',
-        queryset=Permission.objects.filter(codename__startswith='raildb')
+        queryset=Permission.objects.filter(codename__startswith='raildb'),
+        required=False
     )
 
     # スタッフを選択肢として表示
@@ -154,5 +155,12 @@ class GroupForm(forms.ModelForm):
         label='メンバー',
         help_text='スタッフのメールアドレスを入力してください',
         widget=UserSelect2MultipleWidgetWidget(),
-        queryset=user_model.objects.filter(is_staff=True)
+        queryset=user_model.objects.filter(is_staff=True),
+        required=False
     )
+
+
+class UpdateUserStaffForm(forms.ModelForm):
+    class Meta:
+        model = get_user_model()
+        fields = ['email', 'display_name', 'is_active']

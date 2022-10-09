@@ -8,8 +8,9 @@ from django.core.exceptions import ValidationError
 from django.db import transaction
 from django.http import Http404
 from django.shortcuts import get_object_or_404
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 from django.views import generic
+from django_datatables_view.base_datatable_view import BaseDatatableView
 from raildb.tasks import send_email
 
 from home import forms
@@ -424,9 +425,77 @@ class DeleteUserView(auth_mixins.LoginRequiredMixin, generic.FormView):
         )
 
         # 成功メッセージを追加
-        messages.error(self.request, 'アカウントを削除しました。')
+        messages.success(self.request, 'アカウントを削除しました。')
 
         return super().form_valid(form)
+
+
+class ManageUsersView(
+        auth_mixins.PermissionRequiredMixin, generic.TemplateView):
+    """ユーザー管理
+    """
+    template_name = 'home/manage_users.html'
+    permission_required = 'home.raildb_manage_users'
+    raise_exception = True
+
+
+class UpdateUserStaffView(
+        auth_mixins.PermissionRequiredMixin, generic.UpdateView):
+    """ユーザー編集（スタッフ専用）
+    """
+    template_name = 'home/update_user_staff.html'
+    permission_required = 'home.raildb_manage_users'
+    raise_exception = True
+    pk_url_kwarg = 'user_id'
+    model = get_user_model()
+    form_class = forms.UpdateUserStaffForm
+
+    def get_success_url(self):
+        return reverse(
+            'home:update_user_staff', kwargs={'user_id': self.object.id})
+
+    def form_valid(self, form):
+        # スタッフの場合は拒否
+        if self.object.is_staff:
+            messages.error(self.request, 'スタッフの情報は編集できません！')
+            return super().form_invalid(form)
+
+        # 成功メッセージを追加
+        messages.success(self.request, f'{form.instance} さんのユーザー情報を編集しました！')
+
+        return super().form_valid(form)
+
+
+class DeleteUserStaffView(
+        auth_mixins.PermissionRequiredMixin, generic.RedirectView):
+    """ユーザー削除（スタッフ専用）
+    """
+    permission_required = 'home.raildb_manage_users'
+    raise_exception = True
+    url = reverse_lazy('home:manage_users')
+
+    def get(self, request, *args, **kwargs):
+        # URL からユーザーを取得
+        user = get_object_or_404(get_user_model(), id=kwargs.get('user_id'))
+
+        # スタッフのアカウントは削除不可
+        if user.is_staff:
+            messages.error(
+                request,
+                'スタッフは削除できません！'
+            )
+            return super().get(request, *args, **kwargs)
+
+        # 削除
+        user.delete()
+
+        # メッセージを追加
+        messages.success(
+            request,
+            f'ユーザー "{user}" を削除しました！'
+        )
+
+        return super().get(request, *args, **kwargs)
 
 
 class ManagePermissionsView(
@@ -445,9 +514,9 @@ class ManagePermissionsView(
         context = super().get_context_data(**kwargs)
         user_model = get_user_model()
 
-        # スタッフ一覧（システム管理者を先に配置）
+        # スタッフ一覧
         context['staff_list'] = \
-            user_model.objects.filter(is_staff=True).order_by('-is_superuser')
+            user_model.objects.filter(is_staff=True)
 
         # グループ一覧
         context['group_list'] = Group.objects.all()
@@ -499,6 +568,14 @@ class UnregisterStaffView(
     def get(self, request, *args, **kwargs):
         # URL からユーザーを取得
         user = get_object_or_404(get_user_model(), id=kwargs.get('user_id'))
+
+        # システム管理者の場合は操作不可
+        if user.is_superuser:
+            messages.error(
+                request,
+                'システム担当者の権限は解除できません！'
+            )
+            return super().get(request, *args, **kwargs)
 
         # スタッフ権限を剥奪
         user.is_staff = False
@@ -627,3 +704,19 @@ class DeleteGroupView(auth_mixins.UserPassesTestMixin, generic.RedirectView):
         )
 
         return super().get(request, *args, **kwargs)
+
+
+# JSON
+
+
+class JsonUser(
+        auth_mixins.PermissionRequiredMixin, BaseDatatableView):
+    """JSON: ユーザー管理
+    """
+    permission_required = 'home.raildb_manage_users'
+    raise_exception = True
+    model = get_user_model()
+    columns = [
+        'email', 'display_name', 'is_active', 'is_staff', 'is_superuser', 'id'
+    ]
+    max_display_length = 500

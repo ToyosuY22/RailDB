@@ -32,7 +32,7 @@
     <!--  スマホ向けメニュー -->
     {% if request.user.is_authenticated %}
         <div class="row mt-2">
-            <div class="col-6">
+            <div class="col">
                 <div class="d-grid d-xl-none">
                     <a href="{% url 'home:profile' %}" class="btn btn-outline-primary">
                         <i class="fa-solid fa-user fa-3x my-2"></i>
@@ -40,20 +40,35 @@
                     </a>
                 </div>
             </div>
-            <div class="col-6"></div>
+            <div class="col"></div>
         </div>
-        {% if request.user.is_staff %}{% endif %}
+        {% if request.user.is_staff %}
+            <div class="row mt-2">
+                {% if perms.home.raildb_manage_users %}
+                    <div class="col">
+                        <div class="d-grid d-xl-none">
+                            <a href="{% url 'home:manage_users' %}" class="btn btn-outline-success">
+                                <i class="fa-solid fa-users fa-3x my-2"></i>
+                                <p class="my-0">ユーザー管理</p>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col"></div>
+                {% endif %}
+            </div>
+        {% endif %}
         {% if request.user.is_superuser %}
             <div class="row mt-2">
-                <div class="col-6">
+                <div class="col">
                     <div class="d-grid d-xl-none">
-                        <a href="{% url 'home:manage_permissions' %}" class="btn btn-outline-danger">
+                        <a href="{% url 'home:manage_permissions' %}"
+                           class="btn btn-outline-danger">
                             <i class="fa-solid fa-key fa-3x my-2"></i>
                             <p class="my-0">権限管理</p>
                         </a>
                     </div>
                 </div>
-                <div class="col-6">
+                <div class="col">
                     <div class="d-grid d-xl-none">
                         <a href="{% url 'admin:index' %}" class="btn btn-outline-danger">
                             <i class="fa-solid fa-database fa-3x my-2"></i>

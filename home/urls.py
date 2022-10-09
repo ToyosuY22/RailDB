@@ -72,6 +72,21 @@ urlpatterns = [
         name='delete_user'
     ),
     path(
+        'manage_users',
+        views.ManageUsersView.as_view(),
+        name='manage_users'
+    ),
+    path(
+        'update_user_staff/<uuid:user_id>',
+        views.UpdateUserStaffView.as_view(),
+        name='update_user_staff'
+    ),
+    path(
+        'delete_user_staff/<uuid:user_id>',
+        views.DeleteUserStaffView.as_view(),
+        name='delete_user_staff'
+    ),
+    path(
         'manage_permissions',
         views.ManagePermissionsView.as_view(),
         name='manage_permissions'
@@ -100,5 +115,10 @@ urlpatterns = [
         'delete_group/<int:group_id>',
         views.DeleteGroupView.as_view(),
         name='delete_group'
+    ),
+    path(
+        'json/user',
+        views.JsonUser.as_view(),
+        name='json_user'
     ),
 ]
