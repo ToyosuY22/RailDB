@@ -38,7 +38,7 @@ class EmailUpdateEmailView(LoginRequiredMixin, generic.CreateView):
         form.instance.kind = EmailToken.KindChoices.EMAIL_UPDATE
 
         # 作成ユーザーを登録
-        form.instance.created_user = self.request.user
+        form.instance.create_user = self.request.user
 
         # Eメールトークンを作成
         response = super().form_valid(form)
@@ -77,7 +77,7 @@ class EmailUpdateView(LoginRequiredMixin,  generic.RedirectView):
 
         with transaction.atomic():
             # Eメールアドレスを変更
-            user = email_token.created_user
+            user = email_token.create_user
             user.email = email_token.email
             user.save()
 

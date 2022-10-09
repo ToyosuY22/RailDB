@@ -1,8 +1,10 @@
+from django.contrib.auth import get_user_model
 from django.contrib import admin
+
 from home import models
 
 
-@admin.register(models.User)
+@admin.register(get_user_model())
 class UserAdmin(admin.ModelAdmin):
     fieldsets = [
         ('基本情報', {'fields': ['id', 'email', 'display_name']}),
@@ -39,22 +41,22 @@ class UserAdmin(admin.ModelAdmin):
 @admin.register(models.EmailToken)
 class EmailTokenAdmin(admin.ModelAdmin):
     fieldsets = [
-        ('基本情報', {'fields': ['id', 'email', 'kind', 'created_user']}),
+        ('基本情報', {'fields': ['id', 'email', 'kind', 'create_user']}),
         ('有効判定情報', {'fields': [
-            'created_datetime', 'is_used'
+            'create_datetime', 'is_used'
         ]}),
     ]
 
     readonly_fields = [
-        'id', 'created_datetime'
+        'id', 'create_datetime'
     ]
 
     autocomplete_fields = [
-        'created_user'
+        'create_user'
     ]
 
     list_display = [
-        'id', 'email', 'kind', 'created_user', 'created_datetime', 'is_used'
+        'id', 'email', 'kind', 'create_user', 'create_datetime', 'is_used'
     ]
 
     list_filter = [
@@ -62,7 +64,34 @@ class EmailTokenAdmin(admin.ModelAdmin):
     ]
 
     search_fields = [
-        'id', 'email', 'created_user__email'
+        'id', 'email', 'create_user__email'
+    ]
+
+
+@admin.register(models.News)
+class NewsAdmin(admin.ModelAdmin):
+    fields = [
+        'id', 'kind', 'title', 'body', 'update_user', 'update_datetime'
+    ]
+
+    readonly_fields = [
+        'id', 'update_datetime'
+    ]
+
+    autocomplete_fields = [
+        'update_user'
+    ]
+
+    list_display = [
+        'title', 'update_user', 'update_datetime'
+    ]
+
+    list_filter = [
+        'kind', 'update_user'
+    ]
+
+    search_fields = [
+        'title', 'body'
     ]
 
 

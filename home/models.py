@@ -151,7 +151,7 @@ class EmailToken(models.Model):
         # 現在時刻
         datetime_now = timezone.now()
         # トークンの有効期限
-        datetime_exp = self.created_datetime + datetime.timedelta(
+        datetime_exp = self.create_datetime + datetime.timedelta(
             minutes=settings.EMAIL_TOKEN_EXP
         )
 
@@ -179,7 +179,7 @@ class EmailToken(models.Model):
         choices=KindChoices.choices
     )
 
-    created_datetime = models.DateTimeField(
+    create_datetime = models.DateTimeField(
         verbose_name='作成日時',
         auto_now_add=True
     )
@@ -189,7 +189,7 @@ class EmailToken(models.Model):
         default=False
     )
 
-    created_user = models.ForeignKey(
+    create_user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         verbose_name='作成ユーザー',
