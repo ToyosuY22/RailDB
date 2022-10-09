@@ -1,0 +1,40 @@
+{% extends "flame.html" %}
+{% load django_bootstrap5 %}
+{% block subtitle %}
+    {{ object.title }}
+{% endblock subtitle %}
+{% block label %}
+    お知らせ詳細
+{% endblock label %}
+{% block menu_home %}
+    active
+{% endblock menu_home %}
+{% block body %}
+    <a href="{% url 'home:index' %}" class="btn btn-secondary">
+        <i class="fa-solid fa-house"></i>
+        ホームに戻る
+    </a>
+    <div class="card mt-3">
+        <div class="card-header">
+            {% if object.kind == 'important' %}
+                <span class="badge text-bg-danger">
+                    <i class="fa-solid fa-circle-exclamation"></i>
+                    重要
+                </span>
+            {% elif object.kind == 'update' %}
+                <span class="badge text-bg-warning">
+                    <i class="fa-solid fa-circle-up"></i>
+                    更新情報
+                </span>
+            {% elif object.kind == 'ordinary' %}
+                <span class="badge text-bg-primary">
+                    <i class="fa-solid fa-newspaper"></i>
+                    お知らせ
+                </span>
+            {% endif %}
+            <h1 class="mt-1">{{ object.title }}</h1>
+        </div>
+        <div class="card-body">{{ object.body|linebreaksbr|urlize }}</div>
+        <div class="card-footer">最終更新：{{ object.update_datetime }}</div>
+    </div>
+{% endblock body %}

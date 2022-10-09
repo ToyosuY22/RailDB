@@ -179,3 +179,54 @@ class EmailToken(models.Model):
         verbose_name='作成ユーザー',
         null=True, blank=True
     )
+
+
+class News(models.Model):
+    class Meta:
+        verbose_name = 'お知らせ'
+        verbose_name_plural = 'お知らせ'
+        ordering = ['-update_datetime']
+        permissions = [
+            ('raildb_manage_news', 'お知らせ管理'),
+        ]
+
+    def __str__(self):
+        return self.title
+
+    id = models.UUIDField(
+        primary_key=True,
+        default=uuid.uuid4,
+        editable=False
+    )
+
+    class KindChoices(models.TextChoices):
+        IMPORTANT = 'important', '重要'
+        UPDATE = 'update', '更新情報'
+        ORDINARY = 'ordinary', 'お知らせ'
+
+    kind = models.CharField(
+        verbose_name='種別',
+        max_length=10,
+        choices=KindChoices.choices
+    )
+
+    title = models.CharField(
+        verbose_name='タイトル',
+        max_length=50
+    )
+
+    body = models.TextField(
+        verbose_name='本文'
+    )
+
+    update_user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        verbose_name='最終更新者'
+    )
+
+    update_datetime = models.DateTimeField(
+        verbose_name='最終更新日時',
+        auto_now=True
+    )

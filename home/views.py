@@ -14,13 +14,21 @@ from django_datatables_view.base_datatable_view import BaseDatatableView
 from raildb.tasks import send_email
 
 from home import forms
-from home.models import EmailToken
+from home.models import EmailToken, News
 
 
 class IndexView(generic.TemplateView):
     """ホーム
     """
     template_name = 'home/index.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        # お知らせ
+        context['news_list'] = News.objects.all()
+
+        return context
 
 
 class SigninView(auth_views.LoginView):
@@ -704,6 +712,97 @@ class DeleteGroupView(auth_mixins.UserPassesTestMixin, generic.RedirectView):
         )
 
         return super().get(request, *args, **kwargs)
+
+
+class NewsListView(auth_mixins.PermissionRequiredMixin, generic.ListView):
+    """お知らせ管理
+    """
+    permission_required = 'home.raildb_manage_news'
+    template_name = 'news_list.html'
+    model = News
+
+
+class NewsCreateView(auth_mixins.PermissionRequiredMixin, generic.CreateView):
+    """お知らせ作成
+    """
+    permission_required = 'home.raildb_manage_news'
+    template_name = 'home/news_create.html'
+    model = News
+    fields = ['kind', 'title', 'body']
+    success_url = reverse_lazy('home:news_list')
+
+    def form_valid(self, form):
+        # 作成
+        response = super().form_valid(form)
+
+        # 最終更新者を登録
+        self.object.update_user = self.request.user
+        self.object.save()
+
+        # メッセージを追加
+        messages.success(
+            self.request,
+            f'メッセージ "{self.object.title}" を追加しました！'
+        )
+
+        return response
+
+
+class NewsUpdateView(auth_mixins.PermissionRequiredMixin, generic.UpdateView):
+    """お知らせ編集
+    """
+    permission_required = 'home.raildb_manage_news'
+    template_name = 'home/news_update.html'
+    model = News
+    fields = ['kind', 'title', 'body']
+
+    def get_success_url(self):
+        return reverse(
+            'home:news_update', kwargs={'pk': self.object.id})
+
+    def form_valid(self, form):
+        # 更新
+        response = super().form_valid(form)
+
+        # 最終更新者を登録
+        self.object.update_user = self.request.user
+        self.object.save()
+
+        # メッセージを追加
+        messages.success(
+            self.request,
+            f'メッセージ "{self.object.title}" を編集しました！'
+        )
+
+        return response
+
+
+class NewsDeleteView(auth_mixins.PermissionRequiredMixin, generic.DeleteView):
+    """お知らせ削除
+    """
+    permission_required = 'home.raildb_manage_news'
+    template_name = 'home/news_delete.html'
+    model = News
+    success_url = reverse_lazy('home:news_list')
+
+    def form_valid(self, form):
+        # 削除
+        response = super().form_valid(form)
+
+        # メッセージを追加
+        messages.success(
+            self.request,
+            f'メッセージ "{self.object.title}" を削除しました！'
+        )
+
+        return response
+
+
+class NewsDetailView(generic.DetailView):
+    """お知らせ詳細
+    """
+    template_name = 'home/news_detail.html'
+    model = News
 
 
 # JSON

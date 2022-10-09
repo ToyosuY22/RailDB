@@ -1,0 +1,41 @@
+{% extends "flame.html" %}
+{% load django_bootstrap5 %}
+{% block subtitle %}
+    お知らせ追加
+{% endblock subtitle %}
+{% block label %}
+    お知らせ追加
+{% endblock label %}
+{% block menu_manage_news %}
+    active
+{% endblock menu_manage_news %}
+{% block body %}
+    <a href="{% url 'home:news_list' %}" class="btn btn-secondary">
+        <i class="fa-solid fa-newspaper"></i>
+        お知らせ管理に戻る
+    </a>
+    <div class="card mt-3">
+        <div class="card-header">
+            <h1>お知らせ追加</h1>
+        </div>
+        <div class="card-body">
+            <div class="alert alert-info">
+                ホーム画面に表示するお知らせを追加します。
+                <ul class="mb-0">
+                    <li>最終更新者の情報は一般ユーザーに表示されません。</li>
+                    <li>本文内の URL には自動的にリンクが付与されます。</li>
+                </ul>
+            </div>
+            <form method="post" class="form">
+                {% csrf_token %}
+                {% bootstrap_form form %}
+                <div class="text-secondary text-sm">
+                    <p>最終更新者：{{ request.user }}</p>
+                </div>
+                <div class="mt-3 d-grid d-md-flex justify-content-md-end">
+                    {% bootstrap_button button_type="submit" content="追加" %}
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock body %}

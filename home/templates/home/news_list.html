@@ -1,0 +1,104 @@
+{% extends "flame.html" %}
+{% block subtitle %}
+    お知らせ管理
+{% endblock subtitle %}
+{% block label %}
+    お知らせ管理
+{% endblock label %}
+{% block menu_manage_news %}
+    active
+{% endblock menu_manage_news %}
+{% block body %}
+    <div class="card">
+        <div class="card-header">
+            <h1>お知らせ管理</h1>
+        </div>
+        <div class="card-body">
+            <div class="alert alert-info">
+                ホーム画面に表示されるお知らせの内容を管理します。
+                この内容はログインしていないユーザーにも表示されます。
+            </div>
+            <div class="text-end">
+                <a href="{% url 'home:news_create' %}" class="btn btn-success">
+                    <i class="fa-solid fa-plus"></i>
+                    追加
+                </a>
+            </div>
+            <div class="d-block d-xl-none">
+                <!-- スマホ向け表示 -->
+                <table class="table">
+                    <tbody>
+                        {% for news in object_list %}
+                            <tr>
+                                <td>
+                                    <strong>{{ news.update_datetime|date:'Y/m/d' }}</strong>
+                                    {% if news.kind == 'important' %}
+                                        <span class="badge text-bg-danger">
+                                            <i class="fa-solid fa-circle-exclamation"></i>
+                                            重要
+                                        </span>
+                                    {% elif news.kind == 'update' %}
+                                        <span class="badge text-bg-warning">
+                                            <i class="fa-solid fa-circle-up"></i>
+                                            更新情報
+                                        </span>
+                                    {% elif news.kind == 'ordinary' %}
+                                        <span class="badge text-bg-primary">
+                                            <i class="fa-solid fa-newspaper"></i>
+                                            お知らせ
+                                        </span>
+                                    {% endif %}
+                                    <h3 class="mt-2">
+                                        <a href="{% url 'home:news_update' news.id %}">{{ news.title }}</a>
+                                    </h3>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="d-none d-xl-block">
+                <!-- PC 向け表示 -->
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>更新日</th>
+                            <th>種別</th>
+                            <th width="80%">タイトル</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for news in object_list %}
+                            <tr>
+                                <th>{{ news.update_datetime|date:'Y/m/d' }}</th>
+                                <td>
+                                    {% if news.kind == 'important' %}
+                                        <span class="badge text-bg-danger">
+                                            <i class="fa-solid fa-circle-exclamation"></i>
+                                            重要
+                                        </span>
+                                    {% elif news.kind == 'update' %}
+                                        <span class="badge text-bg-warning">
+                                            <i class="fa-solid fa-circle-up"></i>
+                                            更新情報
+                                        </span>
+                                    {% elif news.kind == 'ordinary' %}
+                                        <span class="badge text-bg-primary">
+                                            <i class="fa-solid fa-newspaper"></i>
+                                            お知らせ
+                                        </span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <h3>
+                                        <a href="{% url 'home:news_update' news.id %}">{{ news.title }}</a>
+                                    </h3>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock body %}

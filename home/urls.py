@@ -117,6 +117,31 @@ urlpatterns = [
         name='delete_group'
     ),
     path(
+        'news/list',
+        views.NewsListView.as_view(),
+        name='news_list'
+    ),
+    path(
+        'news/create',
+        views.NewsCreateView.as_view(),
+        name='news_create'
+    ),
+    path(
+        'news/update/<uuid:pk>',
+        views.NewsUpdateView.as_view(),
+        name='news_update'
+    ),
+    path(
+        'news/delete/<uuid:pk>',
+        views.NewsDeleteView.as_view(),
+        name='news_delete'
+    ),
+    path(
+        'news/detail/<uuid:pk>',
+        views.NewsDetailView.as_view(),
+        name='news_detail'
+    ),
+    path(
         'json/user',
         views.JsonUser.as_view(),
         name='json_user'
