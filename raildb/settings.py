@@ -16,7 +16,11 @@ import environ
 
 env = environ.Env(
     # set casting, default value
-    DEBUG=(bool, False)
+    DEBUG=(bool, False),
+    EMAIL_PORT=(int, 25),
+    EMAIL_USE_TLS=(bool, False),
+    EMAIL_USE_SSL=(bool, False),
+
 )
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -176,9 +180,18 @@ LOGIN_URL = 'home:auth_signin'
 
 # Email
 # https://docs.djangoproject.com/en/4.1/topics/email/
-# TODO: DEBUG = False の場合は SMTP で送信
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')
+
+if not DEBUG:
+    EMAIL_HOST = env('EMAIL_HOST')
+    EMAIL_PORT = env('EMAIL_PORT')
+    EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+    EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD ')
+    EMAIL_USE_TLS = env('EMAIL_HOST_PASSWORD')
+    EMAIL_USE_SSL = env('EMAIL_USE_SSL')
+    EMAIL_SSL_KEYFILE = env('EMAIL_SSL_KEYFILE')
+    EMAIL_SSL_CERTFILE = env('EMAIL_SSL_CERTFILE')
 
 
 # Logging
