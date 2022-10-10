@@ -14,6 +14,7 @@ django-environ = "~=0.9"
 django-redis = "~=5.2"
 django-select2 = "~=7.10"
 psycopg2 = "~=2.9"
+python-logging-discord-handler = "~=0.1"
 
 [dev-packages]
 autopep8 = "*"

@@ -7,3 +7,6 @@
 
 # Mac のゴミファイル
 .DS_Store
+
+# ログファイル
+debug.log

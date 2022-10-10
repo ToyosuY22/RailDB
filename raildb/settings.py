@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # third party
+    'discord_logging',
     'django_bootstrap5',
     'django_celery_results',
     'django_select2',
@@ -179,6 +180,43 @@ LOGIN_URL = 'home:auth_signin'
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')
 
+
+# Logging
+# https://docs.djangoproject.com/en/4.1/topics/logging/#disabling-logging-configuration
+if not DEBUG:
+    LOGGING = {
+        'version': 1,
+        'disable_existing_loggers': False,
+        'formatters': {
+            'verbose': {
+                'format':
+                    '{levelname} {asctime} {module} '
+                    '{process:d} {thread:d} {message}',
+                'style': '{',
+            },
+        },
+        'handlers': {
+            'file': {
+                'class': 'logging.handlers.TimedRotatingFileHandler',
+                'level': 'DEBUG',
+                'filename': '/var/log/raildb/debug.log',
+                'when': 'd',
+                'formatter': 'verbose'
+            },
+            'discord': {
+                'class': 'discord_logging.handler.DiscordHandler',
+                'level': 'ERROR',
+                'service_name': 'RailDB',
+                'webhook_url': env('DISCORD_WEBHOOK_LOGGER')
+            }
+        },
+        'loggers': {
+            'django': {
+                'handlers': ['file', 'discord'],
+                'propagate': True,
+            },
+        }
+    }
 
 # Celery
 # https://docs.celeryq.dev/en/stable/django/first-steps-with-django.html
