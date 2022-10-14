@@ -5,8 +5,9 @@
 .env
 .env_db
 
+# ログファイル
+log/
+
 # Mac のゴミファイル
 .DS_Store
 
-# ログファイル
-debug.log

@@ -17,10 +17,8 @@ import environ
 env = environ.Env(
     # set casting, default value
     DEBUG=(bool, False),
-    EMAIL_PORT=(int, 25),
-    EMAIL_USE_TLS=(bool, False),
-    EMAIL_USE_SSL=(bool, False),
-
+    EMAIL_PORT=(int, 587),
+    EMAIL_USE_TLS=(bool, True),
 )
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -31,6 +29,7 @@ environ.Env.read_env(os.path.join(BASE_DIR, 'env', '.env'))
 
 # このサイトの URL
 BASE_URL = env('BASE_URL')
+CSRF_TRUSTED_ORIGINS = [env('CSRF_TRUSTED_ORIGINS')]
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
@@ -184,15 +183,14 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')
 
 if not DEBUG:
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
     EMAIL_HOST = env('EMAIL_HOST')
     EMAIL_PORT = env('EMAIL_PORT')
     EMAIL_HOST_USER = env('EMAIL_HOST_USER')
-    EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD ')
-    EMAIL_USE_TLS = env('EMAIL_HOST_PASSWORD')
-    EMAIL_USE_SSL = env('EMAIL_USE_SSL')
+    EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+    EMAIL_USE_TLS = env('EMAIL_USE_TLS')
     EMAIL_SSL_KEYFILE = env('EMAIL_SSL_KEYFILE')
     EMAIL_SSL_CERTFILE = env('EMAIL_SSL_CERTFILE')
-
 
 # Logging
 # https://docs.djangoproject.com/en/4.1/topics/logging/#disabling-logging-configuration

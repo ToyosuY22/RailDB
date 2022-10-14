@@ -54,4 +54,4 @@ def send_email_async(subject, to, body):
         to=[to],
         body=body
     )
-    email.send()
+    email.send(fail_silently=False)

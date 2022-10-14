@@ -23,7 +23,7 @@
           crossorigin="anonymous"/>
     <!-- theme stylesheet-->
     <link rel="stylesheet"
-          href="{% static 'css/style.sea.min.css' %}"
+          href="{% static 'css/style.blue.min.css' %}"
           id="theme-stylesheet"/>
     <!-- Custom stylesheet - for your changes-->
     <link rel="stylesheet" href="{% static 'css/custom.css' %}" />
@@ -46,13 +46,10 @@
                     <div class="navbar-holder d-flex align-items-center justify-content-between w-100">
                         <!-- Navbar Header-->
                         <div class="navbar-header">
-                            <!-- Navbar Brand --><a class="navbar-brand d-none d-sm-inline-block"
+                            <!-- Navbar Brand --><a class="navbar-brand d-inline-block"
    href="{% url 'home:index' %}">
-                            <div class="brand-text d-none d-lg-inline-block">
+                            <div class="brand-text d-inline-block">
                                 <span>Rail</span><strong>DB</strong>
-                            </div>
-                            <div class="brand-text d-none d-sm-inline-block d-lg-none">
-                                <strong>DB</strong>
                             </div>
                         </a>
                         <!-- Toggle Button--><a class="menu-btn active" id="toggle-btn" href="#"></a>
@@ -66,12 +63,12 @@
                                    data-bs-toggle="modal"
                                    data-bs-target="#signout_modal"
                                    href="#">
-                                    <span class="d-none d-sm-inline">ログアウト</span>
+                                    <span class="d-inline">ログアウト</span>
                                     <i class="fa-solid fa-right-from-bracket"></i>
                                 </a>
                             {% else %}
                                 <a class="nav-link text-white" href="{% url 'home:auth_signin' %}">
-                                    <span class="d-none d-sm-inline">ログイン／新規登録</span>
+                                    <span class="d-inline">ログイン／新規登録</span>
                                     <i class="fa-solid fa-right-to-bracket"></i>
                                 </a>
                             {% endif %}

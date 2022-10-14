@@ -9,6 +9,10 @@
     active
 {% endblock menu_manage_news %}
 {% block body %}
+    <a href="{% url 'home:index' %}" class="btn btn-secondary mb-4">
+        <i class="fa-solid fa-house"></i>
+        ホームに戻る
+    </a>
     <div class="card">
         <div class="card-header">
             <h1>お知らせ管理</h1>
