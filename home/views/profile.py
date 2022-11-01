@@ -4,9 +4,8 @@
 """
 
 from django.contrib import messages
-from django.contrib.auth import get_user_model, login
+from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth.views import PasswordChangeView
 from django.core.exceptions import ValidationError
 from django.db import transaction

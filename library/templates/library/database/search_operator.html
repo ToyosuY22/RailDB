@@ -1,0 +1,56 @@
+{% extends "flame.html" %}
+{% load static %}
+{% block subtitle %}
+    データベース
+{% endblock subtitle %}
+{% block label %}
+    データベース
+{% endblock label %}
+{% block menu_database %}
+    active
+{% endblock menu_database %}
+{% block extrahead %}
+    <link rel="stylesheet"
+          type="text/css"
+          href="https://cdn.datatables.net/v/dt/jq-3.6.0/dt-1.12.1/datatables.min.css"/>
+{% endblock extrahead %}
+{% block body %}
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a href="{% url 'library:database_search_operator' %}"
+               class="nav-link active"
+               aria-current="page">事業者検索</a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'library:database_search_line' %}" class="nav-link">路線検索</a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'library:database_search_station' %}" class="nav-link">駅検索</a>
+        </li>
+    </ul>
+    <div class="tab-content" id="databaseTabContent">
+        <div class="card mt-4 mt-xl-0">
+            <div class="card-header">
+                <h1>事業者検索</h1>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info" role="alert">すべての事業者の情報を表示します。</div>
+                <div class="table-responsive text-nowrap">
+                    <table class="table" id="datatable_railway">
+                        <thead>
+                            <tr>
+                                <th>名称</th>
+                                <th>名称かな</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock body %}
+{% block extrascript %}
+    <script type="text/javascript" src="https://cdn.datatables.net/v/dt/jq-3.6.0/dt-1.12.1/datatables.min.js"></script>
+    <script type="text/javascript" src="{% static 'library/database/search_operator.js' %}"></script>
+{% endblock extrascript %}

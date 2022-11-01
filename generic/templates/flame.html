@@ -46,8 +46,7 @@
                     <div class="navbar-holder d-flex align-items-center justify-content-between w-100">
                         <!-- Navbar Header-->
                         <div class="navbar-header">
-                            <!-- Navbar Brand --><a class="navbar-brand d-inline-block"
-   href="{% url 'home:index' %}">
+                            <!-- Navbar Brand --><a class="navbar-brand d-inline-block" href="{% url 'home:index' %}">
                             <div class="brand-text d-inline-block">
                                 <span>Rail</span><strong>DB</strong>
                             </div>
@@ -112,6 +111,13 @@
                         <span class="ps-2">ホーム</span>
                     </a>
                 </li>
+                <li class="sidebar-item{% block menu_database %}{% endblock menu_database %}">
+                    <a class="sidebar-link"
+                       href="{% url 'library:database_search_operator' %}">
+                        <i class="fa-solid fa-train"></i>
+                        <span class="ps-2">データベース</span>
+                    </a>
+                </li>
                 {% if request.user.is_authenticated %}
                     <li class="sidebar-item{% block menu_profile %}{% endblock menu_profile %}">
                         <a class="sidebar-link" href="{% url 'home:profile' %}">
@@ -150,6 +156,12 @@
                             <a class="sidebar-link" href="{% url 'home:permission_management' %}">
                                 <i class="fa-solid fa-key"></i>
                                 <span class="ps-2">権限管理</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item{% block menu_csv %}{% endblock menu_csv %}">
+                            <a class="sidebar-link" href="{% url 'library:csv_upload' 'operator' %}">
+                                <i class="fa-solid fa-file-csv"></i>
+                                <span class="ps-2">CSV処理</span>
                             </a>
                         </li>
                         <li class="sidebar-item">

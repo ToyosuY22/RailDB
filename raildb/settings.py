@@ -58,8 +58,10 @@ INSTALLED_APPS = [
     'django_bootstrap5',
     'django_celery_results',
     'django_select2',
+    'ordered_model',
     # raildb
     'home',
+    'library',
 ]
 
 MIDDLEWARE = [
