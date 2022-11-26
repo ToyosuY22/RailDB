@@ -81,8 +81,7 @@ class EmailUpdateView(LoginRequiredMixin,  generic.RedirectView):
             user.save()
 
             # トークンを無効化
-            email_token.is_used = True
-            email_token.save()
+            email_token.use()
 
         # Email を送信
         send_email(
