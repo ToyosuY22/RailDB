@@ -2,9 +2,12 @@
 {% block subtitle %}
     403 Forbidden
 {% endblock subtitle %}
-{% block label %}
-    <span class="text-danger">403 Forbidden</span>
-{% endblock label %}
+{% block description %}
+    403 Forbidden
+{% endblock description %}
+{% block breadcrumb %}
+    <li class="breadcrumb-item active" aria-current="page">403 Forbidden</li>
+{% endblock breadcrumb %}
 {% block body %}
     <a href="{% url 'home:index' %}" class="btn btn-secondary mb-4">
         <i class="fa-solid fa-house"></i>

@@ -3,17 +3,25 @@
 {% block subtitle %}
     ユーザー削除確認
 {% endblock subtitle %}
-{% block label %}
-    <span class="text-danger">ユーザー削除確認</span>
-{% endblock label %}
+{% block description %}
+    アカウントを削除します。
+{% endblock description %}
+{% block breadcrumb %}
+    <li class="breadcrumb-item">
+        <a href="{% url 'home:index' %}">ホーム</a>
+    </li>
+    <li class="breadcrumb-item">
+        <a href="{% url 'home:user_list' %}">ユーザー管理</a>
+    </li>
+    <li class="breadcrumb-item">
+        <a href="{% url 'home:user_update' object.pk %}">{{ object }}</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">アカウント削除</li>
+{% endblock breadcrumb %}
 {% block menu_manage_user %}
     active
 {% endblock menu_manage_user %}
 {% block body %}
-    <a href="{% url 'home:user_list' %}" class="btn btn-secondary">
-        <i class="fa-solid fa-users"></i>
-        ユーザー管理に戻る
-    </a>
     <div class="card mt-3">
         <div class="card-header">
             <h1>ユーザー削除確認：{{ object }}</h1>

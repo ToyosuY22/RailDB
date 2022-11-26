@@ -3,9 +3,15 @@
 {% block subtitle %}
     データベース
 {% endblock subtitle %}
-{% block label %}
-    データベース
-{% endblock label %}
+{% block description %}
+    鉄道に関するデータを閲覧します。
+{% endblock description %}
+{% block breadcrumb %}
+    <li class="breadcrumb-item">
+        <a href="{% url 'home:index' %}">ホーム</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">データベース</li>
+{% endblock breadcrumb %}
 {% block menu_database %}
     active
 {% endblock menu_database %}

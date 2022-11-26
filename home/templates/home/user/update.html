@@ -3,17 +3,22 @@
 {% block subtitle %}
     ユーザー編集
 {% endblock subtitle %}
-{% block label %}
-    ユーザー編集
-{% endblock label %}
+{% block description %}
+    {{ object }}
+{% endblock description %}
+{% block breadcrumb %}
+    <li class="breadcrumb-item">
+        <a href="{% url 'home:index' %}">ホーム</a>
+    </li>
+    <li class="breadcrumb-item">
+        <a href="{% url 'home:user_list' %}">ユーザー管理</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">{{ object }}</li>
+{% endblock breadcrumb %}
 {% block menu_manage_user %}
     active
 {% endblock menu_manage_user %}
 {% block body %}
-    <a href="{% url 'home:user_list' %}" class="btn btn-secondary">
-        <i class="fa-solid fa-key"></i>
-        ユーザー管理に戻る
-    </a>
     <div class="card mt-3">
         <div class="card-header">
             <h1>ユーザー編集</h1>

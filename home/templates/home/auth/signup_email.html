@@ -3,14 +3,20 @@
 {% block subtitle %}
     アカウント新規登録
 {% endblock subtitle %}
-{% block label %}
-    アカウント新規登録
-{% endblock label %}
+{% block description %}
+アカウントを新規登録します。
+あなたのEメールアドレスを入力してください。
+{% endblock description %}
+{% block breadcrumb %}
+    <li class="breadcrumb-item">
+        <a href="{% url 'home:index' %}">ホーム</a>
+    </li>
+    <li class="breadcrumb-item">
+        <a href="{% url 'home:auth_signin' %}">ログイン</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">アカウント新規登録</li>
+{% endblock breadcrumb %}
 {% block body %}
-    <a href="{% url 'home:auth_signin' %}" class="btn btn-secondary">
-        <i class="fa-solid fa-right-from-bracket"></i>
-        ログイン画面に戻る
-    </a>
     <div class="card mt-3">
         <div class="card-body">
             <div class="alert alert-info" role="alert">

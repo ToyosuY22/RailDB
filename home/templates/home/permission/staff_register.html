@@ -1,26 +1,30 @@
 {% extends "flame.html" %}
 {% load django_bootstrap5 %}
 {% block subtitle %}
-    スタッフ追加
+    スタッフ登録
 {% endblock subtitle %}
 {% block extrahead %}
     {{ form.media.css }}
 {% endblock extrahead %}
-{% block label %}
-    スタッフ追加
-{% endblock label %}
+{% block description %}
+    {{ object.name }}
+{% endblock description %}
+{% block breadcrumb %}
+    <li class="breadcrumb-item">
+        <a href="{% url 'home:index' %}">ホーム</a>
+    </li>
+    <li class="breadcrumb-item">
+        <a href="{% url 'home:permission_management' %}">権限管理</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">スタッフ登録</li>
+{% endblock breadcrumb %}
 {% block menu_manage_permission %}
     active
 {% endblock menu_manage_permission %}
 {% block body %}
-    <a href="{% url 'home:permission_management' %}"
-       class="btn btn-secondary">
-        <i class="fa-solid fa-key"></i>
-        権限管理に戻る
-    </a>
     <div class="card mt-3">
         <div class="card-header">
-            <h1>スタッフ追加</h1>
+            <h1>スタッフ登録</h1>
         </div>
         <div class="card-body">
             <div class="alert alert-info">スタッフ権限を付与したいユーザーのメールアドレスを入力してください。</div>

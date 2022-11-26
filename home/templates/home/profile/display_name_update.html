@@ -4,17 +4,22 @@
 {% block subtitle %}
     表示名変更
 {% endblock subtitle %}
-{% block label %}
-    表示名変更
-{% endblock label %}
+{% block description %}
+    表示名を変更します。
+{% endblock description %}
+{% block breadcrumb %}
+    <li class="breadcrumb-item">
+        <a href="{% url 'home:index' %}">ホーム</a>
+    </li>
+    <li class="breadcrumb-item">
+        <a href="{% url 'home:profile' %}">プロフィール</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">表示名変更</li>
+{% endblock breadcrumb %}
 {% block menu_profile %}
     active
 {% endblock menu_profile %}
 {% block body %}
-    <a href="{% url 'home:profile' %}" class="btn btn-secondary">
-        <i class="fa-solid fa-user"></i>
-        プロフィールに戻る
-    </a>
     <div class="card mt-3">
         <div class="card-body">
             <div class="alert alert-info" role="alert">表示名を変更します。新しい表示名を入力してください。</div>

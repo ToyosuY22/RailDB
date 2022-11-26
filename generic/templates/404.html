@@ -1,10 +1,13 @@
 {% extends "flame.html" %}
 {% block subtitle %}
-    403 Forbidden
+    404 Not Found
 {% endblock subtitle %}
-{% block label %}
-    <span class="text-danger">404 Not Found</span>
-{% endblock label %}
+{% block description %}
+404 Not Found
+{% endblock description %}
+{% block breadcrumb %}
+    <li class="breadcrumb-item active" aria-current="page">404 Not Found</li>
+{% endblock breadcrumb %}
 {% block body %}
     <a href="{% url 'home:index' %}" class="btn btn-secondary mb-4">
         <i class="fa-solid fa-house"></i>

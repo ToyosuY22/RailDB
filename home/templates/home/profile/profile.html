@@ -2,17 +2,19 @@
 {% block subtitle %}
     プロフィール
 {% endblock subtitle %}
-{% block label %}
-    プロフィール
-{% endblock label %}
+{% block description %}
+    プロフィールを表示します。
+{% endblock description %}
+{% block breadcrumb %}
+    <li class="breadcrumb-item">
+        <a href="{% url 'home:index' %}">ホーム</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">プロフィール</li>
+{% endblock breadcrumb %}
 {% block menu_profile %}
     active
 {% endblock menu_profile %}
 {% block body %}
-    <a href="{% url 'home:index' %}" class="btn btn-secondary">
-        <i class="fa-solid fa-house"></i>
-        ホームに戻る
-    </a>
     <div class="card mt-3">
         <div class="card-header">
             <h1>{{ request.user.display_name }} さんのプロフィール</h1>

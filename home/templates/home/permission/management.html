@@ -3,17 +3,19 @@
 {% block subtitle %}
     権限管理
 {% endblock subtitle %}
-{% block label %}
-    権限管理
-{% endblock label %}
+{% block description %}
+    スタッフ／グループ管理
+{% endblock description %}
+{% block breadcrumb %}
+    <li class="breadcrumb-item">
+        <a href="{% url 'home:index' %}">ホーム</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">権限管理</li>
+{% endblock breadcrumb %}
 {% block menu_manage_permission %}
     active
 {% endblock menu_manage_permission %}
 {% block body %}
-    <a href="{% url 'home:index' %}" class="btn btn-secondary">
-        <i class="fa-solid fa-house"></i>
-        ホームに戻る
-    </a>
     <div class="card mt-3">
         <div class="card-header">
             <h1>スタッフ管理</h1>

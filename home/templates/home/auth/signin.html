@@ -4,14 +4,17 @@
 {% block subtitle %}
     ログイン
 {% endblock subtitle %}
-{% block label %}
-    ログイン
-{% endblock label %}
+{% block description %}
+    登録したEメールアドレスとパスワードを入力してください。
+    まだアカウントを作成していない方は「アカウント作成」を選択してください。
+{% endblock description %}
+{% block breadcrumb %}
+    <li class="breadcrumb-item">
+        <a href="{% url 'home:index' %}">ホーム</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">ログイン</li>
+{% endblock breadcrumb %}
 {% block body %}
-    <a href="{% url 'home:index' %}" class="btn btn-secondary">
-        <i class="fa-solid fa-house"></i>
-        ホームに戻る
-    </a>
     <div class="card mt-3">
         <div class="card-body">
             <div class="alert alert-info" role="alert">
@@ -33,8 +36,7 @@
             </form>
         </div>
         <div class="card-footer d-grid d-md-flex justify-content-md-end">
-            <a href="{% url 'home:auth_signup_email' %}"
-               class="btn btn-warning">アカウント新規登録</a>
+            <a href="{% url 'home:auth_signup_email' %}" class="btn btn-warning">アカウント新規登録</a>
         </div>
     </div>
 {% endblock body %}

@@ -3,17 +3,25 @@
 {% block subtitle %}
     お知らせ削除確認
 {% endblock subtitle %}
-{% block label %}
-    <span class="text-danger">お知らせ削除確認</span>
-{% endblock label %}
+{% block description %}
+    {{ object.body }}
+{% endblock description %}
+{% block breadcrumb %}
+    <li class="breadcrumb-item">
+        <a href="{% url 'home:index' %}">ホーム</a>
+    </li>
+    <li class="breadcrumb-item">
+        <a href="{% url 'home:news_list' %}">お知らせ管理</a>
+    </li>
+    <li class="breadcrumb-item">
+        <a href="{% url 'home:news_update' object.id %}">{{ object.title }}</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">削除確認</li>
+{% endblock breadcrumb %}
 {% block menu_manage_news %}
     active
 {% endblock menu_manage_news %}
 {% block body %}
-    <a href="{% url 'home:news_list' %}" class="btn btn-secondary">
-        <i class="fa-solid fa-newspaper"></i>
-        お知らせ管理に戻る
-    </a>
     <div class="card mt-3">
         <div class="card-header">
             <h1>お知らせ削除確認：{{ object.title }}</h1>

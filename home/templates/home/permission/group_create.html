@@ -6,18 +6,22 @@
 {% block subtitle %}
     グループ追加
 {% endblock subtitle %}
-{% block label %}
-    グループ追加
-{% endblock label %}
+{% block description %}
+スタッフの権限を管理するためのグループを作成します。
+{% endblock description %}
+{% block breadcrumb %}
+    <li class="breadcrumb-item">
+        <a href="{% url 'home:index' %}">ホーム</a>
+    </li>
+    <li class="breadcrumb-item">
+        <a href="{% url 'home:permission_management' %}">権限管理</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">グループ追加</li>
+{% endblock breadcrumb %}
 {% block menu_manage_permission %}
     active
 {% endblock menu_manage_permission %}
 {% block body %}
-    <a href="{% url 'home:permission_management' %}"
-       class="btn btn-secondary">
-        <i class="fa-solid fa-key"></i>
-        権限管理に戻る
-    </a>
     <div class="card mt-3">
         <div class="card-header">
             <h1>グループ追加</h1>

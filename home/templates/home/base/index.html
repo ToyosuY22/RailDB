@@ -2,9 +2,12 @@
 {% block subtitle %}
     ホーム
 {% endblock subtitle %}
-{% block label %}
-    ホーム
-{% endblock label %}
+{% block description %}
+    RailDB は、鉄道に関するあらゆるデータを閲覧できるサービスです。乗りつぶしの記録をつけることもできます。
+{% endblock description %}
+{% block breadcrumb %}
+    <li class="breadcrumb-item active" aria-current="page">ホーム</li>
+{% endblock breadcrumb %}
 {% block menu_home %}
     active
 {% endblock menu_home %}
@@ -14,11 +17,7 @@
             <h1>ようこそ RailDB へ！</h1>
         </div>
         <div class="card-body">
-            <p class="card-text">
-                RailDB は、乗りつぶしファンのための鉄道乗車記録サービスです。
-                日本全国の鉄道／軌道等の事業者／路線／駅データを閲覧することができます。
-                また、アカウントを作成してログインすると、乗りつぶしの記録をつけることができます。
-            </p>
+            <p class="card-text">RailDB は、鉄道に関するあらゆるデータを閲覧できるサービスです。乗りつぶしの記録をつけることもできます。</p>
         </div>
         {% if not request.user.is_authenticated %}
             <div class="card-footer text-end">
@@ -30,17 +29,19 @@
         {% endif %}
     </div>
     <!--  スマホ向けメニュー -->
+    <div class="row mt-2">
+        <div class="col">
+            <div class="d-grid d-xl-none">
+                <a href="{% url 'library:database_search_operator' %}"
+                   class="btn btn-outline-primary">
+                    <i class="fa-solid fa-train fa-3x my-2"></i>
+                    <p class="my-0">データベース</p>
+                </a>
+            </div>
+        </div>
+    </div>
     {% if request.user.is_authenticated %}
         <div class="row mt-2">
-            <div class="col">
-                <div class="d-grid d-xl-none">
-                    <a href="{% url 'library:database_search_operator' %}"
-                       class="btn btn-outline-primary">
-                        <i class="fa-solid fa-train fa-3x my-2"></i>
-                        <p class="my-0">データベース</p>
-                    </a>
-                </div>
-            </div>
             <div class="col">
                 <div class="d-grid d-xl-none">
                     <a href="{% url 'home:profile' %}" class="btn btn-outline-primary">

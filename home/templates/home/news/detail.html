@@ -3,17 +3,19 @@
 {% block subtitle %}
     {{ object.title }}
 {% endblock subtitle %}
-{% block label %}
-    お知らせ詳細
-{% endblock label %}
+{% block description %}
+    {{ object.body }}
+{% endblock description %}
+{% block breadcrumb %}
+    <li class="breadcrumb-item">
+        <a href="{% url 'home:index' %}">ホーム</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">{{ object.title }}</li>
+{% endblock breadcrumb %}
 {% block menu_home %}
     active
 {% endblock menu_home %}
 {% block body %}
-    <a href="{% url 'home:index' %}" class="btn btn-secondary">
-        <i class="fa-solid fa-house"></i>
-        ホームに戻る
-    </a>
     <div class="card mt-3">
         <div class="card-header">
             {% if object.kind == 'important' %}

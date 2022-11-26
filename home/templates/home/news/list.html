@@ -2,17 +2,19 @@
 {% block subtitle %}
     お知らせ管理
 {% endblock subtitle %}
-{% block label %}
-    お知らせ管理
-{% endblock label %}
+{% block description %}
+    ホーム画面に表示されるお知らせの内容を管理します。
+{% endblock description %}
+{% block breadcrumb %}
+    <li class="breadcrumb-item">
+        <a href="{% url 'home:index' %}">ホーム</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">お知らせ管理</li>
+{% endblock breadcrumb %}
 {% block menu_manage_news %}
     active
 {% endblock menu_manage_news %}
 {% block body %}
-    <a href="{% url 'home:index' %}" class="btn btn-secondary mb-4">
-        <i class="fa-solid fa-house"></i>
-        ホームに戻る
-    </a>
     <div class="card">
         <div class="card-header">
             <h1>お知らせ管理</h1>

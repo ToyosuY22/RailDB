@@ -2,9 +2,12 @@
 {% block subtitle %}
     500 Internal Server Error
 {% endblock subtitle %}
-{% block label %}
-    <span class="text-danger">500 Internal Server Error</span>
-{% endblock label %}
+{% block description %}
+    500 Internal Server Error
+{% endblock description %}
+{% block breadcrumb %}
+    <li class="breadcrumb-item active" aria-current="page">500 Internal Server Error</li>
+{% endblock breadcrumb %}
 {% block body %}
     <a href="{% url 'home:index' %}" class="btn btn-secondary mb-4">
         <i class="fa-solid fa-house"></i>
