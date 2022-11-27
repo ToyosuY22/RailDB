@@ -43,7 +43,7 @@ $(document).ready(function () {
                 "targets": [11],
                 "render":
                     function (data) {
-                        return `<a href="/user/update/${data}" class="btn btn-primary btn-sm"><i class="fa-solid fa-eye"></i> 詳細</a>`
+                        return `<a href="/library/database/detail_line/${data}" class="btn btn-primary btn-sm"><i class="fa-solid fa-eye"></i> 詳細</a>`
                     },
                 "searchable": false, "orderable": false
             },

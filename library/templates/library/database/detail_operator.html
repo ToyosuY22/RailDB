@@ -1,0 +1,85 @@
+{% extends "flame.html" %}
+{% load static %}
+{% load raildb_tags %}
+{% block subtitle %}
+    {{ object }}
+{% endblock subtitle %}
+{% block description %}
+    {{ object }} の詳細情報を表示します。
+{% endblock description %}
+{% block breadcrumb %}
+    <li class="breadcrumb-item">
+        <a href="{% url 'home:index' %}">ホーム</a>
+    </li>
+    <li class="breadcrumb-item">
+        <a href="{% url 'library:database_search_operator' %}">データベース</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">{{ object }}</li>
+{% endblock breadcrumb %}
+{% block menu_database %}
+    active
+{% endblock menu_database %}
+{% block body %}
+    <div class="card mt-4 mt-xl-0">
+        <div class="card-header">
+            <h1>{{ object }}</h1>
+        </div>
+        <div class="card-body">
+            <h2>基本情報</h2>
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <th>名称</th>
+                        <td>{{ object.name }}</td>
+                    </tr>
+                    <tr>
+                        <th>名称かな</th>
+                        <td>{{ object.name_kana }}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <h2>路線情報</h2>
+            {% for group in line_list %}
+                <h3>
+                    {{ group.kind.label }}　{{ group.status.label }}　{{ group.category.label }}　<span class="text-primary">{{ group.distance_sum|get_actual_distance }}km</span>
+                </h3>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>名称</th>
+                            <th>名称かな</th>
+                            <th>始点</th>
+                            <th>経由点</th>
+                            <th>終点</th>
+                            <th>運輸局等</th>
+                            <th>営業キロ</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for line in group.queryset %}
+                            <tr>
+                                <td>{{ line.name }}</td>
+                                <td>{{ line.name_kana }}</td>
+                                <td>{{ line.start }}</td>
+                                <td>
+                                    {% if line.via %}
+                                        {{ line.via }}
+                                    {% else %}
+                                        ─
+                                    {% endif %}
+                                </td>
+                                <td>{{ line.end }}</td>
+                                <td>{{ line.get_area_display }}</td>
+                                <td>{{ line.distance|get_actual_distance }}</td>
+                                <td>
+                                    <a href="{% url 'library:database_detail_line' line.pk %}" class="btn btn-primary btn-sm"><i class="fa-solid fa-eye"></i> 詳細</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock body %}

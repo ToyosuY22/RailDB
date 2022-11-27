@@ -1,0 +1,59 @@
+{% extends "flame.html" %}
+{% load static %}
+{% load raildb_tags %}
+{% block subtitle %}
+    {{ object }}
+{% endblock subtitle %}
+{% block description %}
+    {{ object }} の詳細情報を表示します。
+{% endblock description %}
+{% block breadcrumb %}
+    <li class="breadcrumb-item">
+        <a href="{% url 'home:index' %}">ホーム</a>
+    </li>
+    <li class="breadcrumb-item">
+        <a href="{% url 'library:database_search_operator' %}">データベース</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">{{ object }}</li>
+{% endblock breadcrumb %}
+{% block menu_database %}
+    active
+{% endblock menu_database %}
+{% block body %}
+    <div class="card mt-4 mt-xl-0">
+        <div class="card-header">
+            <h1>{{ object }}</h1>
+        </div>
+        <div class="card-body">
+            <h2>基本情報</h2>
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <th>名称</th>
+                        <td>{{ object.name }}</td>
+                    </tr>
+                    <tr>
+                        <th>名称かな</th>
+                        <td>{{ object.name_kana }}</td>
+                    </tr>
+                    <tr>
+                        <th>路線</th>
+                        <td><a href="{% url 'library:database_detail_line' object.line.pk %}">{{ object.line }}</a></td>
+                    </tr>
+                    <tr>
+                        <th>キロ程</th>
+                        <td>{{ object.distance|get_actual_distance }}</td>
+                    </tr>
+                    <tr>
+                        <th>特記事項</th>
+                        <td>{{ object.label }}</td>
+                    </tr>
+                    <tr>
+                        <th>備考</th>
+                        <td>{{ object.note }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock body %}

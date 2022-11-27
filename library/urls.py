@@ -33,6 +33,21 @@ urlpatterns = [
         views.database.SearchStationView.as_view(),
         name='database_search_station'
     ),
+    path(
+        'database/detail_operator/<uuid:pk>',
+        views.database.DetailOperatorView.as_view(),
+        name='database_detail_operator'
+    ),
+    path(
+        'database/detail_line/<uuid:pk>',
+        views.database.DetailLineView.as_view(),
+        name='database_detail_line'
+    ),
+    path(
+        'database/detail_station/<uuid:pk>',
+        views.database.DetailStationView.as_view(),
+        name='database_detail_station'
+    ),
     # views/json.py
     path(
         'json/operator',
