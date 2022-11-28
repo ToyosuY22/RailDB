@@ -90,37 +90,6 @@ urlpatterns = [
         views.user.DeleteView.as_view(),
         name='user_delete'
     ),
-    # views/permission.py
-    path(
-        'permission/management',
-        views.permission.ManagementView.as_view(),
-        name='permission_management'
-    ),
-    path(
-        'permission/staff_register',
-        views.permission.StaffRegisterView.as_view(),
-        name='permission_register_staff'
-    ),
-    path(
-        'permission/staff_unregister/<uuid:pk>',
-        views.permission.StaffUnregisterView.as_view(),
-        name='permission_unregister_staff'
-    ),
-    path(
-        'permission/group_create',
-        views.permission.GroupCreateView.as_view(),
-        name='permission_create_group'
-    ),
-    path(
-        'permission/group_update/<int:pk>',
-        views.permission.GroupUpdateView.as_view(),
-        name='permission_update_group'
-    ),
-    path(
-        'permission/group_delete/<int:pk>',
-        views.permission.GroupDeleteView.as_view(),
-        name='permission_delete_group'
-    ),
     # views/news.py
     path(
         'news/list',

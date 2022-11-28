@@ -6,7 +6,6 @@
 {% endblock subtitle %}
 {% block description %}
     登録したEメールアドレスとパスワードを入力してください。
-    まだアカウントを作成していない方は「アカウント作成」を選択してください。
 {% endblock description %}
 {% block breadcrumb %}
     <li class="breadcrumb-item">
@@ -19,7 +18,9 @@
         <div class="card-body">
             <div class="alert alert-info" role="alert">
                 登録したEメールアドレスとパスワードを入力してください。
+                {% comment "一般ユーザー向け機能解放後に表示" %}
                 まだアカウントを作成していない方は「アカウント作成」を選択してください。
+                {% endcomment %}
             </div>
             <form method="post" class="form">
                 {% csrf_token %}
@@ -35,9 +36,11 @@
                 </div>
             </form>
         </div>
+        {% comment "一般ユーザー向け機能解放後に表示" %}
         <div class="card-footer d-grid d-md-flex justify-content-md-end">
             <a href="{% url 'home:auth_signup_email' %}" class="btn btn-warning">アカウント新規登録</a>
         </div>
+        {% endcomment %}
     </div>
 {% endblock body %}
 {% block extrascript %}

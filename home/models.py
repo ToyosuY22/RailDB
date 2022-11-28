@@ -47,9 +47,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     class Meta:
         verbose_name = 'ユーザー'
         verbose_name_plural = 'ユーザー'
-        permissions = [
-            ('raildb_manage_user', 'ユーザー管理'),
-        ]
         ordering = ['-is_superuser', '-is_staff']
 
     def __str__(self):
@@ -202,9 +199,6 @@ class News(models.Model):
         verbose_name = 'お知らせ'
         verbose_name_plural = 'お知らせ'
         ordering = ['-update_datetime']
-        permissions = [
-            ('raildb_manage_news', 'お知らせ管理'),
-        ]
 
     def __str__(self):
         return self.title

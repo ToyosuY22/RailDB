@@ -16,8 +16,8 @@ $(document).ready(function () {
             "searchable": false, "orderable": false
         },
         {
-            target: 3,
-            visible: false,
+            "target": 3,
+            "visible": false,
         }]
     });
 });

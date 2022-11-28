@@ -88,8 +88,6 @@
                         <p class="fw-light mb-0 lh-1">
                             {% if request.user.is_superuser %}
                                 <span class="badge text-bg-danger">システム管理者</span>
-                            {% elif request.user.is_staff %}
-                                <span class="badge text-bg-warning">スタッフ</span>
                             {% else %}
                                 <span class="badge text-bg-primary">ログイン済</span>
                             {% endif %}
@@ -134,34 +132,19 @@
                 {% endif %}
             </ul>
             {% if request.user.is_authenticated %}
-                {% if request.user.is_staff %}
-                    <span class="text-uppercase text-gray-400 text-xs letter-spacing-0 mx-3 px-2 heading">スタッフ向け</span>
-                    <ul class="list-unstyled pt-4">
-                        {% if perms.home.raildb_manage_news %}
-                            <li class="sidebar-item{% block menu_manage_news %}{% endblock menu_manage_news %}">
-                                <a class="sidebar-link" href="{% url 'home:news_list' %}">
-                                    <i class="fa-solid fa-newspaper"></i>
-                                    <span class="ps-2">お知らせ管理</span>
-                                </a>
-                            </li>
-                        {% endif %}
-                        {% if perms.home.raildb_manage_user %}
-                            <li class="sidebar-item{% block menu_manage_user %}{% endblock menu_manage_user %}">
-                                <a class="sidebar-link" href="{% url 'home:user_list' %}">
-                                    <i class="fa-solid fa-users"></i>
-                                    <span class="ps-2">ユーザー管理</span>
-                                </a>
-                            </li>
-                        {% endif %}
-                    </ul>
-                {% endif %}
                 {% if request.user.is_superuser %}
                     <span class="text-uppercase text-gray-400 text-xs letter-spacing-0 mx-3 px-2 heading">システム管理者向け</span>
                     <ul class="list-unstyled pt-4">
-                        <li class="sidebar-item{% block menu_manage_permission %}{% endblock menu_manage_permission %}">
-                            <a class="sidebar-link" href="{% url 'home:permission_management' %}">
-                                <i class="fa-solid fa-key"></i>
-                                <span class="ps-2">権限管理</span>
+                        <li class="sidebar-item{% block menu_manage_news %}{% endblock menu_manage_news %}">
+                            <a class="sidebar-link" href="{% url 'home:news_list' %}">
+                                <i class="fa-solid fa-newspaper"></i>
+                                <span class="ps-2">お知らせ管理</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item{% block menu_manage_user %}{% endblock menu_manage_user %}">
+                            <a class="sidebar-link" href="{% url 'home:user_list' %}">
+                                <i class="fa-solid fa-users"></i>
+                                <span class="ps-2">ユーザー管理</span>
                             </a>
                         </li>
                         <li class="sidebar-item{% block menu_csv %}{% endblock menu_csv %}">
@@ -209,6 +192,10 @@
                             <p class="mb-0">
                                 <a href="https://twitter.com/ToyosuY22"
                                    class="text-white text-decoration-none">Toyosu Y-22</a>
+                                <!-- 一般ユーザー向け機能解放まで表示 -->
+                                {% if not request.user.is_authenticated %}
+                                    <a href={% url 'home:auth_signin' %}>管理者ログイン</a>
+                                {% endif %}
                             </p>
                         </div>
                         <div class="col-sm-6 text-sm-end">

@@ -4,17 +4,16 @@
 """
 
 from django.contrib import messages
-from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.urls import reverse, reverse_lazy
 from django.views import generic
+
 from home.models import News
+from raildb.mixins import SuperUserOnlyMixin
 
 
-class ListView(PermissionRequiredMixin, generic.ListView):
+class ListView(SuperUserOnlyMixin, generic.ListView):
     """お知らせ管理
     """
-    permission_required = 'home.raildb_manage_news'
-    raise_exception = True
     template_name = 'home/news/list.html'
     model = News
 
@@ -22,17 +21,15 @@ class ListView(PermissionRequiredMixin, generic.ListView):
 class DetailView(generic.DetailView):
     """お知らせ詳細
 
-    この View のみ home.raildb_manage_news は不要
+    この View のみ一般ユーザーでもアクセス可能
     """
     template_name = 'home/news/detail.html'
     model = News
 
 
-class CreateView(PermissionRequiredMixin, generic.CreateView):
+class CreateView(SuperUserOnlyMixin, generic.CreateView):
     """お知らせ作成
     """
-    permission_required = 'home.raildb_manage_news'
-    raise_exception = True
     template_name = 'home/news/create.html'
     model = News
     fields = ['kind', 'title', 'body']
@@ -54,11 +51,9 @@ class CreateView(PermissionRequiredMixin, generic.CreateView):
         return response
 
 
-class UpdateView(PermissionRequiredMixin, generic.UpdateView):
+class UpdateView(SuperUserOnlyMixin, generic.UpdateView):
     """お知らせ編集
     """
-    permission_required = 'home.raildb_manage_news'
-    raise_exception = True
     template_name = 'home/news/update.html'
     model = News
     fields = ['kind', 'title', 'body']
@@ -84,11 +79,9 @@ class UpdateView(PermissionRequiredMixin, generic.UpdateView):
         return response
 
 
-class DeleteView(PermissionRequiredMixin, generic.DeleteView):
+class DeleteView(SuperUserOnlyMixin, generic.DeleteView):
     """お知らせ削除
     """
-    permission_required = 'home.raildb_manage_news'
-    raise_exception = True
     template_name = 'home/news/delete.html'
     model = News
     success_url = reverse_lazy('home:news_list')

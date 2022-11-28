@@ -1,8 +1,6 @@
 from django import forms
 from django.contrib.auth import get_user_model, password_validation
-from django.contrib.auth.models import Group, Permission
 from django.core.exceptions import ValidationError
-from django_select2 import forms as s2forms
 
 from home.models import EmailToken
 
@@ -147,57 +145,6 @@ class PasswordUpdateForm(forms.Form):
         if commit:
             self.user.save()
         return self.user
-
-
-class StaffRegisterForm(forms.Form):
-    class UserSelect2Widget(s2forms.ModelSelect2Widget):
-        search_fields = [
-            'email__startswith'
-        ]
-
-    # スタッフ以外を選択肢として表示
-    user_model = get_user_model()
-    user = forms.ModelChoiceField(
-        label='スタッフにしたいユーザー',
-        help_text='ユーザーのメールアドレスを入力してください',
-        widget=UserSelect2Widget(),
-        queryset=user_model.objects.filter(is_staff=False)
-    )
-
-
-class GroupForm(forms.ModelForm):
-    class Meta:
-        model = Group
-        fields = ['name']
-
-    class PermissionMultipleChoiceField(forms.ModelMultipleChoiceField):
-        widget = forms.widgets.CheckboxSelectMultiple()
-
-        def label_from_instance(self, obj):
-            # 権限の name を選択肢として表示
-            return obj.name
-
-    class UserSelect2MultipleWidget(s2forms.ModelSelect2MultipleWidget):
-        search_fields = [
-            'email__startswith'
-        ]
-
-    # raildb からはじまる codename のみ選択肢として表示
-    permissions = PermissionMultipleChoiceField(
-        label='権限',
-        queryset=Permission.objects.filter(codename__startswith='raildb'),
-        required=False
-    )
-
-    # スタッフを選択肢として表示
-    user_model = get_user_model()
-    user_list = forms.ModelMultipleChoiceField(
-        label='メンバー',
-        help_text='スタッフのメールアドレスを入力してください',
-        widget=UserSelect2MultipleWidget(),
-        queryset=user_model.objects.filter(is_staff=True),
-        required=False
-    )
 
 
 class UpdateUserStaffForm(forms.ModelForm):

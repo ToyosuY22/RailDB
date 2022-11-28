@@ -25,7 +25,7 @@
         </div>
         <div class="card-body">
             {% if object.is_staff %}
-                <div class="alert alert-warning">スタッフの情報は編集できません。</div>
+                <div class="alert alert-warning">システム管理者の情報は編集できません。</div>
             {% else %}
                 <div class="alert alert-info">{{ object }} のユーザー情報を編集します。</div>
             {% endif %}
@@ -40,7 +40,7 @@
                 </div>
                 <div class="mt-3 d-grid d-md-flex justify-content-md-end">
                     {% if object.is_staff %}
-                        <button class="btn btn-primary" disabled>スタッフの情報は編集できません</button>
+                        <button class="btn btn-primary" disabled>システム管理者の情報は編集できません</button>
                         <br/>
                     {% else %}
                         {% bootstrap_button button_type="submit" content="決定" %}

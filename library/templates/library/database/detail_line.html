@@ -19,6 +19,11 @@
 {% block menu_database %}
     active
 {% endblock menu_database %}
+{% block extrahead %}
+    <link rel="stylesheet"
+          type="text/css"
+          href="https://cdn.datatables.net/v/dt/jq-3.6.0/dt-1.12.1/r-2.4.0/datatables.min.css"/>
+{% endblock extrahead %}
 {% block body %}
     <div class="card mt-4 mt-xl-0">
         <div class="card-header">
@@ -38,7 +43,9 @@
                     </tr>
                     <tr>
                         <th>事業者</th>
-                        <td><a href="{% url 'library:database_detail_operator' object.operator.pk %}">{{ object.operator }}</a></td>
+                        <td>
+                            <a href="{% url 'library:database_detail_operator' object.operator.pk %}">{{ object.operator }}</a>
+                        </td>
                     </tr>
                     <tr>
                         <th>区間</th>
@@ -63,14 +70,19 @@
                 </tbody>
             </table>
             <h2>駅情報</h2>
-            <table class="table">
+            <table class="table responsive nowrap" id="dt" width="100%">
                 <thead>
                     <tr>
+                        <th>order</th>
                         <th>名称</th>
                         <th>名称かな</th>
                         <th>キロ程</th>
-                        <th>区間キロ程</th>
-                        <th>特記事項</th>
+                        <th>
+                            区間キロ程
+                        </th>
+                        <th>
+                            特記事項
+                        </th>
                         <th>
                             操作
                         </th>
@@ -79,6 +91,9 @@
                 <tbody>
                     {% for object in object_list %}
                         <tr{% if object.station.label %} class="table-secondary"{% endif %}>
+                            <td>
+                                {{ object.station.order }}
+                            </td>
                             <td>
                                 {{ object.station.name }}
                             </td>
@@ -95,7 +110,8 @@
                                 {{ object.station.get_label_display }}
                             </td>
                             <td>
-                                <a href="{% url 'library:database_detail_station' object.station.pk %}" class="btn btn-primary btn-sm"><i class="fa-solid fa-eye"></i> 詳細</a>
+                                <a href="{% url 'library:database_detail_station' object.station.pk %}"
+                                   class="btn btn-primary btn-sm"><i class="fa-solid fa-eye"></i> 詳細</a>
                             </td>
                         </tr>
                     {% endfor %}
@@ -104,3 +120,7 @@
         </div>
     </div>
 {% endblock body %}
+{% block extrascript %}
+    <script type="text/javascript" src="https://cdn.datatables.net/v/dt/jq-3.6.0/dt-1.12.1/r-2.4.0/datatables.min.js"></script>
+    <script type="text/javascript" src="{% static 'library/database/detail_line.js' %}"></script>
+{% endblock extrascript %}

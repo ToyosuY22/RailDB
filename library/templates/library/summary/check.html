@@ -37,38 +37,46 @@
             <h1>整合性検査</h1>
         </div>
         <div class="card-body">
-            <div class="alert alert-primary" role="alert">
-                路線データと駅データの整合性を確認します
-            </div>
+            <div class="alert alert-primary" role="alert">路線データと駅データの整合性を確認します</div>
             <h2>確認が必要な路線</h2>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>事業者</th>
-                        <th>路線</th>
-                        <th>始点／路線</th>
-                        <th>始点／駅</th>
-                        <th>終点／路線</th>
-                        <th>終点／駅</th>
-                        <th>キロ程／路線</th>
-                        <th>キロ程／駅</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for row in check_object %}
-                    <tr>
-                        <td><a href="{% url 'library:database_detail_operator' row.line.operator.id %}">{{ row.line.operator }}</a></td>
-                        <td><a href="{% url 'library:database_detail_line' row.line.id %}">{{ row.line }}</a></td>
-                        <td{% if row.error_start %} class="table-danger"{% endif %}>{{ row.line.start }}</td>
-                        <td{% if row.error_start %} class="table-danger"{% endif %}>{{ row.line.station_set.first.name }}</td>
-                        <td{% if row.error_end %} class="table-danger"{% endif %}>{{ row.line.end }}</td>
-                        <td{% if row.error_end %} class="table-danger"{% endif %}>{{ row.line.station_set.last.name }}</td>
-                        <td class="text-end{% if row.error_distance %} table-danger{% endif %}">{{ row.line.distance|get_actual_distance  }}</td>
-                        <td class="text-end{% if row.error_distance %} table-danger{% endif %}">{{ row.line.station_set.last.distance|get_actual_distance }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+            <div class="table-responsive text-nowrap">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>事業者</th>
+                            <th>路線</th>
+                            <th>始点／路線</th>
+                            <th>始点／駅</th>
+                            <th>終点／路線</th>
+                            <th>終点／駅</th>
+                            <th>キロ程／路線</th>
+                            <th>キロ程／駅</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in check_object %}
+                            <tr>
+                                <td>
+                                    <a href="{% url 'library:database_detail_operator' row.line.operator.id %}">{{ row.line.operator }}</a>
+                                </td>
+                                <td>
+                                    <a href="{% url 'library:database_detail_line' row.line.id %}">{{ row.line }}</a>
+                                </td>
+                                <td{% if row.error_start %} class="table-danger"{% endif %}>{{ row.line.start }}</td>
+                                <td{% if row.error_start %} class="table-danger"{% endif %}>{{ row.line.station_set.first.name }}</td>
+                                <td{% if row.error_end %} class="table-danger"{% endif %}>{{ row.line.end }}</td>
+                                <td{% if row.error_end %} class="table-danger"{% endif %}>{{ row.line.station_set.last.name }}</td>
+                                <td class="text-end{% if row.error_distance %} table-danger{% endif %}">
+                                    {{ row.line.distance|get_actual_distance  }}
+                                </td>
+                                <td class="text-end{% if row.error_distance %} table-danger{% endif %}">
+                                    {{ row.line.station_set.last.distance|get_actual_distance }}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 {% endblock body %}

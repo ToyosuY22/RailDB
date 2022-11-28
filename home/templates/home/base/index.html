@@ -3,7 +3,7 @@
     ホーム
 {% endblock subtitle %}
 {% block description %}
-    RailDB は、鉄道に関するあらゆるデータを閲覧できるサービスです。乗りつぶしの記録をつけることもできます。
+    RailDB は、鉄道に関するデータを整理するサービスです。
 {% endblock description %}
 {% block breadcrumb %}
     <li class="breadcrumb-item active" aria-current="page">ホーム</li>
@@ -17,8 +17,9 @@
             <h1>ようこそ RailDB へ！</h1>
         </div>
         <div class="card-body">
-            <p class="card-text">RailDB は、鉄道に関するあらゆるデータを閲覧できるサービスです。乗りつぶしの記録をつけることもできます。</p>
+            <p class="card-text">RailDB は、鉄道に関するデータを整理するサービスです。</p>
         </div>
+        {% comment "一般ユーザー向け機能解放後に表示" %}
         {% if not request.user.is_authenticated %}
             <div class="card-footer text-end">
                 <a href="{% url 'home:auth_signin' %}" class="btn btn-primary">
@@ -26,7 +27,7 @@
                     ログイン／新規登録
                 </a>
             </div>
-        {% endif %}
+        {% endif %} {% endcomment %}
     </div>
     <!--  スマホ向けメニュー -->
     <div class="row mt-2">
@@ -59,42 +60,28 @@
                     </a>
                 </div>
             </div>
+            <div class="col"></div>
         </div>
-        {% if request.user.is_staff %}
-            <div class="row mt-2">
-                <div class="col">
-                    {% if perms.home.raildb_manage_news %}
-                        <div class="d-grid d-xl-none">
-                            <a href="{% url 'home:news_list' %}" class="btn btn-outline-success">
-                                <i class="fa-solid fa-newspaper fa-3x my-2"></i>
-                                <p class="my-0">お知らせ管理</p>
-                            </a>
-                        </div>
-                    {% endif %}
-                </div>
-                <div class="col">
-                    {% if perms.home.raildb_manage_user %}
-                        <div class="d-grid d-xl-none">
-                            <a href="{% url 'home:user_list' %}" class="btn btn-outline-success">
-                                <i class="fa-solid fa-users fa-3x my-2"></i>
-                                <p class="my-0">ユーザー管理</p>
-                            </a>
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
-        {% endif %}
         {% if request.user.is_superuser %}
             <div class="row mt-2">
                 <div class="col">
                     <div class="d-grid d-xl-none">
-                        <a href="{% url 'home:permission_management' %}"
-                           class="btn btn-outline-danger">
-                            <i class="fa-solid fa-key fa-3x my-2"></i>
-                            <p class="my-0">権限管理</p>
+                        <a href="{% url 'home:news_list' %}" class="btn btn-outline-danger">
+                            <i class="fa-solid fa-newspaper fa-3x my-2"></i>
+                            <p class="my-0">お知らせ管理</p>
                         </a>
                     </div>
                 </div>
+                <div class="col">
+                    <div class="d-grid d-xl-none">
+                        <a href="{% url 'home:user_list' %}" class="btn btn-outline-danger">
+                            <i class="fa-solid fa-users fa-3x my-2"></i>
+                            <p class="my-0">ユーザー管理</p>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-2">
                 <div class="col">
                     <div class="d-grid d-xl-none">
                         <a href="{% url 'library:csv_upload' 'operator' %}"
@@ -104,8 +91,6 @@
                         </a>
                     </div>
                 </div>
-            </div>
-            <div class="row mt-2">
                 <div class="col">
                     <div class="d-grid d-xl-none">
                         <a href="{% url 'admin:index' %}" class="btn btn-outline-danger">

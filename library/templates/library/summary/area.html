@@ -27,9 +27,9 @@
             <a class="nav-link" href="{% url 'library:summary_kind' %}">種別別</a>
         </li>
         {% if request.user.is_superuser %}
-        <li class="nav-item">
-            <a class="nav-link" href="{% url 'library:summary_check' %}">整合性検査</a>
-        </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'library:summary_check' %}">整合性検査</a>
+            </li>
         {% endif %}
     </ul>
     <div class="card mt-4 mt-xl-0">
@@ -52,203 +52,238 @@
                     </li>
                 </ul>
             </div>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>運輸局</th>
-                        <th>鉄道</th>
-                        <th>（鉄道計）</th>
-                        <th>軌道</th>
-                        <th>（軌道計）</th>
-                        <th>合計</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for object in area_object %}
-                        {% if object.area == 'sum' %}
-                            <tr class="text-danger">
-                                <th>合計</th>
-                                <td></td>
-                                <td>
-                                    <table class="table table-warning">
-                                        <tr>
-                                            <th class="w-50">開業者数</th>
-                                            <td class="text-end">
-                                                {{ object.summary_train_operator }}
-                                                {% if object.summary_train_operator_maintenance %}({{ object.summary_train_operator_maintenance }}){% endif %}
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th class="w-50">キロ程</th>
-                                            <td class="text-end">{{ object.summary_train_distance|get_actual_distance }}</td>
-                                        </tr>
-                                    </table>
-                                </td>
-                                <td></td>
-                                <td>
-                                    <table class="table table-warning">
-                                        <tr>
-                                            <th class="w-50">開業者数</th>
-                                            <td class="text-end">
-                                                {{ object.summary_tram_operator }}
-                                                {% if object.summary_tram_operator_maintenance %}({{ object.summary_tram_operator_maintenance }}){% endif %}
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th class="w-50">キロ程</th>
-                                            <td class="text-end">
-                                                {{ object.summary_tram_distance|get_actual_distance }}
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                                <td>
-                                    <table class="table table-danger">
-                                        <tr>
-                                            <th class="w-50">
-                                                開業者数
-                                            </th>
-                                            <td class="text-end">
-                                                {{ object.summary_operator }}
-                                                {% if object.summary_operator_maintenance %}({{ object.summary_operator_maintenance }}){% endif %}
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th class="w-50">
-                                                キロ程
-                                            </th>
-                                            <td class="text-end">
-                                                {{ object.summary_distance|get_actual_distance }}
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                            </tr>
-                        {% else %}
-                            <tr>
-                                <th>
-                                    {{ object.area.label }}
-                                </th>
-                                <td>
-                                    <table class="table">
-                                        <tbody>
-                                            {% for row in object.train_transport %}
-                                                <tr>
-                                                    <td class="w-50">
-                                                        {{ row.operator }}
-                                                    </td>
-                                                    <td class="text-end">
-                                                        {{ row.distance|get_actual_distance }}
-                                                    </td>
-                                                </tr>
-                                            {% endfor %}
-                                            {% for row in object.train_maintenance %}
-                                                <tr class="table-secondary">
-                                                    <td class="w-50">
-                                                        {{ row.operator }}
-                                                    </td>
-                                                    <td class="text-end">
-                                                        {{ row.distance|get_actual_distance }}
-                                                    </td>
-                                                </tr>
-                                            {% endfor %}
-                                        </tbody>
-                                    </table>
-                                </td>
-                                <td>
-                                    <table class="table table-warning">
-                                        <tr>
-                                            <th class="w-50">
-                                                開業者数
-                                            </th>
-                                            <td class="text-end">
-                                                {{ object.summary_train_operator }}
-                                                {% if object.summary_train_operator_maintenance %}({{ object.summary_train_operator_maintenance }}){% endif %}
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th class="w-50">
-                                                キロ程
-                                            </th>
-                                            <td class="text-end">
-                                                {{ object.summary_train_distance|get_actual_distance }}
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                                <td>
-                                    <table class="table">
-                                        <tbody>
-                                            {% for row in object.tram_transport %}
-                                                <tr>
-                                                    <td class="w-50">
-                                                        {{ row.operator }}
-                                                    </td>
-                                                    <td class="text-end">
-                                                        {{ row.distance|get_actual_distance }}
-                                                    </td>
-                                                </tr>
-                                            {% endfor %}
-                                            {% for row in object.tram_maintenance %}
-                                                <tr class="table-secondary">
-                                                    <td class="w-50">
-                                                        {{ row.operator }}
-                                                    </td>
-                                                    <td class="text-end">
-                                                        {{ row.distance|get_actual_distance }}
-                                                    </td>
-                                                </tr>
-                                            {% endfor %}
-                                        </tbody>
-                                    </table>
-                                </td>
-                                <td>
-                                    <table class="table table-warning">
-                                        <tr>
-                                            <th class="w-50">
-                                                開業者数
-                                            </th>
-                                            <td class="text-end">
-                                                {{ object.summary_tram_operator }}
-                                                {% if object.summary_tram_operator_maintenance %}({{ object.summary_tram_operator_maintenance }}){% endif %}
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th class="w-50">
-                                                キロ程
-                                            </th>
-                                            <td class="text-end">
-                                                {{ object.summary_tram_distance|get_actual_distance }}
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                                <td>
-                                    <table class="table table-danger">
-                                        <tr>
-                                            <th class="w-50">
-                                                開業者数
-                                            </th>
-                                            <td class="text-end">
-                                                {{ object.summary_operator }}
-                                                {% if object.summary_operator_maintenance %}({{ object.summary_operator_maintenance }}){% endif %}
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th class="w-50">
-                                                キロ程
-                                            </th>
-                                            <td class="text-end">
-                                                {{ object.summary_distance|get_actual_distance }}
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                            </tr>
-                        {% endif %}
-                    {% endfor %}
-                </tbody>
-            </table>
+            <div class="table-responsive text-nowrap">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>運輸局</th>
+                            <th>鉄道</th>
+                            <th>軌道</th>
+                            <th>合計</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for object in area_object %}
+                            {% if object.area == 'sum' %}
+                                <tr class="text-danger">
+                                    <th>合計</th>
+                                    <td>
+                                        <table class="table table-warning">
+                                            <tr>
+                                                <th class="w-50">開業者数</th>
+                                                <td class="text-end">
+                                                    {{ object.summary_train_operator }}
+                                                    {% if object.summary_train_operator_maintenance %}({{ object.summary_train_operator_maintenance }}){% endif %}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th class="w-50">キロ程</th>
+                                                <td class="text-end">{{ object.summary_train_distance|get_actual_distance }}</td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table class="table table-warning">
+                                            <tr>
+                                                <th class="w-50">開業者数</th>
+                                                <td class="text-end">
+                                                    {{ object.summary_tram_operator }}
+                                                    {% if object.summary_tram_operator_maintenance %}({{ object.summary_tram_operator_maintenance }}){% endif %}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th class="w-50">キロ程</th>
+                                                <td class="text-end">{{ object.summary_tram_distance|get_actual_distance }}</td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table class="table table-danger">
+                                            <tr>
+                                                <th class="w-50">開業者数</th>
+                                                <td class="text-end">
+                                                    {{ object.summary_operator }}
+                                                    {% if object.summary_operator_maintenance %}({{ object.summary_operator_maintenance }}){% endif %}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th class="w-50">キロ程</th>
+                                                <td class="text-end">
+                                                    {{ object.summary_distance|get_actual_distance }}
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <th>
+                                        {{ object.area.label }}
+                                    </th>
+                                    <td>
+                                        <table class="table table-warning">
+                                            <tr>
+                                                <th class="w-50">
+                                                    開業者数
+                                                </th>
+                                                <td class="text-end">
+                                                    {{ object.summary_train_operator }}
+                                                    {% if object.summary_train_operator_maintenance %}({{ object.summary_train_operator_maintenance }}){% endif %}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th class="w-50">
+                                                    キロ程
+                                                </th>
+                                                <td class="text-end">
+                                                    {{ object.summary_train_distance|get_actual_distance }}
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        <div class="accordion" id="acc_{{ forloop.counter0 }}_train">
+                                            <div class="accordion-item">
+                                                <h2 class="accordion-header"
+                                                    id="acc_{{ forloop.counter0 }}_train_heading">
+                                                    <button class="accordion-button collapsed"
+                                                            type="button"
+                                                            data-bs-toggle="collapse"
+                                                            data-bs-target="#acc_{{ forloop.counter0 }}_train_collapse"
+                                                            aria-expanded="false"
+                                                            aria-controls="acc_{{ forloop.counter0 }}_train_collapse">
+                                                        事業者一覧
+                                                    </button>
+                                                </h2>
+                                                <div id="acc_{{ forloop.counter0 }}_train_collapse"
+                                                     class="accordion-collapse collapse"
+                                                     aria-labelledby="acc_{{ forloop.counter0 }}_train_heading"
+                                                     data-bs-parent="#acc_{{ forloop.counter0 }}_train">
+                                                    <div class="accordion-body">
+                                                        <div class="text-nowrap">
+                                                            <table class="table">
+                                                                <tbody>
+                                                                    {% for row in object.train_transport %}
+                                                                        <tr>
+                                                                            <td class="w-50">
+                                                                                {{ row.operator }}
+                                                                            </td>
+                                                                            <td class="text-end">
+                                                                                {{ row.distance|get_actual_distance }}
+                                                                            </td>
+                                                                        </tr>
+                                                                    {% endfor %}
+                                                                    {% for row in object.train_maintenance %}
+                                                                        <tr class="table-secondary">
+                                                                            <td class="w-50">
+                                                                                {{ row.operator }}
+                                                                            </td>
+                                                                            <td class="text-end">
+                                                                                {{ row.distance|get_actual_distance }}
+                                                                            </td>
+                                                                        </tr>
+                                                                    {% endfor %}
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <table class="table table-warning">
+                                            <tr>
+                                                <th class="w-50">
+                                                    開業者数
+                                                </th>
+                                                <td class="text-end">
+                                                    {{ object.summary_tram_operator }}
+                                                    {% if object.summary_tram_operator_maintenance %}({{ object.summary_tram_operator_maintenance }}){% endif %}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th class="w-50">
+                                                    キロ程
+                                                </th>
+                                                <td class="text-end">
+                                                    {{ object.summary_tram_distance|get_actual_distance }}
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        <div class="accordion" id="acc_{{ forloop.counter0 }}_tram">
+                                            <div class="accordion-item">
+                                                <h2 class="accordion-header" id="acc_{{ forloop.counter0 }}_tram_heading">
+                                                    <button class="accordion-button collapsed"
+                                                            type="button"
+                                                            data-bs-toggle="collapse"
+                                                            data-bs-target="#acc_{{ forloop.counter0 }}_tram_collapse"
+                                                            aria-expanded="false"
+                                                            aria-controls="acc_{{ forloop.counter0 }}_tram_collapse">
+                                                        事業者一覧
+                                                    </button>
+                                                </h2>
+                                                <div id="acc_{{ forloop.counter0 }}_tram_collapse"
+                                                     class="accordion-collapse collapse"
+                                                     aria-labelledby="acc_{{ forloop.counter0 }}_tram_heading"
+                                                     data-bs-parent="#acc_{{ forloop.counter0 }}_tram">
+                                                    <div class="accordion-body">
+                                                        <div class="text-nowrap">
+                                                            <table class="table">
+                                                                <tbody>
+                                                                    {% for row in object.tram_transport %}
+                                                                        <tr>
+                                                                            <td class="w-50">
+                                                                                {{ row.operator }}
+                                                                            </td>
+                                                                            <td class="text-end">
+                                                                                {{ row.distance|get_actual_distance }}
+                                                                            </td>
+                                                                        </tr>
+                                                                    {% endfor %}
+                                                                    {% for row in object.tram_maintenance %}
+                                                                        <tr class="table-secondary">
+                                                                            <td class="w-50">
+                                                                                {{ row.operator }}
+                                                                            </td>
+                                                                            <td class="text-end">
+                                                                                {{ row.distance|get_actual_distance }}
+                                                                            </td>
+                                                                        </tr>
+                                                                    {% endfor %}
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <table class="table table-danger">
+                                            <tr>
+                                                <th class="w-50">
+                                                    開業者数
+                                                </th>
+                                                <td class="text-end">
+                                                    {{ object.summary_operator }}
+                                                    {% if object.summary_operator_maintenance %}({{ object.summary_operator_maintenance }}){% endif %}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th class="w-50">
+                                                    キロ程
+                                                </th>
+                                                <td class="text-end">
+                                                    {{ object.summary_distance|get_actual_distance }}
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 {% endblock body %}

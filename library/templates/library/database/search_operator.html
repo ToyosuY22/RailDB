@@ -18,7 +18,7 @@
 {% block extrahead %}
     <link rel="stylesheet"
           type="text/css"
-          href="https://cdn.datatables.net/v/dt/jq-3.6.0/dt-1.12.1/datatables.min.css"/>
+          href="https://cdn.datatables.net/v/dt/jq-3.6.0/dt-1.12.1/r-2.4.0/datatables.min.css"/>
 {% endblock extrahead %}
 {% block body %}
     <ul class="nav nav-tabs">
@@ -41,22 +41,20 @@
             </div>
             <div class="card-body">
                 <div class="alert alert-info" role="alert">すべての事業者の情報を表示します。</div>
-                <div class="table-responsive text-nowrap">
-                    <table class="table" id="datatable_railway">
-                        <thead>
-                            <tr>
-                                <th>名称</th>
-                                <th>名称かな</th>
-                                <th>操作</th>
-                            </tr>
-                        </thead>
-                    </table>
-                </div>
+                <table class="table responsive nowrap" id="datatable_railway" width="100%">
+                    <thead>
+                        <tr>
+                            <th>名称</th>
+                            <th>名称かな</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                </table>
             </div>
         </div>
     </div>
 {% endblock body %}
 {% block extrascript %}
-    <script type="text/javascript" src="https://cdn.datatables.net/v/dt/jq-3.6.0/dt-1.12.1/datatables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/v/dt/jq-3.6.0/dt-1.12.1/r-2.4.0/datatables.min.js"></script>
     <script type="text/javascript" src="{% static 'library/database/search_operator.js' %}"></script>
 {% endblock extrascript %}

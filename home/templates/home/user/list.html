@@ -32,7 +32,6 @@
                             <th>Eメールアドレス</th>
                             <th>表示名</th>
                             <th>有効</th>
-                            <th>スタッフ</th>
                             <th>システム管理者</th>
                             <th>操作</th>
                         </tr>
@@ -57,16 +56,6 @@
             "columns": [
                 null,
                 null,
-                {"render":
-                    function(data) {
-                        if(data=='True') {
-                            return '<span class="text-success"><i class="fa-solid fa-check"></i></span>'
-                        } else {
-                            return '<span class="text-danger"><i class="fa-solid fa-xmark"></i></span'
-                        }
-                    },
-                    "searchable": false, "orderable": false
-                },
                 {"render":
                     function(data) {
                         if(data=='True') {
