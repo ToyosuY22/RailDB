@@ -64,4 +64,20 @@ urlpatterns = [
         views.json.StationAPI.as_view(),
         name='json_station'
     ),
+    # views/summary.py
+    path(
+        'summary/area',
+        views.summary.AreaView.as_view(),
+        name='summary_area'
+    ),
+    path(
+        'summary/kind',
+        views.summary.KindView.as_view(),
+        name='summary_kind'
+    ),
+    path(
+        'summary/check',
+        views.summary.CheckView.as_view(),
+        name='summary_check'
+    ),
 ]

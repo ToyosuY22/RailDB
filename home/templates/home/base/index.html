@@ -39,6 +39,15 @@
                 </a>
             </div>
         </div>
+        <div class="col">
+            <div class="d-grid d-xl-none">
+                <a href="{% url 'library:summary_area' %}"
+                   class="btn btn-outline-primary">
+                    <i class="fa-solid fa-calculator fa-3x my-2"></i>
+                    <p class="my-0">集計</p>
+                </a>
+            </div>
+        </div>
     </div>
     {% if request.user.is_authenticated %}
         <div class="row mt-2">

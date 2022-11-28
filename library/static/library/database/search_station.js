@@ -22,7 +22,8 @@ $(document).ready(function () {
                             return `${data.slice(0, -1)}.${data.slice(-1)}`
                         }
                     },
-                "searchable": false, "orderable": false
+                "searchable": false, "orderable": false,
+                "className": "dt-body-right"
             },
             {
                 "targets": [6],

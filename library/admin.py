@@ -79,7 +79,7 @@ class StationAdmin(admin.ModelAdmin):
     ]
 
     list_filter = [
-        'label'
+        'label', 'line'
     ]
 
     search_fields = [

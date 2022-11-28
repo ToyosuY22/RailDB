@@ -1,0 +1,74 @@
+{% extends "flame.html" %}
+{% load static %}
+{% load raildb_tags %}
+{% block subtitle %}
+    集計
+{% endblock subtitle %}
+{% block description %}
+    集計情報を表示します。
+{% endblock description %}
+{% block breadcrumb %}
+    <li class="breadcrumb-item">
+        <a href="{% url 'home:index' %}">ホーム</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">集計</li>
+{% endblock breadcrumb %}
+{% block menu_summary %}
+    active
+{% endblock menu_summary %}
+{% block body %}
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'library:summary_area' %}">運輸局別</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'library:summary_kind' %}">種別別</a>
+        </li>
+        {% if request.user.is_superuser %}
+            <li class="nav-item">
+                <a class="nav-link active"
+                   aria-current="page"
+                   href="{% url 'library:summary_check' %}">整合性検査</a>
+            </li>
+        {% endif %}
+    </ul>
+    <div class="card mt-4 mt-xl-0">
+        <div class="card-header">
+            <h1>整合性検査</h1>
+        </div>
+        <div class="card-body">
+            <div class="alert alert-primary" role="alert">
+                路線データと駅データの整合性を確認します
+            </div>
+            <h2>確認が必要な路線</h2>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>事業者</th>
+                        <th>路線</th>
+                        <th>始点／路線</th>
+                        <th>始点／駅</th>
+                        <th>終点／路線</th>
+                        <th>終点／駅</th>
+                        <th>キロ程／路線</th>
+                        <th>キロ程／駅</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in check_object %}
+                    <tr>
+                        <td><a href="{% url 'library:database_detail_operator' row.line.operator.id %}">{{ row.line.operator }}</a></td>
+                        <td><a href="{% url 'library:database_detail_line' row.line.id %}">{{ row.line }}</a></td>
+                        <td{% if row.error_start %} class="table-danger"{% endif %}>{{ row.line.start }}</td>
+                        <td{% if row.error_start %} class="table-danger"{% endif %}>{{ row.line.station_set.first.name }}</td>
+                        <td{% if row.error_end %} class="table-danger"{% endif %}>{{ row.line.end }}</td>
+                        <td{% if row.error_end %} class="table-danger"{% endif %}>{{ row.line.station_set.last.name }}</td>
+                        <td class="text-end{% if row.error_distance %} table-danger{% endif %}">{{ row.line.distance|get_actual_distance  }}</td>
+                        <td class="text-end{% if row.error_distance %} table-danger{% endif %}">{{ row.line.station_set.last.distance|get_actual_distance }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock body %}

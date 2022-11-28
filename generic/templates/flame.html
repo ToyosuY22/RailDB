@@ -118,6 +118,12 @@
                         <span class="ps-2">データベース</span>
                     </a>
                 </li>
+                <li class="sidebar-item{% block menu_summary %}{% endblock menu_summary %}">
+                    <a class="sidebar-link" href="{% url 'library:summary_area' %}">
+                        <i class="fa-solid fa-calculator"></i>
+                        <span class="ps-2">集計</span>
+                    </a>
+                </li>
                 {% if request.user.is_authenticated %}
                     <li class="sidebar-item{% block menu_profile %}{% endblock menu_profile %}">
                         <a class="sidebar-link" href="{% url 'home:profile' %}">

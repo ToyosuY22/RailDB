@@ -1,0 +1,72 @@
+{% extends "flame.html" %}
+{% load static %}
+{% load raildb_tags %}
+{% block subtitle %}
+    集計
+{% endblock subtitle %}
+{% block description %}
+    集計情報を表示します。
+{% endblock description %}
+{% block breadcrumb %}
+    <li class="breadcrumb-item">
+        <a href="{% url 'home:index' %}">ホーム</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">集計</li>
+{% endblock breadcrumb %}
+{% block menu_summary %}
+    active
+{% endblock menu_summary %}
+{% block body %}
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'library:summary_area' %}">運輸局別</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link active"
+               aria-current="page"
+               href="{% url 'library:summary_kind' %}">種別別</a>
+        </li>
+        {% if request.user.is_superuser %}
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'library:summary_check' %}">整合性検査</a>
+        </li>
+        {% endif %}
+    </ul>
+    <div class="card mt-4 mt-xl-0">
+        <div class="card-header">
+            <h1>種別別鉄道／軌道営業キロ一覧表</h1>
+        </div>
+        <div class="card-body">
+            <div class="alert alert-primary" role="alert">
+                <p>下記要項は「鉄道要覧」と規則が一部異なります</p>
+                <ul class="mb-0">
+                    <li>「経営者数」の「計」において、開業路線／未開業路線を併有する事業者は重複して計上しません</li>
+                    <li>第3種鉄道事業または軌道整備事業のみを有する事業者の数は「経営者数」に計上しません。キロ数についても同様に計上しません</li>
+                </ul>
+            </div>
+            {% for object in kind_object %}
+                <h2>{{ object.kind.label }}</h2>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="w-25">状態</th>
+                            <th class="w-25">事業</th>
+                            <th class="w-25">経営者数</th>
+                            <th class="w-25">キロ数</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in object.data %}
+                            <tr>
+                                <td>{{ row.status }}</td>
+                                <td>{{ row.category }}</td>
+                                <td class="text-end">{{ row.operator }}</td>
+                                <td class="text-end">{{ row.distance|get_actual_distance }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock body %}

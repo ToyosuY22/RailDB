@@ -71,7 +71,7 @@
                                 </td>
                                 <td>{{ line.end }}</td>
                                 <td>{{ line.get_area_display }}</td>
-                                <td>{{ line.distance|get_actual_distance }}</td>
+                                <td class="text-end">{{ line.distance|get_actual_distance }}</td>
                                 <td>
                                     <a href="{% url 'library:database_detail_line' line.pk %}" class="btn btn-primary btn-sm"><i class="fa-solid fa-eye"></i> 詳細</a>
                                 </td>
