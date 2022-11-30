@@ -14,6 +14,9 @@
     <li class="breadcrumb-item">
         <a href="{% url 'library:database_search_operator' %}">データベース</a>
     </li>
+    <li class="breadcrumb-item">
+        <a href="{% url 'library:database_detail_operator' object.operator.id %}">{{ object.operator }}</a>
+    </li>
     <li class="breadcrumb-item active" aria-current="page">{{ object }}</li>
 {% endblock breadcrumb %}
 {% block menu_database %}
@@ -107,7 +110,7 @@
                                 {{ object.gap|get_actual_distance }}
                             </td>
                             <td>
-                                {{ object.station.get_label_display }}
+                                {% if object.station.label %}{{ object.station.get_label_display }}{% endif %}
                             </td>
                             <td>
                                 <a href="{% url 'library:database_detail_station' object.station.pk %}"
@@ -117,7 +120,28 @@
                     {% endfor %}
                 </tbody>
             </table>
+            <hr />
+            <div class="text-end">
+                <a href="{% url 'library:database_csv_download' 'station' object.id %}"
+                   class="btn btn-primary"><i class="fa-solid fa-file-csv"></i> この路線の駅一覧をダウンロード</a>
+            </div>
         </div>
+        {% if request.user.is_superuser %}
+            <div class="card-footer text-end">
+                <a href="{% url 'library:database_create_station' object.id %}"
+                   class="btn btn-success"><i class="fa-solid fa-plus"></i> 駅追加</a>
+                <a href="{% url 'library:database_order_line' object.id %}"
+                   class="btn btn-info"><i class="fa-solid fa-arrows-up-down"></i> 路線順序変更</a>
+                <a href="{% url 'library:database_update_line' object.id %}"
+                   class="btn btn-warning"><i class="fa-solid fa-edit"></i> 路線編集</a>
+                <a href="{% url 'library:database_update_line_operator' object.id %}"
+                   class="btn btn-warning"><i class="fa-solid fa-edit"></i> 事業者変更</a>
+                <a href="{% url 'library:database_csv_upload' object.id %}"
+                   class="btn btn-warning"><i class="fa-solid fa-file-csv"></i> CSV駅データ入力</a>
+                <a href="{% url 'library:database_delete_line' object.id %}"
+                   class="btn btn-danger"><i class="fa-solid fa-times"></i> 路線削除</a>
+            </div>
+        {% endif %}
     </div>
 {% endblock body %}
 {% block extrascript %}

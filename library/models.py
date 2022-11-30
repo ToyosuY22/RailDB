@@ -39,7 +39,8 @@ class Line(OrderedModel):
         ordering = ['order']
 
     def __str__(self):
-        return f'{self.name}（{self.section}）'
+        name = self.name if self.name else '（路線名なし）'
+        return f'{name}（{self.operator}／{self.section}）'
 
     @property
     def section(self):
@@ -173,7 +174,7 @@ class Station(OrderedModel):
         ordering = ['line__order', 'order']
 
     def __str__(self):
-        return self.name
+        return f'{self.name}（{self.line}）'
 
     id = models.UUIDField(
         primary_key=True,

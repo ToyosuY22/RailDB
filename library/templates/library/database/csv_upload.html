@@ -1,0 +1,41 @@
+{% extends "flame.html" %}
+{% load django_bootstrap5 %}
+{% block subtitle %}
+    {{ line }} CSV 駅データ入力
+{% endblock subtitle %}
+{% block description %}
+    CSVをアップロードし、駅データを入力します。
+{% endblock description %}
+{% block breadcrumb %}
+    <li class="breadcrumb-item">
+        <a href="{% url 'home:index' %}">ホーム</a>
+    </li>
+    <li class="breadcrumb-item">
+        <a href="{% url 'library:database_search_operator' %}">データベース</a>
+    </li>
+    <li class="breadcrumb-item">
+        <a href="{% url 'library:database_detail_line' line.id %}">{{ line }}</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">CSV 駅データ入力</li>
+{% endblock breadcrumb %}
+{% block menu_csv %}
+    active
+{% endblock menu_csv %}
+{% block body %}
+    <div class="card mt-3">
+        <div class="card-header">
+            <h1>{{ line }} CSV 駅データ入力</h1>
+        </div>
+        <div class="card-body">
+            <div class="alert alert-info">CSVをアップロードし、駅データを入力します。</div>
+            <div class="alert alert-danger">現在保持されている当該路線所属駅データはすべて削除されます。あらかじめ CSV で駅データをダウンロードし、バックアップしてください。</div>
+            <form method="post" class="form" enctype="multipart/form-data">
+                {% csrf_token %}
+                {% bootstrap_form form %}
+                <div class="mt-3 d-grid d-md-flex justify-content-md-end">
+                    {% bootstrap_button button_type="submit" content="処理開始" %}
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock body %}

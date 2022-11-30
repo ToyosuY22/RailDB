@@ -1,0 +1,50 @@
+{% extends "flame.html" %}
+{% load django_bootstrap5 %}
+{% block subtitle %}
+    {{ object }} 削除
+{% endblock subtitle %}
+{% block description %}
+    {{ object }} を削除します。
+{% endblock description %}
+{% block breadcrumb %}
+    <li class="breadcrumb-item">
+        <a href="{% url 'home:index' %}">ホーム</a>
+    </li>
+    <li class="breadcrumb-item">
+        <a href="{% url 'library:database_search_operator' %}">データベース</a>
+    </li>
+    <li class="breadcrumb-item">
+        <a href="{% url 'library:database_detail_operator' object.id %}">{{ object }}</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">削除</li>
+{% endblock breadcrumb %}
+{% block menu_database %}
+    active
+{% endblock menu_database %}
+{% block body %}
+    <div class="card mt-3">
+        <div class="card-body">
+            <div class="alert alert-danger" role="alert">削除すると二度と取り消すことはできません。</div>
+            <p class="text-danger">削除しようとしている事業者をよく確認してください。</p>
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <th>名称</th>
+                        <td>{{ object.name }}</td>
+                    </tr>
+                    <tr>
+                        <th>名称かな</th>
+                        <td>{{ object.name_kana }}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <form method="post" class="form">
+                {% csrf_token %}
+                {% bootstrap_form form %}
+                <div class="mt-3 d-grid d-md-flex justify-content-md-end">
+                    {% bootstrap_button button_type="submit" content="削除" %}
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock body %}

@@ -1,11 +1,11 @@
 {% extends "flame.html" %}
-{% load static %}
+{% load django_bootstrap5 %}
 {% load raildb_tags %}
 {% block subtitle %}
-    {{ object }}
+    {{ object }} 削除
 {% endblock subtitle %}
 {% block description %}
-    {{ object }} の詳細情報を表示します。
+    {{ object }} を削除します。
 {% endblock description %}
 {% block breadcrumb %}
     <li class="breadcrumb-item">
@@ -15,23 +15,18 @@
         <a href="{% url 'library:database_search_operator' %}">データベース</a>
     </li>
     <li class="breadcrumb-item">
-        <a href="{% url 'library:database_detail_operator' object.line.operator.id %}">{{ object.line.operator }}</a>
+        <a href="{% url 'library:database_detail_station' object.id %}">{{ object }}</a>
     </li>
-    <li class="breadcrumb-item">
-        <a href="{% url 'library:database_detail_line' object.line.id %}">{{ object.line }}</a>
-    </li>
-    <li class="breadcrumb-item active" aria-current="page">{{ object }}</li>
+    <li class="breadcrumb-item active" aria-current="page">削除</li>
 {% endblock breadcrumb %}
 {% block menu_database %}
     active
 {% endblock menu_database %}
 {% block body %}
-    <div class="card mt-4 mt-xl-0">
-        <div class="card-header">
-            <h1>{{ object }}</h1>
-        </div>
+    <div class="card mt-3">
         <div class="card-body">
-            <h2>基本情報</h2>
+            <div class="alert alert-danger" role="alert">削除すると二度と取り消すことはできません。</div>
+            <p class="text-danger">削除しようとしている駅をよく確認してください。</p>
             <table class="table">
                 <tbody>
                     <tr>
@@ -62,18 +57,13 @@
                     </tr>
                 </tbody>
             </table>
+            <form method="post" class="form">
+                {% csrf_token %}
+                {% bootstrap_form form %}
+                <div class="mt-3 d-grid d-md-flex justify-content-md-end">
+                    {% bootstrap_button button_type="submit" content="削除" %}
+                </div>
+            </form>
         </div>
-        {% if request.user.is_superuser %}
-            <div class="card-footer text-end">
-                <a href="{% url 'library:database_order_station' object.id %}"
-                   class="btn btn-info"><i class="fa-solid fa-arrows-up-down"></i> 駅順序変更</a>
-                <a href="{% url 'library:database_update_station' object.id %}"
-                   class="btn btn-warning"><i class="fa-solid fa-edit"></i> 駅編集</a>
-                <a href="{% url 'library:database_update_station_line' object.id %}"
-                   class="btn btn-warning"><i class="fa-solid fa-edit"></i> 路線変更</a>
-                <a href="{% url 'library:database_delete_station' object.id %}"
-                   class="btn btn-danger"><i class="fa-solid fa-times"></i> 駅削除</a>
-            </div>
-        {% endif %}
     </div>
 {% endblock body %}

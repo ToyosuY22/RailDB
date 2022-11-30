@@ -84,21 +84,13 @@
             <div class="row mt-2">
                 <div class="col">
                     <div class="d-grid d-xl-none">
-                        <a href="{% url 'library:csv_upload' 'operator' %}"
-                           class="btn btn-outline-danger">
-                            <i class="fa-solid fa-file-csv fa-3x my-2"></i>
-                            <p class="my-0">CSV処理</p>
-                        </a>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="d-grid d-xl-none">
                         <a href="{% url 'admin:index' %}" class="btn btn-outline-danger">
                             <i class="fa-solid fa-database fa-3x my-2"></i>
                             <p class="my-0">管理サイト</p>
                         </a>
                     </div>
                 </div>
+                <div class="col"></div>
             </div>
         {% endif %}
     {% endif %}

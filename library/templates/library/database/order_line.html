@@ -1,0 +1,95 @@
+{% extends "flame.html" %}
+{% load static %}
+{% load django_bootstrap5 %}
+{% load raildb_tags %}
+{% block subtitle %}
+    {{ object }} 順序指定
+{% endblock subtitle %}
+{% block description %}
+    {{ object }} の順序を指定します。
+{% endblock description %}
+{% block breadcrumb %}
+    <li class="breadcrumb-item">
+        <a href="{% url 'home:index' %}">ホーム</a>
+    </li>
+    <li class="breadcrumb-item">
+        <a href="{% url 'library:database_search_operator' %}">データベース</a>
+    </li>
+    <li class="breadcrumb-item">
+        <a href="{% url 'library:database_detail_line' object.id %}">{{ object }}</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">順序指定</li>
+{% endblock breadcrumb %}
+{% block menu_database %}
+    active
+{% endblock menu_database %}
+{% block extrahead %}
+    <link rel="stylesheet"
+          type="text/css"
+          href="https://cdn.datatables.net/v/dt/jq-3.6.0/dt-1.12.1/r-2.4.0/datatables.min.css"/>
+{% endblock extrahead %}
+{% block body %}
+    <form method="post" class="form">
+        <div class="card mt-4 mt-xl-0">
+            <div class="card-header">
+                <h1>{{ object }} 順序指定</h1>
+            </div>
+            {% csrf_token %}
+            <div class="card-body">
+                <div class="alert alert-info" role="alert">路線 {{ object }} の順序を変更します。</div>
+                <h2>路線一覧</h2>
+                <table class="table mb-3" id="dt">
+                    <thead>
+                        <tr>
+                            <th>順序</th>
+                            <th>名称</th>
+                            <th>名称かな</th>
+                            <th>始点</th>
+                            <th>経由点</th>
+                            <th>終点</th>
+                            <th>事業者</th>
+                            <th>運輸局等</th>
+                            <th>種別</th>
+                            <th>状態</th>
+                            <th>事業</th>
+                            <th>営業キロ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in object_list %}
+                            <tr{% if row.id == object.id %} class="table-warning"{% endif %}>
+                                <th>{{ row.order }}</th>
+                                <td>{{ row.name }}</td>
+                                <td>{{ row.name_kana }}</td>
+                                <td>{{ row.start }}</td>
+                                <td>
+                                    {% if line.via %}
+                                        {{ line.via }}
+                                    {% else %}
+                                        ─
+                                    {% endif %}
+                                </td>
+                                <td>{{ row.end }}</td>
+                                <td>{{ row.operator }}</td>
+                                <td>{{ row.get_area_display }}</td>
+                                <td>{{ row.get_kind_display }}</td>
+                                <td>{{ row.get_status_display }}</td>
+                                <td>{{ row.get_category_display }}</td>
+                                <td>{{ row.distance|get_actual_distance }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <h2>新規順序</h2>
+                {% bootstrap_form form %}
+            </div>
+            <div class="card-footer">
+                <div class="d-grid d-md-flex justify-content-md-end">{% bootstrap_button button_type="submit" content="順序指定" %}</div>
+            </div>
+        </div>
+    </form>
+{% endblock body %}
+{% block extrascript %}
+    <script type="text/javascript" src="https://cdn.datatables.net/v/dt/jq-3.6.0/dt-1.12.1/r-2.4.0/datatables.min.js"></script>
+    <script type="text/javascript" src="{% static 'library/database/order.js' %}"></script>
+{% endblock extrascript %}

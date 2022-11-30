@@ -48,7 +48,9 @@
                 <h3>
                     {{ group.kind.label }}　{{ group.status.label }}　{{ group.category.label }}　<span class="text-primary">{{ group.distance_sum|get_actual_distance }}km</span>
                 </h3>
-                <table class="table responsive nowrap" id="dt_{{ forloop.counter0 }}" width="100%">
+                <table class="table responsive nowrap"
+                       id="dt_{{ forloop.counter0 }}"
+                       width="100%">
                     <thead>
                         <tr>
                             <th>order</th>
@@ -89,9 +91,25 @@
                         {% endfor %}
                     </tbody>
                 </table>
-                <hr>
+                <hr />
             {% endfor %}
+            <div class="text-end">
+                <a href="{% url 'library:database_csv_download' 'line' object.id %}"
+                   class="btn btn-primary"><i class="fa-solid fa-file-csv"></i> この事業者の路線一覧をダウンロード</a>
+            </div>
         </div>
+        {% if request.user.is_superuser %}
+            <div class="card-footer text-end">
+                <a href="{% url 'library:database_create_line' object.id %}"
+                   class="btn btn-success"><i class="fa-solid fa-plus"></i> 路線追加</a>
+                <a href="{% url 'library:database_order_operator' object.id %}"
+                   class="btn btn-info"><i class="fa-solid fa-arrows-up-down"></i> 事業者順序変更</a>
+                <a href="{% url 'library:database_update_operator' object.id %}"
+                   class="btn btn-warning"><i class="fa-solid fa-edit"></i> 事業者編集</a>
+                <a href="{% url 'library:database_delete_operator' object.id %}"
+                   class="btn btn-danger"><i class="fa-solid fa-times"></i> 事業者削除</a>
+            </div>
+        {% endif %}
     </div>
 {% endblock body %}
 {% block extrascript %}

@@ -66,10 +66,12 @@
                                     <i class="fa-solid fa-right-from-bracket"></i>
                                 </a>
                             {% else %}
+                                {% comment "一般ユーザー向け機能解放後に表示" %}
                                 <a class="nav-link text-white" href="{% url 'home:auth_signin' %}">
                                     <span class="d-inline">ログイン／新規登録</span>
                                     <i class="fa-solid fa-right-to-bracket"></i>
                                 </a>
+                                {% endcomment %}
                             {% endif %}
                         </li>
                     </ul>
@@ -145,12 +147,6 @@
                             <a class="sidebar-link" href="{% url 'home:user_list' %}">
                                 <i class="fa-solid fa-users"></i>
                                 <span class="ps-2">ユーザー管理</span>
-                            </a>
-                        </li>
-                        <li class="sidebar-item{% block menu_csv %}{% endblock menu_csv %}">
-                            <a class="sidebar-link" href="{% url 'library:csv_upload' 'operator' %}">
-                                <i class="fa-solid fa-file-csv"></i>
-                                <span class="ps-2">CSV処理</span>
                             </a>
                         </li>
                         <li class="sidebar-item">
