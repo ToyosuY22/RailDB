@@ -17,7 +17,7 @@
     <li class="breadcrumb-item">
         <a href="{% url 'library:database_detail_operator' object.operator.id %}">{{ object.operator }}</a>
     </li>
-    <li class="breadcrumb-item active" aria-current="page">{{ object }}</li>
+    <li class="breadcrumb-item active" aria-current="page">{{ object.name }}（{{ object.section }}）</li>
 {% endblock breadcrumb %}
 {% block menu_database %}
     active
@@ -73,6 +73,9 @@
                 </tbody>
             </table>
             <h2>駅情報</h2>
+            {% if object.status == 'unopened' or object.category == 'train_3' or object.category == 'tram_maintenance' %}
+            未開業線／第3種鉄道事業線／軌道整備事業線の駅一覧は表示できません
+            {% else %}
             <table class="table responsive nowrap" id="dt" width="100%">
                 <thead>
                     <tr>
@@ -123,13 +126,17 @@
             <hr />
             <div class="text-end">
                 <a href="{% url 'library:database_csv_download' 'station' object.id %}"
-                   class="btn btn-primary"><i class="fa-solid fa-file-csv"></i> この路線の駅一覧をダウンロード</a>
+                class="btn btn-primary"><i class="fa-solid fa-file-csv"></i> この路線の駅一覧をダウンロード</a>
             </div>
+            {% endif %}
         </div>
         {% if request.user.is_superuser %}
             <div class="card-footer text-end">
+                {% if object.status == 'unopened' or object.category == 'train_3' or object.category == 'tram_maintenance' %}
+                {% else %}
                 <a href="{% url 'library:database_create_station' object.id %}"
                    class="btn btn-success"><i class="fa-solid fa-plus"></i> 駅追加</a>
+                {% endif %}
                 <a href="{% url 'library:database_order_line' object.id %}"
                    class="btn btn-info"><i class="fa-solid fa-arrows-up-down"></i> 路線順序変更</a>
                 <a href="{% url 'library:database_update_line' object.id %}"

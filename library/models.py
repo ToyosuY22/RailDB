@@ -210,9 +210,9 @@ class Station(OrderedModel):
     )
 
     class LabelChoices(models.TextChoices):
-        UNOPENED = 'unopened', '未開業駅',
         NOT_PASSENGER = 'not_passenger', '旅客扱い無し'
         SEASONAL = 'seasonal', '臨時駅'
+        FREIGHT = 'freight', '貨物取扱'
 
     label = models.CharField(
         max_length=20,

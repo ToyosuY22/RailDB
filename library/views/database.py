@@ -89,8 +89,19 @@ class DetailLineView(generic.DetailView):
             return None
         else:
             this_station = Station.objects.get(line=self.object, order=order)
-            previous_station = \
-                Station.objects.get(line=self.object, order=order-1)
+            # 通常駅以外の場合は値なし
+            if this_station.label:
+                return None
+            # get previous station
+            # 通常駅のみ取得
+            station_list = Station.objects.filter(
+                line=self.object, label__isnull=True, order__lt=order)
+
+            # 該当する駅が空の場合は値なし
+            if not station_list:
+                return None
+
+            previous_station = station_list.last()
 
             try:
                 return this_station.distance - previous_station.distance
@@ -712,7 +723,7 @@ class CsvUploadView(SuperUserOnlyMixin, generic.FormView):
                         name_kana=row[1],
                         line=self.line,
                         distance=int(row[2]),
-                        label=row[3],
+                        label=row[3] if row[3] else None,
                         note=row[4]
                     )
         except Exception as e:

@@ -15,7 +15,7 @@
         <a href="{% url 'library:database_search_operator' %}">データベース</a>
     </li>
     <li class="breadcrumb-item">
-        <a href="{% url 'library:database_detail_line' object.id %}">{{ object }}</a>
+        <a href="{% url 'library:database_detail_line' object.id %}">{{ object.name }}（{{ object.section }}）</a>
     </li>
     <li class="breadcrumb-item active" aria-current="page">削除</li>
 {% endblock breadcrumb %}

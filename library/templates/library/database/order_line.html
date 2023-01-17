@@ -16,7 +16,7 @@
         <a href="{% url 'library:database_search_operator' %}">データベース</a>
     </li>
     <li class="breadcrumb-item">
-        <a href="{% url 'library:database_detail_line' object.id %}">{{ object }}</a>
+        <a href="{% url 'library:database_detail_line' object.id %}">{{ object.name }}（{{ object.section }}）</a>
     </li>
     <li class="breadcrumb-item active" aria-current="page">順序指定</li>
 {% endblock breadcrumb %}
@@ -72,19 +72,31 @@
                                 <td>{{ row.end }}</td>
                                 <td>{{ row.operator }}</td>
                                 <td>{{ row.get_area_display }}</td>
-                                <td>{{ row.get_kind_display }}</td>
-                                <td>{{ row.get_status_display }}</td>
-                                <td>{{ row.get_category_display }}</td>
-                                <td>{{ row.distance|get_actual_distance }}</td>
+                                <td>
+                                    {{ row.get_kind_display }}
+                                </td>
+                                <td>
+                                    {{ row.get_status_display }}
+                                </td>
+                                <td>
+                                    {{ row.get_category_display }}
+                                </td>
+                                <td>
+                                    {{ row.distance|get_actual_distance }}
+                                </td>
                             </tr>
                         {% endfor %}
                     </tbody>
                 </table>
-                <h2>新規順序</h2>
+                <h2>
+                    新規順序
+                </h2>
                 {% bootstrap_form form %}
             </div>
             <div class="card-footer">
-                <div class="d-grid d-md-flex justify-content-md-end">{% bootstrap_button button_type="submit" content="順序指定" %}</div>
+                <div class="d-grid d-md-flex justify-content-md-end">
+                    {% bootstrap_button button_type="submit" content="順序指定" %}
+                </div>
             </div>
         </div>
     </form>

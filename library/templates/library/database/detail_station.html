@@ -18,9 +18,9 @@
         <a href="{% url 'library:database_detail_operator' object.line.operator.id %}">{{ object.line.operator }}</a>
     </li>
     <li class="breadcrumb-item">
-        <a href="{% url 'library:database_detail_line' object.line.id %}">{{ object.line }}</a>
+        <a href="{% url 'library:database_detail_line' object.line.id %}">{{ object.line.name }}（{{ object.line.section }}）</a>
     </li>
-    <li class="breadcrumb-item active" aria-current="page">{{ object }}</li>
+    <li class="breadcrumb-item active" aria-current="page">{{ object.name }}</li>
 {% endblock breadcrumb %}
 {% block menu_database %}
     active

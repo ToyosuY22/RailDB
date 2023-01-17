@@ -16,7 +16,7 @@
         <a href="{% url 'library:database_search_operator' %}">データベース</a>
     </li>
     <li class="breadcrumb-item">
-        <a href="{% url 'library:database_detail_station' object.id %}">{{ object }}</a>
+        <a href="{% url 'library:database_detail_station' object.id %}">{{ object.name }}</a>
     </li>
     <li class="breadcrumb-item active" aria-current="page">順序指定</li>
 {% endblock breadcrumb %}
@@ -55,7 +55,9 @@
                                 <td>{{ row.name }}</td>
                                 <td>{{ row.name_kana }}</td>
                                 <td class="text-end">{{ row.distance|get_actual_distance }}</td>
-                                <td>{% if row.label %}{{ row.get_label_display }}{% endif %}</td>
+                                <td>
+                                    {% if row.label %}{{ row.get_label_display }}{% endif %}
+                                </td>
                             </tr>
                         {% endfor %}
                     </tbody>
