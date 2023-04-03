@@ -79,35 +79,31 @@ class DetailLineView(generic.DetailView):
         # 駅一覧を登録
         context['object_list'] = [{
             'station': station,
-            'gap': self.get_gap(station.order)
+            'gap': self.get_gap(station)
         } for station in Station.objects.filter(line=self.object)]
 
         return context
 
-    def get_gap(self, order):
-        if order == 0:
+    def get_gap(self, this_station):
+        # 区間キロ程を求める
+        # キロ程が登録されていて、かつ自駅より前の駅を抽出
+        station_list = Station.objects.filter(
+            line=self.object,
+            distance__isnull=False,
+            order__lt=this_station.order
+        )
+
+        # 該当する駅が空の場合は値なし
+        if not station_list:
             return None
-        else:
-            this_station = Station.objects.get(line=self.object, order=order)
-            # 通常駅以外の場合は値なし
-            if this_station.label:
-                return None
-            # get previous station
-            # 通常駅のみ取得
-            station_list = Station.objects.filter(
-                line=self.object, label__isnull=True, order__lt=order)
 
-            # 該当する駅が空の場合は値なし
-            if not station_list:
-                return None
+        previous_station = station_list.last()
 
-            previous_station = station_list.last()
-
-            try:
-                return this_station.distance - previous_station.distance
-            except TypeError:
-                # キロ程 None
-                return None
+        try:
+            return this_station.distance - previous_station.distance
+        except TypeError:
+            # キロ程 None
+            return None
 
 
 class DetailStationView(generic.DetailView):

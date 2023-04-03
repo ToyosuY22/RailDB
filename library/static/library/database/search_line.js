@@ -31,8 +31,10 @@ $(document).ready(function () {
                 "targets": [10],
                 "render":
                     function (data) {
-                        if (data == '0') {
+                        if (data.length == 0) {
                             return '0.0'
+                        } else if (data.length == 1) {
+                            return `0.${data.slice(-1)}`
                         } else {
                             return `${data.slice(0, -1)}.${data.slice(-1)}`
                         }
