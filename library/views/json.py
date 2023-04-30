@@ -40,7 +40,7 @@ class StationAPI(BaseDatatableView):
     model = Station
     columns = [
         'name', 'name_kana', 'line.operator', 'line',
-        'distance', 'label', 'id', 'line.order', 'order'
+        'distance', 'label', 'freight', 'id', 'line.order', 'order'
     ]
     max_display_length = 500
 

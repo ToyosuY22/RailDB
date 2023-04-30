@@ -46,6 +46,7 @@
                             <th>名称かな</th>
                             <th>キロ程</th>
                             <th>特記事項</th>
+                            <th>貨物情報</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -57,6 +58,9 @@
                                 <td class="text-end">{{ row.distance|get_actual_distance }}</td>
                                 <td>
                                     {% if row.label %}{{ row.get_label_display }}{% endif %}
+                                </td>
+                                <td>
+                                    {% if row.freight %}{{ row.get_freight_display }}{% endif %}
                                 </td>
                             </tr>
                         {% endfor %}

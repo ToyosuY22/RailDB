@@ -619,7 +619,7 @@ class CsvDownloadView(generic.View):
         elif mode == 'station':
             return [
                 'name', 'name_kana',
-                'distance', 'label', 'note'
+                'distance', 'label', 'freight', 'note'
             ]
 
     def get_queryset(self, mode, instance):
@@ -663,6 +663,7 @@ class CsvDownloadView(generic.View):
                 obj.name_kana,
                 obj.distance,
                 obj.label,
+                obj.freight,
                 obj.note
             ]
 

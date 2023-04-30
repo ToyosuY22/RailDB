@@ -6,7 +6,7 @@ $(document).ready(function () {
         "processing": true,
         "serverSide": true,
         "ajax": "/library/json/station",
-        "order": [[7, 'asc'], [8, 'asc']],
+        "order": [[8, 'asc'], [9, 'asc']],
         "columnDefs": [
             {
                 "targets": [2, 3],
@@ -28,7 +28,7 @@ $(document).ready(function () {
                 "className": "dt-body-right"
             },
             {
-                "targets": [6],
+                "targets": [7],
                 "render":
                     function (data) {
                         return `<a href="/library/database/detail_station/${data}" class="btn btn-primary btn-sm"><i class="fa-solid fa-eye"></i> 詳細</a>`
@@ -36,7 +36,7 @@ $(document).ready(function () {
                 "searchable": false, "orderable": false
             },
             {
-                "targets": [7, 8],
+                "targets": [8, 9],
                 "visible": false,
             },
         ]

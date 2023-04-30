@@ -212,13 +212,23 @@ class Station(OrderedModel):
     class LabelChoices(models.TextChoices):
         NOT_PASSENGER = 'not_passenger', '旅客扱い無し'
         SEASONAL = 'seasonal', '臨時駅'
-        FREIGHT = 'freight', '貨物取扱'
 
     label = models.CharField(
         max_length=20,
         verbose_name='特記事項',
         null=True, blank=True,
         choices=LabelChoices.choices
+    )
+
+    class FreightChoices(models.TextChoices):
+        FREIGHT = 'freight', '貨物駅'
+        ORS = 'ors', 'オフレールステーション'
+
+    freight = models.CharField(
+        max_length=20,
+        verbose_name='貨物情報',
+        null=True, blank=True,
+        choices=FreightChoices.choices
     )
 
     note = models.TextField(

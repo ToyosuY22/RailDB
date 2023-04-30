@@ -57,6 +57,10 @@
                         <td>{% if object.label %}{{ object.get_label_display }}{% endif %}</td>
                     </tr>
                     <tr>
+                        <th>貨物情報</th>
+                        <td>{% if object.freight %}{{ object.get_freight_display }}{% endif %}</td>
+                    </tr>
+                    <tr>
                         <th>備考</th>
                         <td>{{ object.note }}</td>
                     </tr>

@@ -61,7 +61,7 @@ class StationAdmin(admin.ModelAdmin):
     fieldsets = [
         ('基本情報', {
             'fields': ['id', 'name', 'name_kana', 'line', 'distance']}),
-        ('分類情報', {'fields': ['label']}),
+        ('分類情報', {'fields': ['label', 'freight']}),
         ('その他', {'fields': ['note', 'order']}),
     ]
 
@@ -75,11 +75,11 @@ class StationAdmin(admin.ModelAdmin):
 
     list_display = [
         'id', 'name', 'name_kana', 'line', 'distance',
-        'label', 'order'
+        'label', 'freight', 'order'
     ]
 
     list_filter = [
-        'label', 'line'
+        'label', 'freight', 'line'
     ]
 
     search_fields = [

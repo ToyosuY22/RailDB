@@ -47,7 +47,7 @@ class LineOperatorForm(forms.ModelForm):
 class StationForm(forms.ModelForm):
     class Meta:
         model = Station
-        fields = ['name', 'name_kana', 'distance', 'label', 'note']
+        fields = ['name', 'name_kana', 'distance', 'label', 'freight', 'note']
 
 
 class StationLineForm(forms.ModelForm):
