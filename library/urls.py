@@ -23,6 +23,11 @@ urlpatterns = [
         name='database_search_station'
     ),
     path(
+        'database/list_line_relationship',
+        views.database.ListLineRelationshipView.as_view(),
+        name='database_list_line_relationship'
+    ),
+    path(
         'database/detail_operator/<uuid:pk>',
         views.database.DetailOperatorView.as_view(),
         name='database_detail_operator'
@@ -41,6 +46,21 @@ urlpatterns = [
         'database/create_operator',
         views.database.CreateOperatorView.as_view(),
         name='database_create_operator'
+    ),
+    path(
+        'database/create_line_relationship',
+        views.database.CreateLineRelationshipView.as_view(),
+        name='database_create_line_relationship'
+    ),
+    path(
+        'database/update_line_relationship/<uuid:pk>',
+        views.database.UpdateLineRelationshipView.as_view(),
+        name='database_update_line_relationship'
+    ),
+    path(
+        'database/delete_line_relationship/<uuid:pk>',
+        views.database.DeleteLineRelationshipView.as_view(),
+        name='database_delete_line_relationship'
     ),
     path(
         'database/order_operator/<uuid:pk>',

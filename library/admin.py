@@ -85,3 +85,25 @@ class StationAdmin(admin.ModelAdmin):
     search_fields = [
         'id', 'name', 'name_kana'
     ]
+
+
+@admin.register(models.LineRelationship)
+class LineRelationshipAdmin(admin.ModelAdmin):
+    fields = [
+        'id', 'transport_start', 'transport_end',
+        'maintenance_start', 'maintenance_end'
+    ]
+
+    readonly_fields = [
+        'id'
+    ]
+
+    autocomplete_fields = [
+        'transport_start', 'transport_end',
+        'maintenance_start', 'maintenance_end'
+    ]
+
+    list_display = [
+        'id', 'transport_start', 'transport_end',
+        'maintenance_start', 'maintenance_end'
+    ]

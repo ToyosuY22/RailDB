@@ -168,7 +168,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # https://docs.djangoproject.com/en/4.1/topics/cache/
 
 CACHES = {
-    'default': env.cache(),
+    'default': {
+        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+        'LOCATION': 'redis://raildb_cache:6379'
+    }
 }
 
 
@@ -234,7 +237,7 @@ if not DEBUG:
 # Celery
 # https://docs.celeryq.dev/en/stable/django/first-steps-with-django.html
 
-CELERY_BROKER_URL = env('CELERY_BROKER_URL')
+CELERY_BROKER_URL = 'redis://raildb_cache'
 CELERY_TIMEZONE = 'Asia/Tokyo'
 CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 30 * 60

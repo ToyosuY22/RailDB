@@ -44,10 +44,33 @@ class Line(OrderedModel):
 
     @property
     def section(self):
+        # 区間表示
         if self.via:
             return f'{self.start}─{self.via}─{self.end}'
         else:
             return f'{self.start}─{self.end}'
+
+    @property
+    def line_relationship_list(self):
+        # 関連路線の一覧を取得
+        if self.category in ['train_2', 'tram_transport']:
+            return LineRelationship.objects.filter(
+                transport_start__line=self
+            ).values_list(
+                'maintenance_start__line__id', 'maintenance_start__line__name',
+                'maintenance_start__line__operator__name',
+                'transport_start__name', 'transport_end__name'
+            )
+        elif self.category in ['train_1', 'train_3', 'tram_maintenance']:
+            return LineRelationship.objects.filter(
+                maintenance_start__line=self
+            ).values_list(
+                'transport_start__line__id', 'transport_start__line__name',
+                'transport_start__line__operator__name',
+                'maintenance_start__name', 'maintenance_end__name'
+            )
+        else:
+            return None
 
     id = models.UUIDField(
         primary_key=True,
@@ -234,4 +257,57 @@ class Station(OrderedModel):
     note = models.TextField(
         verbose_name='備考',
         null=True, blank=True
+    )
+
+
+class LineRelationship(OrderedModel):
+    class Meta:
+        verbose_name = '路線関係'
+        verbose_name_plural = '路線関係'
+        ordering = ['transport_start__line__order', 'transport_start__order']
+
+    def __str__(self):
+        return \
+            f'{self.transport_line}→{self.maintenance_line}'
+
+    @property
+    def transport_line(self):
+        return self.transport_start.line
+
+    @property
+    def maintenance_line(self):
+        return self.maintenance_start.line
+
+    id = models.UUIDField(
+        primary_key=True,
+        default=uuid.uuid4,
+        editable=False
+    )
+
+    transport_start = models.ForeignKey(
+        'library.Station',
+        verbose_name='運送路線／開始駅',
+        related_name='relationship_transport_start',
+        on_delete=models.CASCADE
+    )
+
+    transport_end = models.ForeignKey(
+        'library.Station',
+        verbose_name='運送路線／終了駅',
+        related_name='relationship_transport_end',
+        on_delete=models.CASCADE
+    )
+
+    maintenance_start = models.ForeignKey(
+        'library.Station',
+        verbose_name='整備路線／開始駅',
+        related_name='relationship_maintenance_start',
+        on_delete=models.CASCADE
+    )
+
+    maintenance_end = models.ForeignKey(
+        'library.Station',
+        verbose_name='整備路線／終了駅',
+        related_name='relationship_maintenance_end',
+        on_delete=models.CASCADE
     )

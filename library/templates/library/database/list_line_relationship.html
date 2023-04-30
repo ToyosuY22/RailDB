@@ -1,0 +1,198 @@
+{% extends "flame.html" %}
+{% load django_bootstrap5 %}
+{% load static %}
+{% load raildb_tags %}
+{% block subtitle %}
+    データベース
+{% endblock subtitle %}
+{% block description %}
+    鉄道に関するデータを閲覧します。
+{% endblock description %}
+{% block breadcrumb %}
+    <li class="breadcrumb-item">
+        <a href="{% url 'home:index' %}">ホーム</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">データベース</li>
+{% endblock breadcrumb %}
+{% block menu_database %}
+    active
+{% endblock menu_database %}
+{% block body %}
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a href="{% url 'library:database_search_operator' %}" class="nav-link">事業者検索</a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'library:database_search_line' %}" class="nav-link">路線検索</a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'library:database_search_station' %}" class="nav-link">駅検索</a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'library:database_list_line_relationship' %}"
+               class="nav-link active"
+               aria-current="page">路線関係</a>
+        </li>
+    </ul>
+    <div class="tab-content" id="databaseTabContent">
+        <div class="card mt-4 mt-xl-0">
+            <div class="card-header">
+                <h1>路線関係</h1>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info" role="alert">すべての路線関係の情報を表示します。</div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>役務</th>
+                            <th>路線</th>
+                            <th>種別</th>
+                            <th>開始駅</th>
+                            <th>終了駅</th>
+                            <th>距離</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for object in object_list %}
+                            <tr>
+                                <th>
+                                    運送
+                                    <br />
+                                    整備
+                                </th>
+                                <td>
+                                    <a href="{% url 'library:database_detail_line' object.line_relationship.transport_line.pk %}">{{ object.line_relationship.transport_line }}</a>
+                                    <br />
+                                    <a href="{% url 'library:database_detail_line' object.line_relationship.maintenance_line.pk %}">{{ object.line_relationship.maintenance_line }}</a>
+                                </td>
+                                <td>
+                                    {{ object.line_relationship.transport_line.get_category_display }}
+                                    <br />
+                                    {{ object.line_relationship.maintenance_line.get_category_display }}
+                                </td>
+                                <td {% if object.line_relationship.transport_start.name != object.line_relationship.maintenance_start.name %} class="table-danger"{% endif %}>
+                                    {{ object.line_relationship.transport_start.name }}
+                                    <br />
+                                    {{ object.line_relationship.maintenance_start.name }}
+                                </td>
+                                <td {% if object.line_relationship.transport_end.name != object.line_relationship.maintenance_end.name %} class="table-danger"{% endif %}>
+                                    {{ object.line_relationship.transport_end.name }}
+                                    <br />
+                                    {{ object.line_relationship.maintenance_end.name }}
+                                </td>
+                                <td class="text-end{% if object.distance.transport != object.distance.maintenance %} table-danger{% endif %}">
+                                    {{ object.distance.transport|get_actual_distance }}
+                                    <br />
+                                    {{ object.distance.maintenance|get_actual_distance }}
+                                </td>
+                                <td>
+                                    <a href="{% url 'library:database_update_line_relationship' object.line_relationship.id %}"
+                                       class="btn btn-warning btn-sm text-nowrap">
+                                        <i class="fa-solid fa-pen-to-square"></i>
+                                        編集
+                                    </a>
+                                    <!-- Button trigger modal -->
+                                    <button type="button"
+                                            class="btn btn-sm btn-danger"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#deleteConfirmation_{{ object.line_relationship.id }}">
+                                        <i class="fa-solid fa-xmark"></i>
+                                        削除
+                                    </button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% if request.user.is_superuser %}
+                <div class="card-footer text-end">
+                    <a href="{% url 'library:database_create_line_relationship' %}"
+                       class="btn btn-success"><i class="fa-solid fa-plus"></i> 路線関係追加</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    <!-- Modal -->
+    {% for object in object_list %}
+        <div class="modal fade"
+             id="deleteConfirmation_{{ object.line_relationship.id }}"
+             tabindex="-1"
+             aria-labelledby="deleteConfirmationlLabel_{{ object.line_relationship.id }}"
+             aria-hidden="true">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5"
+                            id="deleteConfirmationlLabel_{{ object.line_relationship.id }}">削除確認</h1>
+                        <button type="button"
+                                class="btn-close"
+                                data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        下記の路線関係を本当に削除しますか？
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>役務</th>
+                                    <th>路線</th>
+                                    <th>種別</th>
+                                    <th>開始駅</th>
+                                    <th>終了駅</th>
+                                    <th>距離</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th>
+                                        運送
+                                        <br />
+                                        整備
+                                    </th>
+                                    <td>
+                                        <a href="{% url 'library:database_detail_line' object.line_relationship.transport_line.pk %}">{{ object.line_relationship.transport_line }}</a>
+                                        <br />
+                                        <a href="{% url 'library:database_detail_line' object.line_relationship.maintenance_line.pk %}">{{ object.line_relationship.maintenance_line }}</a>
+                                    </td>
+                                    <td>
+                                        {{ object.line_relationship.transport_line.get_category_display }}
+                                        <br />
+                                        {{ object.line_relationship.maintenance_line.get_category_display }}
+                                    </td>
+                                    <td {% if object.line_relationship.transport_start.name != object.line_relationship.maintenance_start.name %} class="table-danger"{% endif %}>
+                                        {{ object.line_relationship.transport_start.name }}
+                                        <br />
+                                        {{ object.line_relationship.maintenance_start.name }}
+                                    </td>
+                                    <td {% if object.line_relationship.transport_end.name != object.line_relationship.maintenance_end.name %} class="table-danger"{% endif %}>
+                                        {{ object.line_relationship.transport_end.name }}
+                                        <br />
+                                        {{ object.line_relationship.maintenance_end.name }}
+                                    </td>
+                                    <td class="text-end{% if object.distance.transport != object.distance.maintenance %} table-danger{% endif %}">
+                                        {{ object.distance.transport|get_actual_distance }}
+                                        <br />
+                                        {{ object.distance.maintenance|get_actual_distance }}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            やめる
+                        </button>
+                        <form method="post"
+                              class="form"
+                              action="{% url 'library:database_delete_line_relationship' object.line_relationship.id %}">
+                            {% csrf_token %}
+                            {% bootstrap_button button_type="submit" content="削除" button_class="btn-danger" %}
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+{% endblock body %}

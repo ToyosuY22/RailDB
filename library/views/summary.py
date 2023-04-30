@@ -396,6 +396,11 @@ class CheckView(SuperUserOnlyMixin, generic.TemplateView):
 
         # 整合性
         context['check_object'] = self.get_check_object()
+
+        # 駅情報なし路線
+        context['line_no_station_list'] = \
+            Line.objects.filter(station__isnull=True)
+
         return context
 
     def get_check_object(self):

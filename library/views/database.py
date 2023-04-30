@@ -11,7 +11,7 @@ from django.urls import reverse, reverse_lazy
 from django.views import generic
 
 from library import forms
-from library.models import Line, Operator, Station
+from library.models import Line, LineRelationship, Operator, Station
 from raildb.mixins import SuperUserOnlyMixin
 
 
@@ -25,6 +25,33 @@ class SearchLineView(generic.TemplateView):
 
 class SearchStationView(generic.TemplateView):
     template_name = 'library/database/search_station.html'
+
+
+class ListLineRelationshipView(SuperUserOnlyMixin, generic.TemplateView):
+    template_name = 'library/database/list_line_relationship.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        object_list = []
+
+        # 路線関係データを登録
+        for line_relationship in LineRelationship.objects.all():
+            object_list.append({
+                'line_relationship': line_relationship,
+                'distance': {
+                    'transport':
+                        line_relationship.transport_end.distance
+                        - line_relationship.transport_start.distance,
+                    'maintenance':
+                        line_relationship.maintenance_end.distance
+                        - line_relationship.maintenance_start.distance,
+                }
+            })
+
+        context['object_list'] = object_list
+
+        return context
 
 
 class DetailOperatorView(generic.DetailView):
@@ -537,6 +564,89 @@ class DeleteStationView(SuperUserOnlyMixin, generic.DeleteView):
         messages.success(
             self.request,
             f'駅 {self.object} を削除しました！'
+        )
+
+        return response
+
+
+def set_queryset_line_relationship(form):
+    """LineRelationship の selec2 form において使用する queryset を設定する
+    """
+    # 運送路線
+    line_list_transport = Station.objects.filter(
+        line__category__in=['train_2', 'tram_transport']
+    )
+    # 整備路線
+    line_list_maintenance = Station.objects.filter(
+        line__category__in=['train_1', 'train_3', 'tram_maintenance']
+    )
+    # queryset を指定
+    form.fields['transport_start'].queryset = line_list_transport
+    form.fields['transport_end'].queryset = line_list_transport
+    form.fields['maintenance_start'].queryset = line_list_maintenance
+    form.fields['maintenance_end'].queryset = line_list_maintenance
+
+    return form
+
+
+class CreateLineRelationshipView(SuperUserOnlyMixin, generic.CreateView):
+    template_name = 'library/database/create_line_relationship.html'
+    model = LineRelationship
+    form_class = forms.LineRelationshipForm
+    success_url = reverse_lazy('library:database_list_line_relationship')
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        return set_queryset_line_relationship(form)
+
+    def form_valid(self, form):
+        # 作成
+        response = super().form_valid(form)
+
+        # 成功メッセージを追加
+        messages.success(
+            self.request,
+            f'路線関係 {self.object} を作成しました！'
+        )
+
+        return response
+
+
+class UpdateLineRelationshipView(SuperUserOnlyMixin, generic.UpdateView):
+    template_name = 'library/database/update_line_relationship.html'
+    model = LineRelationship
+    form_class = forms.LineRelationshipForm
+    success_url = reverse_lazy('library:database_list_line_relationship')
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        return set_queryset_line_relationship(form)
+
+    def form_valid(self, form):
+        # 作成
+        response = super().form_valid(form)
+
+        # 成功メッセージを追加
+        messages.success(
+            self.request,
+            f'路線関係 {self.object} を編集しました！'
+        )
+
+        return response
+
+
+class DeleteLineRelationshipView(SuperUserOnlyMixin, generic.DeleteView):
+    model = LineRelationship
+    success_url = reverse_lazy('library:database_list_line_relationship')
+
+    def form_valid(self, form):
+        # 削除
+        response = super().form_valid(form)
+
+        # 成功メッセージを追加
+        messages.success(
+            self.request,
+            f'路線関係 {self.object} を削除しました！'
         )
 
         return response

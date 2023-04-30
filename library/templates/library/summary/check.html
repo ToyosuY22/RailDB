@@ -37,7 +37,6 @@
             <h1>整合性検査</h1>
         </div>
         <div class="card-body">
-            <div class="alert alert-primary" role="alert">路線データと駅データの整合性を確認します</div>
             <h2>確認が必要な路線</h2>
             <div class="table-responsive text-nowrap">
                 <table class="table">
@@ -67,10 +66,45 @@
                                 <td{% if row.error_end %} class="table-danger"{% endif %}>{{ row.line.end }}</td>
                                 <td{% if row.error_end %} class="table-danger"{% endif %}>{{ row.line.station_set.last.name }}</td>
                                 <td class="text-end{% if row.error_distance %} table-danger{% endif %}">
-                                    {{ row.line.distance|get_actual_distance  }}
+                                    {{ row.line.distance|get_actual_distance }}
                                 </td>
                                 <td class="text-end{% if row.error_distance %} table-danger{% endif %}">
                                     {{ row.line.station_set.last.distance|get_actual_distance }}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <h2>駅情報が登録されていない路線</h2>
+            <div class="table-responsive text-nowrap">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>事業者</th>
+                            <th>路線</th>
+                            <th>
+                                状態
+                            </th>
+                            <th>
+                                事業
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for line in line_no_station_list %}
+                            <tr>
+                                <td>
+                                    <a href="{% url 'library:database_detail_operator' line.operator.id %}">{{ line.operator }}</a>
+                                </td>
+                                <td>
+                                    <a href="{% url 'library:database_detail_line' line.id %}">{{ line }}</a>
+                                </td>
+                                <td>
+                                    {{ line.get_status_display }}
+                                </td>
+                                <td>
+                                    {{ line.get_category_display }}
                                 </td>
                             </tr>
                         {% endfor %}

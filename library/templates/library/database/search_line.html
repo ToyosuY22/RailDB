@@ -33,6 +33,12 @@
         <li class="nav-item">
             <a href="{% url 'library:database_search_station' %}" class="nav-link">駅検索</a>
         </li>
+        {% if request.user.is_superuser %}
+            <li class="nav-item">
+                <a href="{% url 'library:database_list_line_relationship' %}"
+                   class="nav-link">路線関係</a>
+            </li>
+        {% endif %}
     </ul>
     <div class="tab-content" id="databaseTabContent">
         <div class="card mt-4 mt-xl-0">

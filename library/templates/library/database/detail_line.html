@@ -66,6 +66,28 @@
                         <th>キロ程</th>
                         <td>{{ object.distance|get_actual_distance }}</td>
                     </tr>
+                    {% if object.line_relationship_list %}
+                        <tr>
+                            <th>関連路線</th>
+                            <td>
+                                {% if object.category == 'train_2' or object.category == 'tram_transport' %}
+                                    この路線に対する整備路線は下記のとおりです
+                                {% elif object.category == 'train_1' or object.category == 'train_3' or object.category == 'tram_maintenance' %}
+                                    この路線に対する運送路線は下記のとおりです
+                                {% endif %}
+                                <ul>
+                                    {% for line_relationship in object.line_relationship_list %}
+                                        <li>
+                                            <a href="{% url 'library:database_detail_line' line_relationship.0 %}">
+                                                {{ line_relationship.1 }}（{{ line_relationship.2 }}）
+                                                ：{{ line_relationship.3 }}─{{ line_relationship.4 }}
+                                            </a>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </td>
+                        </tr>
+                    {% endif %}
                     <tr>
                         <th>備考</th>
                         <td>{{ object.note }}</td>
@@ -73,16 +95,17 @@
                 </tbody>
             </table>
             <h2>駅情報</h2>
-            {% if object.status == 'unopened' or object.category == 'train_3' or object.category == 'tram_maintenance' %}
-            未開業線／第3種鉄道事業線／軌道整備事業線の駅一覧は表示できません
-            {% else %}
             <table class="table responsive nowrap" id="dt" width="100%">
                 <thead>
                     <tr>
                         <th>order</th>
                         <th>名称</th>
-                        <th>名称かな</th>
-                        <th>キロ程</th>
+                        <th>
+                            名称かな
+                        </th>
+                        <th>
+                            キロ程
+                        </th>
                         <th>
                             区間キロ程
                         </th>
@@ -126,17 +149,13 @@
             <hr />
             <div class="text-end">
                 <a href="{% url 'library:database_csv_download' 'station' object.id %}"
-                class="btn btn-primary"><i class="fa-solid fa-file-csv"></i> この路線の駅一覧をダウンロード</a>
+                   class="btn btn-primary"><i class="fa-solid fa-file-csv"></i> この路線の駅一覧をダウンロード</a>
             </div>
-            {% endif %}
         </div>
         {% if request.user.is_superuser %}
             <div class="card-footer text-end">
-                {% if object.status == 'unopened' or object.category == 'train_3' or object.category == 'tram_maintenance' %}
-                {% else %}
                 <a href="{% url 'library:database_create_station' object.id %}"
                    class="btn btn-success"><i class="fa-solid fa-plus"></i> 駅追加</a>
-                {% endif %}
                 <a href="{% url 'library:database_order_line' object.id %}"
                    class="btn btn-info"><i class="fa-solid fa-arrows-up-down"></i> 路線順序変更</a>
                 <a href="{% url 'library:database_update_line' object.id %}"
