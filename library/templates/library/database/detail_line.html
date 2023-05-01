@@ -110,6 +110,9 @@
                             特記事項
                         </th>
                         <th>
+                            貨物情報
+                        </th>
+                        <th>
                             操作
                         </th>
                     </tr>
@@ -134,6 +137,9 @@
                             </td>
                             <td>
                                 {% if object.station.label %}{{ object.station.get_label_display }}{% endif %}
+                            </td>
+                            <td>
+                                {% if object.station.freight %}{{ object.station.get_freight_display }}{% endif %}
                             </td>
                             <td>
                                 <a href="{% url 'library:database_detail_station' object.station.pk %}"
