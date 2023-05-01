@@ -831,7 +831,8 @@ class CsvUploadView(SuperUserOnlyMixin, generic.FormView):
                         line=self.line,
                         distance=int(row[2]),
                         label=row[3] if row[3] else None,
-                        note=row[4]
+                        freight=row[4] if row[4] else None,
+                        note=row[5]
                     )
         except Exception as e:
             # エラー内容を表示
