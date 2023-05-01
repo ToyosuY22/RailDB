@@ -75,16 +75,13 @@
                                 {% elif object.category == 'train_1' or object.category == 'train_3' or object.category == 'tram_maintenance' %}
                                     この路線に対する運送路線は下記のとおりです
                                 {% endif %}
-                                <ul>
-                                    {% for line_relationship in object.line_relationship_list %}
-                                        <li>
-                                            <a href="{% url 'library:database_detail_line' line_relationship.0 %}">
-                                                {{ line_relationship.1 }}（{{ line_relationship.2 }}）
-                                                ：{{ line_relationship.3 }}─{{ line_relationship.4 }}
-                                            </a>
-                                        </li>
-                                    {% endfor %}
-                                </ul>
+                                {% for line_relationship in object.line_relationship_list %}
+                                    <br/>
+                                    <a href="{% url 'library:database_detail_line' line_relationship.0 %}">
+                                        {{ line_relationship.1 }}（{{ line_relationship.2 }}）
+                                        ：{{ line_relationship.3 }}─{{ line_relationship.4 }}
+                                    </a>
+                                {% endfor %}
                             </td>
                         </tr>
                     {% endif %}
