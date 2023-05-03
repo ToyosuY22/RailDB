@@ -246,6 +246,7 @@ class Station(OrderedModel):
     class FreightChoices(models.TextChoices):
         FREIGHT = 'freight', '貨物駅'
         ORS = 'ors', 'オフレールステーション'
+        OFFICE = 'office', '新営業所'
 
     freight = models.CharField(
         max_length=20,
