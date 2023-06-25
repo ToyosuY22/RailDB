@@ -155,6 +155,12 @@
                                 <span class="ps-2">ユーザー管理</span>
                             </a>
                         </li>
+                        <li class="sidebar-item{% block menu_ekidata %}{% endblock menu_ekidata %}">
+                            <a class="sidebar-link" href="{% url 'ekidata:index' %}">
+                                <i class="fa-solid fa-file-csv"></i>
+                                <span class="ps-2">駅データ.jp 入力</span>
+                            </a>
+                        </li>
                         <li class="sidebar-item">
                             <a class="sidebar-link" href="{% url 'admin:index' %}">
                                 <i class="fa-solid fa-database"></i>

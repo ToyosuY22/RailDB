@@ -16,6 +16,7 @@ django-select2 = "~=8.1"
 psycopg2 = "~=2.9"
 python-logging-discord-handler = "~=0.1"
 redis = "~=4.5"
+GDAL = "==3.6.2"
 
 [dev-packages]
 autopep8 = "*"

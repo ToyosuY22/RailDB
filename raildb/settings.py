@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.gis',
     # third party
     'discord_logging',
     'django_bootstrap5',
@@ -60,6 +61,7 @@ INSTALLED_APPS = [
     'django_select2',
     'ordered_model',
     # raildb
+    'ekidata',
     'home',
     'library',
 ]
@@ -99,7 +101,7 @@ WSGI_APPLICATION = 'raildb.wsgi.application'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 DATABASES = {
-    'default': env.db()
+    'default': env.db(engine='django.contrib.gis.db.backends.postgis')
 }
 
 

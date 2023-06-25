@@ -1,0 +1,34 @@
+{% extends "flame.html" %}
+{% load django_bootstrap5 %}
+{% block subtitle %}
+    駅データ.jp CSV 入力
+{% endblock subtitle %}
+{% block description %}
+    CSV をアップロードし、駅データ.jp の収録データを入力します。
+{% endblock description %}
+{% block breadcrumb %}
+    <li class="breadcrumb-item">
+        <a href="{% url 'home:index' %}">ホーム</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">駅データ.jp CSV 入力</li>
+{% endblock breadcrumb %}
+{% block menu_ekidata %}
+    active
+{% endblock menu_ekidata %}
+{% block body %}
+    <div class="card mt-3">
+        <div class="card-header">
+            <h1>駅データ.jp CSV 入力</h1>
+        </div>
+        <div class="card-body">
+            <div class="alert alert-info">CSV をアップロードし、駅データ.jp のデータを入力します。</div>
+            <form method="post" class="form" enctype="multipart/form-data">
+                {% csrf_token %}
+                {% bootstrap_form form %}
+                <div class="mt-3 d-grid d-md-flex justify-content-md-end">
+                    {% bootstrap_button button_type="submit" content="処理開始" %}
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock body %}
