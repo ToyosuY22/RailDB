@@ -22,11 +22,6 @@
 {% block menu_database %}
     active
 {% endblock menu_database %}
-{% block extrahead %}
-    <link rel="stylesheet"
-          type="text/css"
-          href="https://cdn.datatables.net/v/dt/jq-3.6.0/dt-1.12.1/r-2.4.0/datatables.min.css"/>
-{% endblock extrahead %}
 {% block body %}
     <div class="card mt-4 mt-xl-0">
         <div class="card-header">
@@ -92,63 +87,59 @@
                 </tbody>
             </table>
             <h2>駅情報</h2>
-            <table class="table responsive nowrap" id="dt" width="100%">
-                <thead>
-                    <tr>
-                        <th>order</th>
-                        <th>名称</th>
-                        <th>
-                            名称かな
-                        </th>
-                        <th>
-                            キロ程
-                        </th>
-                        <th>
-                            区間キロ程
-                        </th>
-                        <th>
-                            特記事項
-                        </th>
-                        <th>
-                            貨物情報
-                        </th>
-                        <th>
-                            操作
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for object in object_list %}
-                        <tr{% if object.station.label %} class="table-secondary"{% endif %}>
-                            <td>
-                                {{ object.station.order }}
-                            </td>
-                            <td>
-                                {{ object.station.name }}
-                            </td>
-                            <td>
-                                {{ object.station.name_kana }}
-                            </td>
-                            <td class="text-end">
-                                {{ object.station.distance|get_actual_distance }}
-                            </td>
-                            <td class="text-end">
-                                {{ object.gap|get_actual_distance }}
-                            </td>
-                            <td>
-                                {% if object.station.label %}{{ object.station.get_label_display }}{% endif %}
-                            </td>
-                            <td>
-                                {% if object.station.freight %}{{ object.station.get_freight_display }}{% endif %}
-                            </td>
-                            <td>
-                                <a href="{% url 'library:database_detail_station' object.station.pk %}"
-                                   class="btn btn-primary btn-sm"><i class="fa-solid fa-eye"></i> 詳細</a>
-                            </td>
+            <div class="table-responsive">
+                <table class="table text-nowrap">
+                    <thead>
+                        <tr>
+                            <th>名称</th>
+                            <th>名称かな</th>
+                            <th>
+                                キロ程
+                            </th>
+                            <th>
+                                区間キロ程
+                            </th>
+                            <th>
+                                特記事項
+                            </th>
+                            <th>
+                                貨物情報
+                            </th>
+                            <th>
+                                操作
+                            </th>
                         </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {% for object in object_list %}
+                            <tr{% if object.station.label %} class="table-secondary"{% endif %}>
+                                <td>
+                                    {{ object.station.name }}
+                                </td>
+                                <td>
+                                    {{ object.station.name_kana }}
+                                </td>
+                                <td class="text-end">
+                                    {{ object.station.distance|get_actual_distance }}
+                                </td>
+                                <td class="text-end">
+                                    {{ object.gap|get_actual_distance }}
+                                </td>
+                                <td>
+                                    {% if object.station.label %}{{ object.station.get_label_display }}{% endif %}
+                                </td>
+                                <td>
+                                    {% if object.station.freight %}{{ object.station.get_freight_display }}{% endif %}
+                                </td>
+                                <td>
+                                    <a href="{% url 'library:database_detail_station' object.station.pk %}"
+                                       class="btn btn-primary btn-sm"><i class="fa-solid fa-eye"></i> 詳細</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
             <hr />
             <div class="text-end">
                 <a href="{% url 'library:database_csv_download' 'station' object.id %}"
@@ -173,7 +164,3 @@
         {% endif %}
     </div>
 {% endblock body %}
-{% block extrascript %}
-    <script type="text/javascript" src="https://cdn.datatables.net/v/dt/jq-3.6.0/dt-1.12.1/r-2.4.0/datatables.min.js"></script>
-    <script type="text/javascript" src="{% static 'library/database/detail_line.js' %}"></script>
-{% endblock extrascript %}

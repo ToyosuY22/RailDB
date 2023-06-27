@@ -28,7 +28,6 @@
         </div>
         <div class="card-body">
             <div class="alert alert-info">CSVをアップロードし、駅データを入力します。</div>
-            <div class="alert alert-danger">現在保持されている当該路線所属駅データはすべて削除されます。あらかじめ CSV で駅データをダウンロードし、バックアップしてください。</div>
             <form method="post" class="form" enctype="multipart/form-data">
                 {% csrf_token %}
                 {% bootstrap_form form %}

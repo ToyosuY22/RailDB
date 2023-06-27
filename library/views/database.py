@@ -1,6 +1,7 @@
 import csv
 import io
 import traceback
+import uuid
 
 from django.contrib import messages
 from django.db import transaction
@@ -106,7 +107,7 @@ class DetailLineView(generic.DetailView):
         # 駅一覧を登録
         context['object_list'] = [{
             'station': station,
-            'gap': self.get_gap(station)
+            'gap': self.get_gap(station),
         } for station in Station.objects.filter(line=self.object)]
 
         return context
@@ -718,17 +719,17 @@ class CsvDownloadView(generic.View):
     def get_header(self, mode):
         if mode == 'operator':
             return [
-                'name', 'name_kana'
+                'id', 'name', 'name_kana'
             ]
         elif mode == 'line':
             return [
-                'name', 'name_kana',
+                'id', 'name', 'name_kana',
                 'start', 'end', 'via', 'area', 'kind', 'status',
                 'category', 'distance', 'note'
             ]
         elif mode == 'station':
             return [
-                'name', 'name_kana',
+                'id', 'name', 'name_kana',
                 'distance', 'label', 'freight', 'note'
             ]
 
@@ -750,11 +751,13 @@ class CsvDownloadView(generic.View):
     def get_body(self, mode, obj):
         if mode == 'operator':
             return [
+                obj.id,
                 obj.name,
                 obj.name_kana
             ]
         elif mode == 'line':
             return [
+                obj.id,
                 obj.name,
                 obj.name_kana,
                 obj.start,
@@ -769,6 +772,7 @@ class CsvDownloadView(generic.View):
             ]
         elif mode == 'station':
             return [
+                obj.id,
                 obj.name,
                 obj.name_kana,
                 obj.distance,
@@ -820,20 +824,7 @@ class CsvUploadView(SuperUserOnlyMixin, generic.FormView):
 
         try:
             with transaction.atomic():
-                # 一旦すべての所属駅を削除
-                Station.objects.filter(line=self.line).delete()
-
-                # CSV データを元に液を作製
-                for row in reader:
-                    Station.objects.create(
-                        name=row[0],
-                        name_kana=row[1],
-                        line=self.line,
-                        distance=int(row[2]),
-                        label=row[3] if row[3] else None,
-                        freight=row[4] if row[4] else None,
-                        note=row[5]
-                    )
+                self.process_normal(reader)
         except Exception as e:
             # エラー内容を表示
             message = traceback.format_exc()
@@ -845,3 +836,28 @@ class CsvUploadView(SuperUserOnlyMixin, generic.FormView):
         messages.success(self.request, '処理完了しました！')
 
         return response
+
+    def process_normal(self, reader):
+        id_list = []
+
+        # データを追加／更新
+        for row in reader:
+            obj, _ = Station.objects.update_or_create(
+                id=uuid.UUID(row[0]),
+                defaults={
+                    'name': row[1],
+                    'name_kana': row[2],
+                    'line': self.line,
+                    'distance': int(row[3]) if row[3] else None,
+                    'label': row[4] if row[4] else None,
+                    'freight': row[5] if row[5] else None,
+                    'note': row[6]
+                }
+            )
+            obj.save()
+            id_list.append(obj.id)
+
+        # データを削除
+        for obj in Station.objects.filter(line=self.line):
+            if obj.id not in id_list:
+                obj.delete()

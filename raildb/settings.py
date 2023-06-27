@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     'django_bootstrap5',
     'django_celery_results',
     'django_select2',
+    'import_export',
     'ordered_model',
     # raildb
     'ekidata',

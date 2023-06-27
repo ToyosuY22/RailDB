@@ -1,6 +1,7 @@
 import csv
 import io
 import traceback
+import uuid
 
 from django.contrib import messages
 from django.contrib.gis.geos import Point
@@ -9,7 +10,9 @@ from django.urls import reverse_lazy
 from django.views import generic
 
 from ekidata.forms import UploadForm
-from ekidata.models import Company, Join, Line, Pref, Station, StationGroup
+from ekidata.models import (Company, ConnectOperator, Join, Line, Pref,
+                            Station, StationGroup)
+from library import models as library_models
 from raildb.mixins import SuperUserOnlyMixin
 
 
@@ -45,6 +48,8 @@ class IndexView(SuperUserOnlyMixin, generic.FormView):
                     self.process_join(reader)
                 elif mode == 'pref':
                     self.process_pref(reader)
+                elif mode == 'connect_operator':
+                    self.process_connect_operator(reader)
                 else:
                     # 想定外の mode が与えられた場合
                     return super().form_invalid(form)
@@ -214,4 +219,30 @@ class IndexView(SuperUserOnlyMixin, generic.FormView):
         # データを削除
         for obj in Pref.objects.all():
             if obj.pref_cd not in cd_list:
+                obj.delete()
+
+    def process_connect_operator(self, reader):
+        obj_list = []
+
+        # データを追加／更新
+        for row in reader:
+            obj, _ = ConnectOperator.objects.get_or_create(
+                library_operator=library_models.Operator.objects.get(
+                    id=uuid.UUID(row[0])
+                ),
+                ekidata_operator=Company.objects.get(company_cd=int(row[1]))
+            )
+            obj.save()
+            obj_list.append({
+                'library_operator_id': uuid.UUID(row[0]),
+                'ekidata_operator_id': int(row[1])
+            })
+
+        # データを削除
+        for obj in ConnectOperator.objects.all():
+            search = {
+                'library_operator_id': obj.library_operator.id,
+                'ekidata_operator_id': obj.ekidata_operator.company_cd
+            }
+            if search not in obj_list:
                 obj.delete()

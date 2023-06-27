@@ -19,11 +19,6 @@
 {% block menu_database %}
     active
 {% endblock menu_database %}
-{% block extrahead %}
-    <link rel="stylesheet"
-          type="text/css"
-          href="https://cdn.datatables.net/v/dt/jq-3.6.0/dt-1.12.1/r-2.4.0/datatables.min.css"/>
-{% endblock extrahead %}
 {% block body %}
     <div class="card mt-4 mt-xl-0">
         <div class="card-header">
@@ -41,6 +36,41 @@
                         <th>名称かな</th>
                         <td>{{ object.name_kana }}</td>
                     </tr>
+                    {% if object.connectoperator %}
+                        <tr>
+                            <td colspan="2">
+                                「<a href="https://www.ekidata.jp/">駅データ.jp</a>」のデータを利用可能です。
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>事業者名（一般）</th>
+                            <td>{{ object.connectoperator.ekidata_operator.company_name }}</td>
+                        </tr>
+                        <tr>
+                            <th>事業者名（一般／カナ）</th>
+                            <td>{{ object.connectoperator.ekidata_operator.company_name_k }}</td>
+                        </tr>
+                        <tr>
+                            <th>事業者名（正式名称）</th>
+                            <td>{{ object.connectoperator.ekidata_operator.company_name_h }}</td>
+                        </tr>
+                        <tr>
+                            <th>事業者名（略称）</th>
+                            <td>{{ object.connectoperator.ekidata_operator.company_name_r }}</td>
+                        </tr>
+                        <tr>
+                            <th>Webサイト</th>
+                            <td>{{ object.connectoperator.ekidata_operator.company_url|urlize }}</td>
+                        </tr>
+                        <tr>
+                            <th>事業者区分</th>
+                            <td>{{ object.connectoperator.ekidata_operator.get_company_type_display }}</td>
+                        </tr>
+                        <tr>
+                            <th>状態</th>
+                            <td>{{ object.connectoperator.ekidata_operator.get_e_status_display }}</td>
+                        </tr>
+                    {% endif %}
                 </tbody>
             </table>
             <h2>路線情報</h2>
@@ -48,49 +78,73 @@
                 <h3>
                     {{ group.kind.label }}　{{ group.status.label }}　{{ group.category.label }}　<span class="text-primary">{{ group.distance_sum|get_actual_distance }}km</span>
                 </h3>
-                <table class="table responsive nowrap"
-                       id="dt_{{ forloop.counter0 }}"
-                       width="100%">
-                    <thead>
-                        <tr>
-                            <th>order</th>
-                            <th>名称</th>
-                            <th>名称かな</th>
-                            <th>始点</th>
-                            <th>経由点</th>
-                            <th>終点</th>
-                            <th>運輸局等</th>
-                            <th>営業キロ</th>
-                            <th>操作</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for line in group.queryset %}
+                <div class="table-responsive">
+                    <table class="table text-nowrap" id="dt_{{ forloop.counter0 }}" width="100%">
+                        <thead>
                             <tr>
-                                <td>{{ line.order }}</td>
-                                <td>{{ line.name }}</td>
-                                <td>{{ line.name_kana }}</td>
-                                <td>{{ line.start }}</td>
-                                <td>
-                                    {% if line.via %}
-                                        {{ line.via }}
-                                    {% else %}
-                                        ─
-                                    {% endif %}
-                                </td>
-                                <td>{{ line.end }}</td>
-                                <td>{{ line.get_area_display }}</td>
-                                <td class="text-end">
-                                    {{ line.distance|get_actual_distance }}
-                                </td>
-                                <td>
-                                    <a href="{% url 'library:database_detail_line' line.pk %}"
-                                       class="btn btn-primary btn-sm"><i class="fa-solid fa-eye"></i> 詳細</a>
-                                </td>
+                                <th>
+                                    名称
+                                </th>
+                                <th>
+                                    名称かな
+                                </th>
+                                <th>
+                                    始点
+                                </th>
+                                <th>
+                                    経由点
+                                </th>
+                                <th>
+                                    終点
+                                </th>
+                                <th>
+                                    運輸局等
+                                </th>
+                                <th>
+                                    営業キロ
+                                </th>
+                                <th>
+                                    操作
+                                </th>
                             </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            {% for line in group.queryset %}
+                                <tr>
+                                    <td>
+                                        {{ line.name }}
+                                    </td>
+                                    <td>
+                                        {{ line.name_kana }}
+                                    </td>
+                                    <td>
+                                        {{ line.start }}
+                                    </td>
+                                    <td>
+                                        {% if line.via %}
+                                            {{ line.via }}
+                                        {% else %}
+                                            ─
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {{ line.end }}
+                                    </td>
+                                    <td>
+                                        {{ line.get_area_display }}
+                                    </td>
+                                    <td class="text-end">
+                                        {{ line.distance|get_actual_distance }}
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'library:database_detail_line' line.pk %}"
+                                           class="btn btn-primary btn-sm"><i class="fa-solid fa-eye"></i> 詳細</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
                 <hr />
             {% endfor %}
             <div class="text-end">
@@ -112,7 +166,3 @@
         {% endif %}
     </div>
 {% endblock body %}
-{% block extrascript %}
-    <script type="text/javascript" src="https://cdn.datatables.net/v/dt/jq-3.6.0/dt-1.12.1/r-2.4.0/datatables.min.js"></script>
-    <script type="text/javascript" src="{% static 'library/database/detail_operator.js' %}"></script>
-{% endblock extrascript %}

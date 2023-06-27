@@ -346,3 +346,59 @@ class Pref(models.Model):
         max_length=4,
         unique=True
     )
+
+
+class ConnectOperator(models.Model):
+    class Meta:
+        verbose_name = 'DB連携_事業者'
+        verbose_name_plural = 'DB連携_事業者'
+        ordering = ['library_operator']
+
+    def __str__(self):
+        return str(self.library_operator)
+
+    id = models.UUIDField(
+        primary_key=True,
+        default=uuid.uuid4,
+        editable=False
+    )
+
+    library_operator = models.OneToOneField(
+        'library.Operator',
+        verbose_name='ライブラリ_事業者',
+        on_delete=models.CASCADE
+    )
+
+    ekidata_operator = models.OneToOneField(
+        'ekidata.Company',
+        verbose_name='駅データ_事業者',
+        on_delete=models.CASCADE
+    )
+
+
+class ConnectStationGroup(models.Model):
+    class Meta:
+        verbose_name = 'DB連携_駅グループ'
+        verbose_name_plural = 'DB連携_駅グループ'
+        ordering = ['library_station']
+
+    def __str__(self):
+        return str(self.library_station)
+
+    id = models.UUIDField(
+        primary_key=True,
+        default=uuid.uuid4,
+        editable=False
+    )
+
+    library_station = models.OneToOneField(
+        'library.Station',
+        verbose_name='ライブラリ_駅',
+        on_delete=models.CASCADE
+    )
+
+    ekidata_station_group = models.ForeignKey(
+        'ekidata.StationGroup',
+        verbose_name='駅データ_駅グループ',
+        on_delete=models.CASCADE
+    )
