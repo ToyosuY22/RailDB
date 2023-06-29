@@ -185,18 +185,18 @@ class ConnectOperatorAdmin(ExportActionModelAdmin):
     ]
 
 
-@admin.register(models.ConnectStationGroup)
-class ConnectStationGroupAdmin(ExportActionModelAdmin):
+@admin.register(models.ConnectStation)
+class ConnectStationAdmin(ExportActionModelAdmin):
     formats = [base_formats.CSV]
 
     fields = [
-        'library_station', 'ekidata_station_group'
+        'library_station', 'ekidata_station'
     ]
 
     autocomplete_fields = [
-        'library_station', 'ekidata_station_group'
+        'library_station', 'ekidata_station'
     ]
 
     list_display = [
-        'library_station', 'ekidata_station_group'
+        'library_station', 'ekidata_station'
     ]

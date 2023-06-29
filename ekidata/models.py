@@ -376,11 +376,11 @@ class ConnectOperator(models.Model):
     )
 
 
-class ConnectStationGroup(models.Model):
+class ConnectStation(models.Model):
     class Meta:
-        verbose_name = 'DB連携_駅グループ'
-        verbose_name_plural = 'DB連携_駅グループ'
-        ordering = ['library_station']
+        verbose_name = 'DB連携_駅'
+        verbose_name_plural = 'DB連携_駅'
+        ordering = ['library_station', 'ekidata_station']
 
     def __str__(self):
         return str(self.library_station)
@@ -391,14 +391,14 @@ class ConnectStationGroup(models.Model):
         editable=False
     )
 
-    library_station = models.OneToOneField(
+    library_station = models.ForeignKey(
         'library.Station',
         verbose_name='ライブラリ_駅',
         on_delete=models.CASCADE
     )
 
-    ekidata_station_group = models.ForeignKey(
-        'ekidata.StationGroup',
-        verbose_name='駅データ_駅グループ',
+    ekidata_station = models.ForeignKey(
+        'ekidata.Station',
+        verbose_name='駅データ',
         on_delete=models.CASCADE
     )

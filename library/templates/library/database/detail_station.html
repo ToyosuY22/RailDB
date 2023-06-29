@@ -54,11 +54,15 @@
                     </tr>
                     <tr>
                         <th>特記事項</th>
-                        <td>{% if object.label %}{{ object.get_label_display }}{% endif %}</td>
+                        <td>
+                            {% if object.label %}{{ object.get_label_display }}{% endif %}
+                        </td>
                     </tr>
                     <tr>
                         <th>貨物情報</th>
-                        <td>{% if object.freight %}{{ object.get_freight_display }}{% endif %}</td>
+                        <td>
+                            {% if object.freight %}{{ object.get_freight_display }}{% endif %}
+                        </td>
                     </tr>
                     <tr>
                         <th>備考</th>
@@ -66,6 +70,75 @@
                     </tr>
                 </tbody>
             </table>
+            {% if object.connectstation_set.exists %}
+                <h3>運行系統</h3>
+                <p>
+                    「<a href="https://www.ekidata.jp/">駅データ.jp</a>」のデータを利用可能です。
+                </p>
+                {% for connectstation in object.connectstation_set.all %}
+                    <h4>
+                        {% if connectstation.ekidata_station.line.line_color_c %}
+                            <span style="color: #{{ connectstation.ekidata_station.line.line_color_c }};">■</span>
+                        {% endif %}
+                        {{ connectstation.ekidata_station.line.line_name }}
+                    </h4>
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <th>事業者</th>
+                                <td>{{ connectstation.ekidata_station.line.company }}</td>
+                            </tr>
+                            <tr>
+                                <th>路線名称（一般）</th>
+                                <td>{{ connectstation.ekidata_station.line.line_name }}</td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    路線名称（一般／カナ）
+                                </th>
+                                <td>
+                                    {{ connectstation.ekidata_station.line.line_name_k }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    路線名称（正式名称）
+                                </th>
+                                <td>
+                                    {{ connectstation.ekidata_station.line.line_name_h }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    路線カラー
+                                </th>
+                                <td>
+                                    {{ connectstation.ekidata_station.line.line_color_t }}
+                                    {% if connectstation.ekidata_station.line.line_color_c %}
+                                        （#{{ connectstation.ekidata_station.line.line_color_c }}）
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    路線区分
+                                </th>
+                                <td>
+                                    {{ connectstation.ekidata_station.line.get_line_type_display }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    状態
+                                </th>
+                                <td>
+                                    {{ connectstation.ekidata_station.line.get_e_status_display }}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                {% endfor %}
+            {% endif %}
         </div>
         {% if request.user.is_superuser %}
             <div class="card-footer text-end">

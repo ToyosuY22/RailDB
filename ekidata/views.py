@@ -10,8 +10,8 @@ from django.urls import reverse_lazy
 from django.views import generic
 
 from ekidata.forms import UploadForm
-from ekidata.models import (Company, ConnectOperator, Join, Line, Pref,
-                            Station, StationGroup)
+from ekidata.models import (Company, ConnectOperator, ConnectStation, Join,
+                            Line, Pref, Station, StationGroup)
 from library import models as library_models
 from raildb.mixins import SuperUserOnlyMixin
 
@@ -50,6 +50,8 @@ class IndexView(SuperUserOnlyMixin, generic.FormView):
                     self.process_pref(reader)
                 elif mode == 'connect_operator':
                     self.process_connect_operator(reader)
+                elif mode == 'connect_station':
+                    self.process_connect_station(reader)
                 else:
                     # 想定外の mode が与えられた場合
                     return super().form_invalid(form)
@@ -246,3 +248,45 @@ class IndexView(SuperUserOnlyMixin, generic.FormView):
             }
             if search not in obj_list:
                 obj.delete()
+
+    def process_connect_station(self, reader):
+        obj_list = []
+
+        # データを追加／更新
+        for row in reader:
+            if row[1]:
+                obj = self.process_connect_station_row(row[1], row[0])
+                obj_list.append(obj)
+            if row[2]:
+                obj = self.process_connect_station_row(row[2], row[0])
+                obj_list.append(obj)
+
+        # データを削除
+        for obj in ConnectStation.objects.all():
+            search = {
+                'library_station_id': obj.library_station.id,
+                'ekidata_station_id': obj.ekidata_station.station_cd
+            }
+            if search not in obj_list:
+                obj.delete()
+
+    def process_connect_station_row(self, library_obj, ekidata_obj):
+        obj, _ = ConnectStation.objects.get_or_create(
+            library_station=library_models.Station.objects.get(
+                id=uuid.UUID(library_obj)
+            ),
+            ekidata_station=Station.objects.get(
+                station_cd=int(ekidata_obj)
+            )
+        )
+        obj.save()
+
+        return {
+            'library_station_id': uuid.UUID(library_obj),
+            'ekidata_station_id': int(ekidata_obj)
+        }
+
+
+class DetailLineView(generic.DetailView):
+    template_name = 'ekidata/detail_line.html'
+    model = Line

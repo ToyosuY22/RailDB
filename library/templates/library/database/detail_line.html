@@ -106,6 +106,9 @@
                                 貨物情報
                             </th>
                             <th>
+                                運行系統（駅データ.jp）
+                            </th>
+                            <th>
                                 操作
                             </th>
                         </tr>
@@ -130,6 +133,17 @@
                                 </td>
                                 <td>
                                     {% if object.station.freight %}{{ object.station.get_freight_display }}{% endif %}
+                                </td>
+                                <td>
+                                    {% for connectstation in object.station.connectstation_set.all %}
+                                        {% if not forloop.first %}<br />{% endif %}
+                                        <a href="{% url 'ekidata:detail_line' connectstation.ekidata_station.line.pk %}">
+                                            {% if connectstation.ekidata_station.line.line_color_c %}
+                                                <span style="color: #{{ connectstation.ekidata_station.line.line_color_c }};">■</span>
+                                            {% endif %}
+                                            {{ connectstation.ekidata_station.line.line_name }}
+                                        </a>
+                                    {% endfor %}
                                 </td>
                                 <td>
                                     <a href="{% url 'library:database_detail_station' object.station.pk %}"

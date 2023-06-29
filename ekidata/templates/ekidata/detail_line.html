@@ -1,0 +1,92 @@
+{% extends "flame.html" %}
+{% load static %}
+{% load raildb_tags %}
+{% block subtitle %}
+    {{ object }}
+{% endblock subtitle %}
+{% block description %}
+    {{ object }} の詳細情報を表示します。
+{% endblock description %}
+{% block breadcrumb %}
+    <li class="breadcrumb-item">
+        <a href="{% url 'home:index' %}">ホーム</a>
+    </li>
+    <li class="breadcrumb-item">運行系統（駅データ.jp）</li>
+    <li class="breadcrumb-item active" aria-current="page">{{ object.line_name }}</li>
+{% endblock breadcrumb %}
+{% block menu_database %}
+    active
+{% endblock menu_database %}
+{% block body %}
+    <div class="card mt-4 mt-xl-0">
+        <div class="card-header">
+            <h1>
+                {% if object.line_color_c %}
+                    <span style="color: #{{ object.line_color_c }};">■</span>
+                {% endif %}
+                {{ object.line_name }}
+            </h1>
+        </div>
+        <div class="card-body">
+            <h2>基本情報</h2>
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <th>事業者</th>
+                        <td>{{ object.company }}</td>
+                    </tr>
+                    <tr>
+                        <th>路線名称（一般）</th>
+                        <td>{{ object.line_name }}</td>
+                    </tr>
+                    <tr>
+                        <th>路線名称（一般／カナ）</th>
+                        <td>{{ object.line_name_k }}</td>
+                    </tr>
+                    <tr>
+                        <th>路線名称（正式名称）</th>
+                        <td>{{ object.line_name_h }}</td>
+                    </tr>
+                    <tr>
+                        <th>路線カラー</th>
+                        <td>
+                            {{ object.line_color_t }}
+                            {% if object.line_color_c %}（#{{ object.line_color_c }}）{% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>路線区分</th>
+                        <td>{{ object.get_line_type_display }}</td>
+                    </tr>
+                    <tr>
+                        <th>状態</th>
+                        <td>{{ object.get_e_status_display }}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <h2>駅情報</h2>
+            <div class="table-responsive">
+                <table class="table text-nowrap">
+                    <thead>
+                        <tr>
+                            <th>名称</th>
+                            <th>名称かな</th>
+                            <th>路線</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for ekidata_station in object.station_set.all %}
+                            {% for connectstation in ekidata_station.connectstation_set.all %}
+                                <tr>
+                                    <td>{{ connectstation.library_station.name }}</td>
+                                    <td>{{ connectstation.library_station.name_kana }}</td>
+                                    <td><a href="{% url 'library:database_detail_line' connectstation.library_station.line.pk %}">{{ connectstation.library_station.line }}</a></td>
+                                </tr>
+                            {% endfor %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock body %}

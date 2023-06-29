@@ -10,6 +10,7 @@ class UploadForm(forms.Form):
         JOIN = 'join', '接続駅'
         PREF = 'pref', '都道府県'
         CONNECT_OPERATOR = 'connect_operator', 'DB連携_事業者'
+        CONNECT_STATION = 'connect_station', 'DB連携_駅'
 
     mode = forms.ChoiceField(
         label='モード',
