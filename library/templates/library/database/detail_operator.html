@@ -147,6 +147,59 @@
                 </div>
                 <hr />
             {% endfor %}
+            {% if object.connectoperator %}
+                <h3>
+                    運転系統一覧（駅データ.jp）
+                </h3>
+                <div class="table-responsive">
+                    <table class="table text-nowrap" width="100%">
+                        <thead>
+                            <tr>
+                                <th>
+                                    路線名称（一般）
+                                </th>
+                                <th>
+                                    路線名称（一般／カナ）
+                                </th>
+                                <th>
+                                    路線名称（正式名称）
+                                </th>
+                                <th>
+                                    路線区分
+                                </th>
+                                <th>
+                                    操作
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for ekidata_line in object.connectoperator.ekidata_operator.line_set.all %}
+                                {% if ekidata_line.e_status == 0 %}
+                                    <tr>
+                                        <td>
+                                            {% if ekidata_line.line_color_c %}<span style="color: #{{ ekidata_line.line_color_c }};">■</span>{% endif %}
+                                            {{ ekidata_line.line_name }}
+                                        </td>
+                                        <td>
+                                            {{ ekidata_line.line_name_k }}
+                                        </td>
+                                        <td>
+                                            {{ ekidata_line.line_name_h }}
+                                        </td>
+                                        <td>
+                                            {{ ekidata_line.get_line_type_display }}
+                                        </td>
+                                        <td>
+                                            <a href="{% url 'ekidata:detail_line' ekidata_line.pk %}"
+                                               class="btn btn-primary btn-sm"><i class="fa-solid fa-eye"></i> 詳細</a>
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% endif %}
             <div class="text-end">
                 <a href="{% url 'library:database_csv_download' 'line' object.id %}"
                    class="btn btn-primary"><i class="fa-solid fa-file-csv"></i> この事業者の路線一覧をダウンロード</a>

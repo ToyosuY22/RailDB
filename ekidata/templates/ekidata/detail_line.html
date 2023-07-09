@@ -11,7 +11,12 @@
     <li class="breadcrumb-item">
         <a href="{% url 'home:index' %}">ホーム</a>
     </li>
-    <li class="breadcrumb-item">運行系統（駅データ.jp）</li>
+    <li class="breadcrumb-item">
+        <a href="{% url 'library:database_search_operator' %}">データベース</a>
+    </li>
+    <li class="breadcrumb-item">
+        <a href="{% url 'library:database_detail_operator' object.company.connectoperator.library_operator.pk %}">{{ object.company.connectoperator.library_operator.name }}</a>
+    </li>
     <li class="breadcrumb-item active" aria-current="page">{{ object.line_name }}</li>
 {% endblock breadcrumb %}
 {% block menu_database %}
@@ -21,9 +26,7 @@
     <div class="card mt-4 mt-xl-0">
         <div class="card-header">
             <h1>
-                {% if object.line_color_c %}
-                    <span style="color: #{{ object.line_color_c }};">■</span>
-                {% endif %}
+                {% if object.line_color_c %}<span style="color: #{{ object.line_color_c }};">■</span>{% endif %}
                 {{ object.line_name }}
             </h1>
         </div>
@@ -58,10 +61,6 @@
                         <th>路線区分</th>
                         <td>{{ object.get_line_type_display }}</td>
                     </tr>
-                    <tr>
-                        <th>状態</th>
-                        <td>{{ object.get_e_status_display }}</td>
-                    </tr>
                 </tbody>
             </table>
             <h2>駅情報</h2>
@@ -69,20 +68,76 @@
                 <table class="table text-nowrap">
                     <thead>
                         <tr>
-                            <th>名称</th>
-                            <th>名称かな</th>
-                            <th>路線</th>
+                            <th>駅名称</th>
+                            <th>駅名称（カナ）</th>
+                            <th>駅名称（ローマ字）</th>
+                            <th>都道府県</th>
+                            <th>住所</th>
+                            <th>駅グループ（運転系統一覧）</th>
+                            <th>接続駅</th>
+                            <th>路線一覧</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for ekidata_station in object.station_set.all %}
-                            {% for connectstation in ekidata_station.connectstation_set.all %}
+                        {% for object in station_list %}
+                            {% if object.station.e_status == 0 %}
                                 <tr>
-                                    <td>{{ connectstation.library_station.name }}</td>
-                                    <td>{{ connectstation.library_station.name_kana }}</td>
-                                    <td><a href="{% url 'library:database_detail_line' connectstation.library_station.line.pk %}">{{ connectstation.library_station.line }}</a></td>
+                                    <td>
+                                        {{ object.station.station_name }}
+                                    </td>
+                                    <td>
+                                        {{ object.station.station_name_k }}
+                                    </td>
+                                    <td>
+                                        {{ object.station.station_name_r }}
+                                    </td>
+                                    <td>
+                                        {{ object.station.pref.pref_name }}
+                                    </td>
+                                    <td>
+                                        {{ object.station.address }}
+                                    </td>
+                                    <td>
+                                        {% for stationgroup in object.station.stationgroup_set.all %}
+                                            {% for another_station in stationgroup.station_set.all %}
+                                                {% if another_station == object.station %}
+                                                    {% if another_station.line.line_color_c %}
+                                                        <span style="color: #{{ another_station.line.line_color_c }};">■</span>
+                                                    {% endif %}
+                                                    {{ another_station.line.line_name }}〈{{ another_station.station_name }}〉
+                                                    <br />
+                                                {% else %}
+                                                    {% if another_station.e_status == 0 %}
+                                                        {% if another_station.line.line_color_c %}
+                                                            <span style="color: #{{ another_station.line.line_color_c }};">■</span>
+                                                        {% endif %}
+                                                        <a href="{% url 'ekidata:detail_line' another_station.line.pk %}">
+                                                            {{ another_station.line.line_name }}〈{{ another_station.station_name }}〉
+                                                        </a>
+                                                        <br />
+                                                    {% endif %}
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% endfor %}
+                                    </td>
+                                    <td>
+                                        {% for obj in object.join_prev_list %}
+                                        ▲ {{ obj.station_name }} <br />
+                                        {% endfor %}
+                                        {% for obj in object.join_next_list %}
+                                        ▼ {{ obj.station_name }} <br />
+                                        {% endfor %}
+                                    </td>
+                                    <td>
+                                        {% for connectstation in object.station.connectstation_set.all %}
+                                            {% if not forloop.first %}<br />{% endif %}
+                                            <a href="{% url 'library:database_detail_line' connectstation.library_station.line.pk %}">
+                                                {{ connectstation.library_station.line }}〈{{ connectstation.library_station.name }}〉
+                                            </a>
+                                        {% endfor %}
+                                    </td>
                                 </tr>
-                            {% endfor %}
+                            {% endif %}
                         {% endfor %}
                     </tbody>
                 </table>

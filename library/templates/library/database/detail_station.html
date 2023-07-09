@@ -35,7 +35,7 @@
             <table class="table">
                 <tbody>
                     <tr>
-                        <th>名称</th>
+                        <th width="30%">名称</th>
                         <td>{{ object.name }}</td>
                     </tr>
                     <tr>
@@ -80,17 +80,21 @@
                         {% if connectstation.ekidata_station.line.line_color_c %}
                             <span style="color: #{{ connectstation.ekidata_station.line.line_color_c }};">■</span>
                         {% endif %}
-                        {{ connectstation.ekidata_station.line.line_name }}
+                        <a href="{% url 'ekidata:detail_line' connectstation.ekidata_station.line.pk %}">
+                            {{ connectstation.ekidata_station.line.line_name }}
+                        </a>
                     </h4>
                     <table class="table">
                         <tbody>
                             <tr>
-                                <th>事業者</th>
+                                <th width="30%">事業者</th>
                                 <td>{{ connectstation.ekidata_station.line.company }}</td>
                             </tr>
                             <tr>
                                 <th>路線名称（一般）</th>
-                                <td>{{ connectstation.ekidata_station.line.line_name }}</td>
+                                <td>
+                                    {{ connectstation.ekidata_station.line.line_name }}
+                                </td>
                             </tr>
                             <tr>
                                 <th>

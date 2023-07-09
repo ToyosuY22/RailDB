@@ -199,7 +199,7 @@ class Station(models.Model):
     )
 
     station_name_k = models.CharField(
-        verbose_name='路線名称（カナ）',
+        verbose_name='駅名称（カナ）',
         max_length=80,
         validators=[validators.KatakanaRegexValidator],
         null=True, blank=True
