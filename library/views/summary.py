@@ -1,7 +1,9 @@
+import pykakasi
 from django.db.models import Sum
 from django.views import generic
 
-from library.models import Line, Operator
+from ekidata import models as ekidata_models
+from library.models import Line, Operator, Station
 from raildb.mixins import SuperUserOnlyMixin
 
 
@@ -399,7 +401,13 @@ class CheckView(SuperUserOnlyMixin, generic.TemplateView):
 
         # 駅情報なし路線
         context['line_no_station_list'] = \
-            Line.objects.filter(station__isnull=True)
+            Line.objects.filter(station__isnull=True, status='active')
+
+        # かな不整合
+        context['kana_object'] = self.get_kana_object()
+
+        # 対応データなし
+        context['none_object'] = self.get_none_object()
 
         return context
 
@@ -428,3 +436,78 @@ class CheckView(SuperUserOnlyMixin, generic.TemplateView):
                 })
 
         return result
+
+    def get_kana_object(self):
+        kks = pykakasi.kakasi()
+        kana_object = []
+
+        for obj in ekidata_models.ConnectOperator.objects.all():
+            kana_lib = obj.library_operator.name_kana
+            kana_eki_kata = obj.ekidata_operator.company_name_k
+
+            kana_eki_kks = kks.convert(kana_eki_kata)
+
+            kana_eki = ''.join([kks['hira'] for kks in kana_eki_kks])
+
+            if kana_lib != kana_eki:
+                kana_object.append({
+                    'model': '事業者',
+                    'library': obj.library_operator,
+                    'library_kana': kana_lib,
+                    'ekidata': obj.ekidata_operator,
+                    'ekidata_kana': kana_eki,
+                })
+
+        for obj in ekidata_models.ConnectStation.objects.all():
+            kana_lib = obj.library_station.name_kana
+            kana_eki_kata = obj.ekidata_station.station_name_k
+
+            kana_eki_kks = kks.convert(kana_eki_kata)
+
+            kana_eki = ''.join([kks['hira'] for kks in kana_eki_kks])
+
+            if kana_lib != kana_eki:
+                kana_object.append({
+                    'model': '駅',
+                    'library': obj.library_station,
+                    'library_kana': kana_lib,
+                    'ekidata': obj.ekidata_station,
+                    'ekidata_kana': kana_eki,
+                })
+
+        return kana_object
+
+    def get_none_object(self):
+        none_object = []
+
+        for obj in Operator.objects.all():
+            if not ekidata_models.ConnectOperator.objects.filter(
+                    library_operator=obj).exists():
+                none_object.append({
+                    'model': 'ライブラリ／事業者',
+                    'object': obj,
+                })
+
+        for obj in ekidata_models.Company.objects.filter(e_status=0):
+            if not ekidata_models.ConnectOperator.objects.filter(
+                    ekidata_operator=obj).exists():
+                none_object.append({
+                    'model': '駅データ／事業者',
+                    'object': obj
+                })
+
+        for obj in Station.objects.all():
+            if not obj.connectstation_set.exists():
+                none_object.append({
+                    'model': 'ライブラリ／駅',
+                    'object': obj
+                })
+
+        for obj in ekidata_models.Station.objects.filter(e_status=0):
+            if not obj.connectstation_set.exists():
+                none_object.append({
+                    'model': '駅データ／駅',
+                    'object': obj
+                })
+
+        return none_object

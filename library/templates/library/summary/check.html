@@ -37,80 +37,148 @@
             <h1>整合性検査</h1>
         </div>
         <div class="card-body">
-            <h2>確認が必要な路線</h2>
-            <div class="table-responsive text-nowrap">
-                <table class="table">
-                    <thead>
+            <h2>始点／終点／キロ程確認</h2>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>事業者</th>
+                        <th>路線</th>
+                        <th>始点／路線</th>
+                        <th>始点／駅</th>
+                        <th>終点／路線</th>
+                        <th>終点／駅</th>
+                        <th>キロ程／路線</th>
+                        <th>キロ程／駅</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in check_object %}
                         <tr>
-                            <th>事業者</th>
-                            <th>路線</th>
-                            <th>始点／路線</th>
-                            <th>始点／駅</th>
-                            <th>終点／路線</th>
-                            <th>終点／駅</th>
-                            <th>キロ程／路線</th>
-                            <th>キロ程／駅</th>
+                            <td>
+                                <a href="{% url 'library:database_detail_operator' row.line.operator.id %}">{{ row.line.operator }}</a>
+                            </td>
+                            <td>
+                                <a href="{% url 'library:database_detail_line' row.line.id %}">{{ row.line }}</a>
+                            </td>
+                            <td{% if row.error_start %} class="table-danger"{% endif %}>{{ row.line.start }}</td>
+                            <td{% if row.error_start %} class="table-danger"{% endif %}>{{ row.line.station_set.first.name }}</td>
+                            <td{% if row.error_end %} class="table-danger"{% endif %}>{{ row.line.end }}</td>
+                            <td{% if row.error_end %} class="table-danger"{% endif %}>{{ row.line.station_set.last.name }}</td>
+                            <td class="text-end{% if row.error_distance %} table-danger{% endif %}">
+                                {{ row.line.distance|get_actual_distance }}
+                            </td>
+                            <td class="text-end{% if row.error_distance %} table-danger{% endif %}">
+                                {{ row.line.station_set.last.distance|get_actual_distance }}
+                            </td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        {% for row in check_object %}
-                            <tr>
-                                <td>
-                                    <a href="{% url 'library:database_detail_operator' row.line.operator.id %}">{{ row.line.operator }}</a>
-                                </td>
-                                <td>
-                                    <a href="{% url 'library:database_detail_line' row.line.id %}">{{ row.line }}</a>
-                                </td>
-                                <td{% if row.error_start %} class="table-danger"{% endif %}>{{ row.line.start }}</td>
-                                <td{% if row.error_start %} class="table-danger"{% endif %}>{{ row.line.station_set.first.name }}</td>
-                                <td{% if row.error_end %} class="table-danger"{% endif %}>{{ row.line.end }}</td>
-                                <td{% if row.error_end %} class="table-danger"{% endif %}>{{ row.line.station_set.last.name }}</td>
-                                <td class="text-end{% if row.error_distance %} table-danger{% endif %}">
-                                    {{ row.line.distance|get_actual_distance }}
-                                </td>
-                                <td class="text-end{% if row.error_distance %} table-danger{% endif %}">
-                                    {{ row.line.station_set.last.distance|get_actual_distance }}
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+                    {% endfor %}
+                </tbody>
+            </table>
             <h2>駅情報が登録されていない路線</h2>
-            <div class="table-responsive text-nowrap">
-                <table class="table">
-                    <thead>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>事業者</th>
+                        <th>路線</th>
+                        <th>
+                            状態
+                        </th>
+                        <th>
+                            事業
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for line in line_no_station_list %}
                         <tr>
-                            <th>事業者</th>
-                            <th>路線</th>
-                            <th>
-                                状態
-                            </th>
-                            <th>
-                                事業
-                            </th>
+                            <td>
+                                <a href="{% url 'library:database_detail_operator' line.operator.id %}">{{ line.operator }}</a>
+                            </td>
+                            <td>
+                                <a href="{% url 'library:database_detail_line' line.id %}">{{ line }}</a>
+                            </td>
+                            <td>
+                                {{ line.get_status_display }}
+                            </td>
+                            <td>
+                                {{ line.get_category_display }}
+                            </td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        {% for line in line_no_station_list %}
-                            <tr>
-                                <td>
-                                    <a href="{% url 'library:database_detail_operator' line.operator.id %}">{{ line.operator }}</a>
-                                </td>
-                                <td>
-                                    <a href="{% url 'library:database_detail_line' line.id %}">{{ line }}</a>
-                                </td>
-                                <td>
-                                    {{ line.get_status_display }}
-                                </td>
-                                <td>
-                                    {{ line.get_category_display }}
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <h3>
+                かな不整合
+            </h3>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            モデル
+                        </th>
+                        <th>
+                            ライブラリ
+                        </th>
+                        <th>
+                            ライブラリかな
+                        </th>
+                        <th>
+                            駅データ
+                        </th>
+                        <th>
+                            駅データかな
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for kana in kana_object %}
+                        <tr>
+                            <td>
+                                {{ kana.model }}
+                            </td>
+                            <td>
+                                {{ kana.library }}
+                            </td>
+                            <td>
+                                {{ kana.library_kana }}
+                            </td>
+                            <td>
+                                {{ kana.ekidata }}
+                            </td>
+                            <td>
+                                {{ kana.ekidata_kana }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <h3>
+                対応データなし
+            </h3>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th class="text-nowrap">
+                            モデル
+                        </th>
+                        <th>
+                            オブジェクト
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for none in none_object %}
+                        <tr>
+                            <td>
+                                {{ none.model }}
+                            </td>
+                            <td>
+                                {{ none.object }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
     </div>
 {% endblock body %}
