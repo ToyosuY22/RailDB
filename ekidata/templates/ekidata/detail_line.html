@@ -98,34 +98,34 @@
                                         {{ object.station.address }}
                                     </td>
                                     <td>
-                                        {% for stationgroup in object.station.stationgroup_set.all %}
-                                            {% for another_station in stationgroup.station_set.all %}
-                                                {% if another_station == object.station %}
-                                                    {% if another_station.line.line_color_c %}
-                                                        <span style="color: #{{ another_station.line.line_color_c }};">■</span>
-                                                    {% endif %}
-                                                    {{ another_station.line.line_name }}〈{{ another_station.station_name }}〉
-                                                    <br />
-                                                {% else %}
-                                                    {% if another_station.e_status == 0 %}
-                                                        {% if another_station.line.line_color_c %}
-                                                            <span style="color: #{{ another_station.line.line_color_c }};">■</span>
-                                                        {% endif %}
-                                                        <a href="{% url 'ekidata:detail_line' another_station.line.pk %}">
-                                                            {{ another_station.line.line_name }}〈{{ another_station.station_name }}〉
-                                                        </a>
-                                                        <br />
-                                                    {% endif %}
+                                        {% for grouped_station in object.station.grouped_station_list %}
+                                            {% if grouped_station == object.station %}
+                                                {% if grouped_station.line.line_color_c %}
+                                                    <span style="color: #{{ grouped_station.line.line_color_c }};">■</span>
                                                 {% endif %}
-                                            {% endfor %}
+                                                {{ grouped_station.line.line_name }}〈{{ grouped_station.station_name }}〉
+                                                <br />
+                                            {% else %}
+                                                {% if grouped_station.e_status == 0 %}
+                                                    {% if grouped_station.line.line_color_c %}
+                                                        <span style="color: #{{ grouped_station.line.line_color_c }};">■</span>
+                                                    {% endif %}
+                                                    <a href="{% url 'ekidata:detail_line' grouped_station.line.pk %}">
+                                                        {{ grouped_station.line.line_name }}〈{{ grouped_station.station_name }}〉
+                                                    </a>
+                                                    <br />
+                                                {% endif %}
+                                            {% endif %}
                                         {% endfor %}
                                     </td>
                                     <td>
                                         {% for obj in object.join_prev_list %}
-                                        ▲ {{ obj.station_name }} <br />
+                                            ▲ {{ obj.station_name }}
+                                            <br />
                                         {% endfor %}
                                         {% for obj in object.join_next_list %}
-                                        ▼ {{ obj.station_name }} <br />
+                                            ▼ {{ obj.station_name }}
+                                            <br />
                                         {% endfor %}
                                     </td>
                                     <td>

@@ -200,10 +200,6 @@
                     </table>
                 </div>
             {% endif %}
-            <div class="text-end">
-                <a href="{% url 'library:database_csv_download' 'line' object.id %}"
-                   class="btn btn-primary"><i class="fa-solid fa-file-csv"></i> この事業者の路線一覧をダウンロード</a>
-            </div>
         </div>
         {% if request.user.is_superuser %}
             <div class="card-footer text-end">

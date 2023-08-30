@@ -155,12 +155,12 @@
                                 <span class="ps-2">ユーザー管理</span>
                             </a>
                         </li>
-                        <li class="sidebar-item{% block menu_ekidata %}{% endblock menu_ekidata %}">
+                        {% comment %} <li class="sidebar-item{% block menu_ekidata %}{% endblock menu_ekidata %}">
                             <a class="sidebar-link" href="{% url 'ekidata:index' %}">
                                 <i class="fa-solid fa-file-csv"></i>
                                 <span class="ps-2">駅データ.jp 入力</span>
                             </a>
-                        </li>
+                        </li> {% endcomment %}
                         <li class="sidebar-item">
                             <a class="sidebar-link" href="{% url 'admin:index' %}">
                                 <i class="fa-solid fa-database"></i>
@@ -200,10 +200,6 @@
                             <p class="mb-0">
                                 <a href="https://twitter.com/ToyosuY22"
                                    class="text-white text-decoration-none">Toyosu Y-22</a>
-                                <!-- 一般ユーザー向け機能解放まで表示 -->
-                                {% if not request.user.is_authenticated %}
-                                    <a href={% url 'home:auth_signin' %}>管理者ログイン</a>
-                                {% endif %}
                             </p>
                         </div>
                         <div class="col-sm-6 text-sm-end">

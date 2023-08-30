@@ -187,10 +187,18 @@ class Station(models.Model):
     def __str__(self):
         return f'{self.station_name}（{self.line}）'
 
+    @property
+    def grouped_station_list(self):
+        return Station.objects.filter(station_g_cd=self.station_g_cd)
+
     station_cd = models.IntegerField(
         verbose_name='駅コード',
         primary_key=True,
         unique=True
+    )
+
+    station_g_cd = models.IntegerField(
+        verbose_name='駅グループコード'
     )
 
     station_name = models.CharField(
@@ -266,27 +274,6 @@ class Station(models.Model):
     e_sort = models.IntegerField(
         verbose_name='並び順',
         null=True, blank=True
-    )
-
-
-class StationGroup(models.Model):
-    class Meta:
-        verbose_name = '駅グループ'
-        verbose_name_plural = '駅グループ'
-        ordering = ['station_g_cd']
-
-    def __str__(self):
-        return '／'.join([str(station) for station in self.station_set.all()])
-
-    station_g_cd = models.IntegerField(
-        verbose_name='駅グループコード',
-        primary_key=True,
-        unique=True
-    )
-
-    station_set = models.ManyToManyField(
-        'ekidata.Station',
-        verbose_name='駅セット'
     )
 
 

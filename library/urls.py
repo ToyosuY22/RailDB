@@ -127,21 +127,6 @@ urlpatterns = [
         views.database.DeleteStationView.as_view(),
         name='database_delete_station'
     ),
-    path(
-        'database/csv_download/<str:mode>',
-        views.database.CsvDownloadView.as_view(),
-        name='database_csv_download'
-    ),
-    path(
-        'database/csv_download/<str:mode>/<uuid:pk>',
-        views.database.CsvDownloadView.as_view(),
-        name='database_csv_download'
-    ),
-    path(
-        'database/csv_upload/<uuid:line_pk>',
-        views.database.CsvUploadView.as_view(),
-        name='database_csv_upload'
-    ),
     # views/json.py
     path(
         'json/operator',

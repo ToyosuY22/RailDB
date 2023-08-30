@@ -57,10 +57,6 @@
                     </thead>
                 </table>
                 <hr />
-                <div class="text-end">
-                    <a href="{% url 'library:database_csv_download' 'operator' %}"
-                       class="btn btn-primary"><i class="fa-solid fa-file-csv"></i> 事業者一覧ダウンロード</a>
-                </div>
             </div>
             {% if request.user.is_superuser %}
                 <div class="card-footer text-end">
