@@ -255,5 +255,10 @@ CELERY_RESULT_EXTENDED = True
 SELECT2_CACHE_BACKEND = 'default'
 
 
+# django-import-export
+# https://django-import-export.readthedocs.io/en/latest/index.html
+IMPORT_EXPORT_TMP_STORAGE_CLASS = 'import_export.tmp_storages.CacheStorage'
+
+
 # Email トークンの有効時間を指定（分単位）
 EMAIL_TOKEN_EXP = 5

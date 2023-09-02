@@ -1,3 +1,5 @@
+import uuid
+
 from django.contrib import admin
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin
@@ -10,12 +12,14 @@ class OperatorResource(resources.ModelResource):
     class Meta:
         model = models.Operator
         skip_unchanged = True
-        report_skipped = False
         import_id_fields = ['id']
         fields = [
             'id', 'name', 'name_kana', 'order'
         ]
         export_order = fields
+
+    def before_import_row(self, row, row_number=None, **kwargs):
+        row['id'] = uuid.UUID(row.get('id')) if row.get('id') else None
 
 
 @admin.register(models.Operator)
@@ -44,13 +48,15 @@ class LineResource(resources.ModelResource):
     class Meta:
         model = models.Line
         skip_unchanged = True
-        report_skipped = False
         import_id_fields = ['id']
         fields = [
             'id', 'name', 'name_kana', 'operator', 'start', 'end', 'via',
             'area', 'kind', 'status', 'category', 'distance', 'note', 'order'
         ]
         export_order = fields
+
+    def before_import_row(self, row, row_number=None, **kwargs):
+        row['id'] = uuid.UUID(row.get('id')) if row.get('id') else None
 
 
 @admin.register(models.Line)
@@ -94,13 +100,15 @@ class StationResource(resources.ModelResource):
     class Meta:
         model = models.Station
         skip_unchanged = True
-        report_skipped = False
         import_id_fields = ['id']
         fields = [
             'id', 'name', 'name_kana', 'line', 'distance', 'label', 'freight',
             'note', 'order'
         ]
         export_order = fields
+
+    def before_import_row(self, row, row_number=None, **kwargs):
+        row['id'] = uuid.UUID(row.get('id')) if row.get('id') else None
 
 
 @admin.register(models.Station)
@@ -140,12 +148,14 @@ class LineRelationshipResource(resources.ModelResource):
     class Meta:
         model = models.LineRelationship
         skip_unchanged = True
-        report_skipped = False
         import_id_fields = ['id']
         fields = [
             'id', 'transport_start', 'transport_end',
             'maintenance_start', 'maintenance_end'
         ]
+
+    def before_import_row(self, row, row_number=None, **kwargs):
+        row['id'] = uuid.UUID(row.get('id')) if row.get('id') else None
 
 
 @admin.register(models.LineRelationship)

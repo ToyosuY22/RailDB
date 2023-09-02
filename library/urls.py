@@ -159,4 +159,9 @@ urlpatterns = [
         views.summary.CheckView.as_view(),
         name='summary_check'
     ),
+    path(
+        'summary/download_csv',
+        views.summary.DownloadCSVView.as_view(),
+        name='download_csv'
+    ),
 ]

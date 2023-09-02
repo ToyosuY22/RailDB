@@ -1,6 +1,10 @@
+import zipfile
+
 import pykakasi
 from django.db.models import Sum
+from django.http import HttpResponse
 from django.views import generic
+from import_export.resources import ModelResource
 
 from ekidata import models as ekidata_models
 from library.models import Line, Operator, Station
@@ -511,3 +515,55 @@ class CheckView(SuperUserOnlyMixin, generic.TemplateView):
                 })
 
         return none_object
+
+
+class DownloadCSVView(SuperUserOnlyMixin, generic.View):
+    """監査用 CSV file を作成
+    """
+    class OperatorExportResource(ModelResource):
+        class Meta:
+            model = Operator
+            fields = [
+                'name', 'name_kana',
+                'connectoperator__ekidata_operator__company_name',
+            ]
+            export_order = fields
+
+    class LineExportResource(ModelResource):
+        class Meta:
+            model = Line
+            fields = [
+                'operator__name', 'name', 'name_kana',
+                'start', 'end', 'via', 'distance', 'note'
+            ]
+            export_order = fields
+
+    class StationExportResource(ModelResource):
+        class Meta:
+            model = Station
+            fields = [
+                'line__operator__name', 'line__name', 'line__start',
+                'line__end', 'name', 'name_kana', 'distance',
+                'label', 'freight', 'note'
+            ]
+            export_order = fields
+
+    def get(self, request, *args, **kwargs):
+        # response を定義
+        response = HttpResponse(content_type='application/zip')
+        response['Content-Disposition'] = 'attachment; filename=audit_csv.zip'
+
+        # csv ファイルを生成
+        with zipfile.ZipFile(
+            response,
+            mode='w',
+            compression=zipfile.ZIP_DEFLATED
+        ) as zf:
+            zf.writestr('audit_operator.csv',
+                        self.OperatorExportResource().export().csv)
+            zf.writestr('audit_line.csv',
+                        self.LineExportResource().export().csv)
+            zf.writestr('audit_station.csv',
+                        self.StationExportResource().export().csv)
+
+        return response
