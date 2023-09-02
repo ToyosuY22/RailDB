@@ -19,6 +19,11 @@
 {% block menu_database %}
     active
 {% endblock menu_database %}
+{% block extrahead %}
+    <link rel="stylesheet"
+          type="text/css"
+          href="https://cdn.datatables.net/v/dt/jq-3.7.0/dt-1.13.6/fc-4.3.0/datatables.min.css"/>
+{% endblock extrahead %}
 {% block body %}
     <div class="card mt-4 mt-xl-0">
         <div class="card-header">
@@ -79,9 +84,11 @@
                     {{ group.kind.label }}　{{ group.status.label }}　{{ group.category.label }}　<span class="text-primary">{{ group.distance_sum|get_actual_distance }}km</span>
                 </h3>
                 <div class="table-responsive">
-                    <table class="table text-nowrap" id="dt_{{ forloop.counter0 }}" width="100%">
+                    <table class="table nowrap dt-detail" width="100%">
                         <thead>
                             <tr>
+                                <th>
+                                </th>
                                 <th>
                                     名称
                                 </th>
@@ -103,16 +110,16 @@
                                 <th>
                                     営業キロ
                                 </th>
-                                <th>
-                                    操作
-                                </th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for line in group.queryset %}
                                 <tr>
                                     <td>
-                                        {{ line.name }}
+                                        {{ line.order }}
+                                    </td>
+                                    <td>
+                                        <span class="wrap-column"><a href="{% url 'library:database_detail_line' line.pk %}">{{ line.name }}</a></span>
                                     </td>
                                     <td>
                                         {{ line.name_kana }}
@@ -136,10 +143,6 @@
                                     <td class="text-end">
                                         {{ line.distance|get_actual_distance }}
                                     </td>
-                                    <td>
-                                        <a href="{% url 'library:database_detail_line' line.pk %}"
-                                           class="btn btn-primary btn-sm"><i class="fa-solid fa-eye"></i> 詳細</a>
-                                    </td>
                                 </tr>
                             {% endfor %}
                         </tbody>
@@ -152,11 +155,15 @@
                     運転系統一覧（駅データ.jp）
                 </h3>
                 <div class="table-responsive">
-                    <table class="table text-nowrap" width="100%">
+                    <table class="table text-nowrap dt-detail" width="100%">
                         <thead>
                             <tr>
                                 <th>
+                                </th>
+                                <th>
                                     路線名称（一般）
+                                </th>
+                                <th>
                                 </th>
                                 <th>
                                     路線名称（一般／カナ）
@@ -167,18 +174,18 @@
                                 <th>
                                     路線区分
                                 </th>
-                                <th>
-                                    操作
-                                </th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for ekidata_line in object.connectoperator.ekidata_operator.line_set.all %}
                                 {% if ekidata_line.e_status == 0 %}
                                     <tr>
+                                        <td>{{ ekidata_line.e_sort }}{{ ekidata_line.line_cd }}</td>
+                                        <td>
+                                            <span class="wrap-column"><a href="{% url 'ekidata:detail_line' ekidata_line.pk %}">{{ ekidata_line.line_name }}</a></span>
+                                        </td>
                                         <td>
                                             {% if ekidata_line.line_color_c %}<span style="color: #{{ ekidata_line.line_color_c }};">■</span>{% endif %}
-                                            {{ ekidata_line.line_name }}
                                         </td>
                                         <td>
                                             {{ ekidata_line.line_name_k }}
@@ -188,10 +195,6 @@
                                         </td>
                                         <td>
                                             {{ ekidata_line.get_line_type_display }}
-                                        </td>
-                                        <td>
-                                            <a href="{% url 'ekidata:detail_line' ekidata_line.pk %}"
-                                               class="btn btn-primary btn-sm"><i class="fa-solid fa-eye"></i> 詳細</a>
                                         </td>
                                     </tr>
                                 {% endif %}
@@ -215,3 +218,7 @@
         {% endif %}
     </div>
 {% endblock body %}
+{% block extrascript %}
+    <script type="text/javascript" src="https://cdn.datatables.net/v/dt/jq-3.7.0/dt-1.13.6/fc-4.3.0/datatables.min.js"></script>
+    <script type="text/javascript" src="{% static 'library/database/detail.js' %}"></script>
+{% endblock extrascript %}

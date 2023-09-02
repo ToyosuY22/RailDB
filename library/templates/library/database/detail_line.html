@@ -22,6 +22,11 @@
 {% block menu_database %}
     active
 {% endblock menu_database %}
+{% block extrahead %}
+    <link rel="stylesheet"
+          type="text/css"
+          href="https://cdn.datatables.net/v/dt/jq-3.7.0/dt-1.13.6/fc-4.3.0/datatables.min.css"/>
+{% endblock extrahead %}
 {% block body %}
     <div class="card mt-4 mt-xl-0">
         <div class="card-header">
@@ -88,9 +93,10 @@
             </table>
             <h2>駅情報</h2>
             <div class="table-responsive">
-                <table class="table text-nowrap">
+                <table class="table text-nowrap dt-detail" width="100%">
                     <thead>
                         <tr>
+                            <th></th>
                             <th>名称</th>
                             <th>名称かな</th>
                             <th>
@@ -108,16 +114,18 @@
                             <th>
                                 運行系統（駅データ.jp）
                             </th>
-                            <th>
-                                操作
-                            </th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for object in object_list %}
                             <tr{% if object.station.label %} class="table-secondary"{% endif %}>
+                                <td>{{ object.order }}</td>
                                 <td>
-                                    {{ object.station.name }}
+                                    <span class="wrap-column">
+                                        <a href="{% url 'library:database_detail_station' object.station.pk %}">
+                                            {{ object.station.name }}
+                                        </a>
+                                    </span>
                                 </td>
                                 <td>
                                     {{ object.station.name_kana }}
@@ -145,10 +153,6 @@
                                         </a>
                                     {% endfor %}
                                 </td>
-                                <td>
-                                    <a href="{% url 'library:database_detail_station' object.station.pk %}"
-                                       class="btn btn-primary btn-sm"><i class="fa-solid fa-eye"></i> 詳細</a>
-                                </td>
                             </tr>
                         {% endfor %}
                     </tbody>
@@ -172,3 +176,7 @@
         {% endif %}
     </div>
 {% endblock body %}
+{% block extrascript %}
+    <script type="text/javascript" src="https://cdn.datatables.net/v/dt/jq-3.7.0/dt-1.13.6/fc-4.3.0/datatables.min.js"></script>
+    <script type="text/javascript" src="{% static 'library/database/detail.js' %}"></script>
+{% endblock extrascript %}

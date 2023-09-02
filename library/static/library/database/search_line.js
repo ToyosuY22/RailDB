@@ -6,10 +6,22 @@ $(document).ready(function () {
         "processing": true,
         "serverSide": true,
         "ajax": "/library/json/line",
+        "fixedColumns": {
+            "left": 1,
+        },
+        "scrollCollapse": true,
+        "scrollX": true,
         "order": [[12, 'asc']],
         "columnDefs": [
             {
-                "targets": [0, 1],
+                "target": 0,
+                "render":
+                    function (data, _, row) {
+                        return `<span class="wrap-column"><a href="/library/database/detail_line/${row[11]}">${data ? data : '（路線名なし）'}</a></span>`
+                    },
+            },
+            {
+                "target": 1,
                 "render":
                     function (data) {
                         return data ? data : '（路線名なし）'
@@ -20,7 +32,7 @@ $(document).ready(function () {
                 "searchable": false
             },
             {
-                "targets": [4],
+                "target": 4,
                 "render":
                     function (data) {
                         return data ? data : '─'
@@ -28,7 +40,7 @@ $(document).ready(function () {
                 "searchable": false
             },
             {
-                "targets": [10],
+                "target": 10,
                 "render":
                     function (data) {
                         if (data.length == 0) {
@@ -43,15 +55,7 @@ $(document).ready(function () {
                 "className": "dt-body-right"
             },
             {
-                "targets": [11],
-                "render":
-                    function (data) {
-                        return `<a href="/library/database/detail_line/${data}" class="btn btn-primary btn-sm"><i class="fa-solid fa-eye"></i> 詳細</a>`
-                    },
-                "searchable": false, "orderable": false
-            },
-            {
-                "targets": [12],
+                "targets": [11, 12],
                 "visible": false,
             },
         ]

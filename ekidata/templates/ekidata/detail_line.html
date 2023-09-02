@@ -22,6 +22,11 @@
 {% block menu_database %}
     active
 {% endblock menu_database %}
+{% block extrahead %}
+    <link rel="stylesheet"
+          type="text/css"
+          href="https://cdn.datatables.net/v/dt/jq-3.7.0/dt-1.13.6/fc-4.3.0/datatables.min.css"/>
+{% endblock extrahead %}
 {% block body %}
     <div class="card mt-4 mt-xl-0">
         <div class="card-header">
@@ -65,9 +70,10 @@
             </table>
             <h2>駅情報</h2>
             <div class="table-responsive">
-                <table class="table text-nowrap">
+                <table class="table text-nowrap dt-detail" width="100%">
                     <thead>
                         <tr>
+                            <th></th>
                             <th>駅名称</th>
                             <th>駅名称（カナ）</th>
                             <th>駅名称（ローマ字）</th>
@@ -75,13 +81,18 @@
                             <th>住所</th>
                             <th>駅グループ（運転系統一覧）</th>
                             <th>接続駅</th>
-                            <th>路線一覧</th>
+                            <th>
+                                路線一覧
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for object in station_list %}
                             {% if object.station.e_status == 0 %}
                                 <tr>
+                                    <td>
+                                        {{ object.station.e_sort }}{{ object.station.station_cd }}
+                                    </td>
                                     <td>
                                         {{ object.station.station_name }}
                                     </td>
@@ -145,3 +156,7 @@
         </div>
     </div>
 {% endblock body %}
+{% block extrascript %}
+    <script type="text/javascript" src="https://cdn.datatables.net/v/dt/jq-3.7.0/dt-1.13.6/fc-4.3.0/datatables.min.js"></script>
+    <script type="text/javascript" src="{% static 'library/database/detail.js' %}"></script>
+{% endblock extrascript %}

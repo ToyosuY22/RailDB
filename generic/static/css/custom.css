@@ -10,6 +10,12 @@
     width: 100%;
 }
 
+/* nowrap をキャンセル（warp する） */
+.wrap-column {
+    white-space: normal;
+    width: 20vw;
+}
+
 /* ローディング画面 */
 
 .wf-loading #loading {

@@ -6,14 +6,26 @@ $(document).ready(function () {
         "processing": true,
         "serverSide": true,
         "ajax": "/library/json/station",
+        "fixedColumns": {
+            "left": 1,
+        },
+        "scrollCollapse": true,
+        "scrollX": true,
         "order": [[8, 'asc'], [9, 'asc']],
         "columnDefs": [
+            {
+                "target": 0,
+                "render":
+                    function (data, _, row) {
+                        return `<span class="wrap-column"><a href="/library/database/detail_station/${row[7]}">${data}</a></span>`
+                    },
+            },
             {
                 "targets": [2, 3],
                 "searchable": false
             },
             {
-                "targets": [4],
+                "target": 4,
                 "render":
                     function (data) {
                         if (data.length == 0) {
@@ -28,15 +40,7 @@ $(document).ready(function () {
                 "className": "dt-body-right"
             },
             {
-                "targets": [7],
-                "render":
-                    function (data) {
-                        return `<a href="/library/database/detail_station/${data}" class="btn btn-primary btn-sm"><i class="fa-solid fa-eye"></i> 詳細</a>`
-                    },
-                "searchable": false, "orderable": false
-            },
-            {
-                "targets": [8, 9],
+                "targets": [7, 8, 9],
                 "visible": false,
             },
         ]

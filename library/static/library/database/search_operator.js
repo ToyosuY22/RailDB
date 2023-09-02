@@ -6,18 +6,25 @@ $(document).ready(function () {
         "processing": true,
         "serverSide": true,
         "ajax": "/library/json/operator",
+        "fixedColumns": {
+            "left": 1,
+        },
+        "scrollCollapse": true,
+        "scrollX": true,
         "order": [[3, 'asc']],
         "columnDefs": [{
-            "targets": 2,
+            "targets": 0,
             "render":
-                function (data) {
-                    return `<a href="/library/database/detail_operator/${data}" class="btn btn-primary btn-sm"><i class="fa-solid fa-eye"></i> 詳細</a>`
+                function (data, _, row) {
+                    return `<span class="wrap-column"><a href="/library/database/detail_operator/${row[2]}">${data}</a></span>`
                 },
-            "searchable": false, "orderable": false
-        },
-        {
+        }, {
+            "target": 2,
+            "visible": false
+        }, {
             "target": 3,
-            "visible": false,
-        }]
+            "visible": false
+        }
+        ]
     });
 });
