@@ -1,10 +1,28 @@
 from django.contrib import admin
+from import_export import resources
+from import_export.admin import ImportExportModelAdmin
+from import_export.formats import base_formats
 
 from library import models
 
 
+class OperatorResource(resources.ModelResource):
+    class Meta:
+        model = models.Operator
+        skip_unchanged = True
+        report_skipped = False
+        import_id_fields = ['id']
+        fields = [
+            'id', 'name', 'name_kana', 'order'
+        ]
+        export_order = fields
+
+
 @admin.register(models.Operator)
-class OperatorAdmin(admin.ModelAdmin):
+class OperatorAdmin(ImportExportModelAdmin):
+    formats = [base_formats.CSV]
+    resource_classes = [OperatorResource]
+
     fields = [
         'id', 'name', 'name_kana', 'order'
     ]
@@ -22,8 +40,24 @@ class OperatorAdmin(admin.ModelAdmin):
     ]
 
 
+class LineResource(resources.ModelResource):
+    class Meta:
+        model = models.Line
+        skip_unchanged = True
+        report_skipped = False
+        import_id_fields = ['id']
+        fields = [
+            'id', 'name', 'name_kana', 'operator', 'start', 'end', 'via',
+            'area', 'kind', 'status', 'category', 'distance', 'note', 'order'
+        ]
+        export_order = fields
+
+
 @admin.register(models.Line)
-class LineAdmin(admin.ModelAdmin):
+class LineAdmin(ImportExportModelAdmin):
+    formats = [base_formats.CSV]
+    resource_classes = [LineResource]
+
     fieldsets = [
         ('基本情報', {
             'fields': [
@@ -56,8 +90,23 @@ class LineAdmin(admin.ModelAdmin):
     ]
 
 
+class StationResource(resources.ModelResource):
+    class Meta:
+        model = models.Station
+        skip_unchanged = True
+        report_skipped = False
+        import_id_fields = ['id']
+        fields = [
+            'id', 'name', 'name_kana', 'line', 'distance', 'label', 'freight',
+            'note', 'order'
+        ]
+        export_order = fields
+
+
 @admin.register(models.Station)
-class StationAdmin(admin.ModelAdmin):
+class StationAdmin(ImportExportModelAdmin):
+    formats = [base_formats.CSV]
+    resource_classes = [StationResource]
     fieldsets = [
         ('基本情報', {
             'fields': ['id', 'name', 'name_kana', 'line', 'distance']}),
@@ -87,8 +136,22 @@ class StationAdmin(admin.ModelAdmin):
     ]
 
 
+class LineRelationshipResource(resources.ModelResource):
+    class Meta:
+        model = models.LineRelationship
+        skip_unchanged = True
+        report_skipped = False
+        import_id_fields = ['id']
+        fields = [
+            'id', 'transport_start', 'transport_end',
+            'maintenance_start', 'maintenance_end'
+        ]
+
+
 @admin.register(models.LineRelationship)
-class LineRelationshipAdmin(admin.ModelAdmin):
+class LineRelationshipAdmin(ImportExportModelAdmin):
+    formats = [base_formats.CSV]
+    resource_classes = [LineRelationshipResource]
     fields = [
         'id', 'transport_start', 'transport_end',
         'maintenance_start', 'maintenance_end'

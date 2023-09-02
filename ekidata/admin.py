@@ -13,6 +13,7 @@ class CompanyResource(resources.ModelResource):
     class Meta:
         model = models.Company
         skip_unchanged = True
+        report_skipped = False
         import_id_fields = ['company_cd']
         fields = [
             'company_cd', 'rr_cd', 'company_name', 'company_name_k',
@@ -56,6 +57,7 @@ class LineResource(resources.ModelResource):
     class Meta:
         model = models.Line
         skip_unchanged = True
+        report_skipped = False
         import_id_fields = ['line_cd']
         fields = [
             'line_cd', 'company_cd', 'line_name', 'line_name_k', 'line_name_h',
@@ -113,6 +115,7 @@ class StationResource(resources.ModelResource):
     class Meta:
         model = models.Station
         skip_unchanged = True
+        report_skipped = False
         import_id_fields = ['station_cd']
         fields = [
             'station_cd', 'station_g_cd', 'station_name', 'station_name_k',
@@ -182,6 +185,7 @@ class JoinResource(resources.ModelResource):
     class Meta:
         model = models.Join
         skip_unchanged = True
+        report_skipped = False
         import_id_fields = ['line_cd', 'station_cd1', 'station_cd2']
         fields = ['line_cd', 'station_cd1', 'station_cd2']
 
@@ -223,6 +227,7 @@ class PrefResource(resources.ModelResource):
     class Meta:
         model = models.Pref
         skip_unchanged = True
+        report_skipped = False
         import_id_fields = ['pref_cd']
         fields = [
             'pref_cd', 'pref_name'
@@ -255,6 +260,7 @@ class ConnectOperatorResource(resources.ModelResource):
     class Meta:
         model = models.ConnectOperator
         skip_unchanged = True
+        report_skipped = False
         import_id_fields = ['library_operator_id', 'ekidata_operator_cd']
         fields = ['library_operator_id', 'ekidata_operator_cd']
 
@@ -291,6 +297,7 @@ class ConnectStationResource(resources.ModelResource):
     class Meta:
         model = models.ConnectStation
         skip_unchanged = True
+        report_skipped = False
         import_id_fields = ['library_station_id', 'ekidata_station_cd']
         fields = ['library_station_id', 'ekidata_station_cd']
 
