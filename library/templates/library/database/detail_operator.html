@@ -119,7 +119,8 @@
                                         {{ line.order }}
                                     </td>
                                     <td>
-                                        <span class="wrap-column"><a href="{% url 'library:database_detail_line' line.pk %}">{{ line.name }}</a></span>
+                                        <span class="wrap-column"><a href="{% url 'library:database_detail_line' line.pk %}">
+                                            {% if line.name %}{{ line.name }}{% else %}（路線名なし）{% endif %}</a></span>
                                     </td>
                                     <td>
                                         {{ line.name_kana }}

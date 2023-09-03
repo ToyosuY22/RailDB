@@ -103,7 +103,7 @@ class LineAdmin(ImportExportModelAdmin):
     ]
 
     search_fields = [
-        'line_cd', 'line_name', 'line_name_k', 'line_name_h',
+        'line_cd', 'line_name', 'line_name_k', 'line_name_h'
     ]
 
     list_filter = [
@@ -222,6 +222,15 @@ class JoinAdmin(ImportExportModelAdmin):
         'line', 'station_1', 'station_2'
     ]
 
+    list_filter = [
+        'line'
+    ]
+
+    search_fields = [
+        'station_1__station_name', 'station_1__station_name_k',
+        'station_2__station_name', 'station_2__station_name_k'
+    ]
+
 
 class PrefResource(resources.ModelResource):
     class Meta:
@@ -292,6 +301,12 @@ class ConnectOperatorAdmin(ImportExportModelAdmin):
         'library_operator', 'ekidata_operator'
     ]
 
+    search_fields = [
+        'library_operator__name', 'library_operator__name_kana',
+        'ekidata_operator__company_name',
+        'ekidata_operator__company_name_k',
+    ]
+
 
 class ConnectStationResource(resources.ModelResource):
     class Meta:
@@ -326,5 +341,20 @@ class ConnectStationAdmin(ImportExportModelAdmin):
     ]
 
     list_display = [
-        'library_station', 'ekidata_station'
+        'library_station', 'ekidata_station', 'get_e_status'
     ]
+
+    list_filter = [
+        'library_station__line', 'ekidata_station__line',
+        'ekidata_station__e_status'
+    ]
+
+    search_fields = [
+        'library_station__name', 'library_station__name_kana',
+        'ekidata_station__station_name',
+        'ekidata_station__station_name_k',
+    ]
+
+    @admin.display(ordering='ekidata_station__e_status', description='状態')
+    def get_e_status(self, obj):
+        return obj.ekidata_station.get_e_status_display()

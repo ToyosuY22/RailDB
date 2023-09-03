@@ -1,4 +1,6 @@
+import csv
 import zipfile
+from io import StringIO
 
 import pykakasi
 from django.db.models import Sum
@@ -548,6 +550,37 @@ class DownloadCSVView(SuperUserOnlyMixin, generic.View):
             ]
             export_order = fields
 
+    def create_ekidata_station_csv(self):
+        with StringIO() as f:
+            writer = csv.writer(f)
+
+            # header
+            writer.writerow([
+                'company', 'line', 'station_name', 'grouped_station_list',
+                'joined_station_list', 'connected_station_list'
+            ])
+
+            # 駅データ路線ごとに処理
+            for ekidata_station in ekidata_models.Station.objects.filter(
+                    e_status=ekidata_models.Station.EStatusChoices.OPERATED):
+                writer.writerow([
+                    ekidata_station.line.company.company_name,
+                    ekidata_station.line.line_name,
+                    ekidata_station.station_name,
+                    '|'.join([
+                        f'{sta.station_name}（{sta.line.line_name}）' for sta in
+                        ekidata_station.grouped_station_list]),
+                    '|'.join([
+                        sta.station_name for sta in
+                        ekidata_station.joined_station_list]),
+                    '|'.join([
+                        f'{sta.name}（{sta.line}）' for sta in
+                        ekidata_station.connected_station_list])
+                ])
+
+            # stringIO を返却
+            return f.getvalue()
+
     def get(self, request, *args, **kwargs):
         # response を定義
         response = HttpResponse(content_type='application/zip')
@@ -565,5 +598,7 @@ class DownloadCSVView(SuperUserOnlyMixin, generic.View):
                         self.LineExportResource().export().csv)
             zf.writestr('audit_station.csv',
                         self.StationExportResource().export().csv)
+            zf.writestr('audit_ekidata_station.csv',
+                        self.create_ekidata_station_csv())
 
         return response

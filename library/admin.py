@@ -88,7 +88,7 @@ class LineAdmin(ImportExportModelAdmin):
     ]
 
     list_filter = [
-        'area', 'kind', 'status', 'category'
+        'area', 'kind', 'status', 'category', 'operator'
     ]
 
     search_fields = [
@@ -179,4 +179,11 @@ class LineRelationshipAdmin(ImportExportModelAdmin):
     list_display = [
         'id', 'transport_start', 'transport_end',
         'maintenance_start', 'maintenance_end'
+    ]
+
+    search_fields = [
+        'transport_start__name', 'transport_start__name_kana',
+        'transport_end__name', 'transport_end__name_kana',
+        'maintenance_start__name', 'maintenance_start__name_kana',
+        'maintenance_end__name', 'maintenance_end__name_kana'
     ]

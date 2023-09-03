@@ -191,6 +191,21 @@ class Station(models.Model):
     def grouped_station_list(self):
         return Station.objects.filter(station_g_cd=self.station_g_cd)
 
+    @property
+    def joined_station_list(self):
+        return [
+            join.station_1 for join in Join.objects.filter(station_2=self)
+        ] + [
+            join.station_2 for join in Join.objects.filter(station_1=self)
+        ]
+
+    @property
+    def connected_station_list(self):
+        return [
+            connect_station.library_station for connect_station
+            in ConnectStation.objects.filter(ekidata_station=self)
+        ]
+
     station_cd = models.IntegerField(
         verbose_name='駅コード',
         primary_key=True,
