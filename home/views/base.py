@@ -2,6 +2,7 @@
 """
 
 from django.views import generic
+
 from home.models import News
 
 
@@ -15,3 +16,9 @@ class IndexView(generic.TemplateView):
         # お知らせ
         context['news_list'] = News.objects.all()
         return context
+
+
+class RailMapView(generic.TemplateView):
+    """路線図
+    """
+    template_name = 'home/base/railmap.html'

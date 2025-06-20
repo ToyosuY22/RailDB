@@ -12,6 +12,11 @@ urlpatterns = [
         views.base.IndexView.as_view(),
         name='index'
     ),
+    path(
+        'railmap',
+        views.base.RailMapView.as_view(),
+        name='railmap'
+    ),
     # views/auth.py
     path(
         'auth/signin',
