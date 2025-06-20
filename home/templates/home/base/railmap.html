@@ -1,0 +1,14 @@
+{% load static %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/openseadragon/4.0.0/openseadragon.min.js"></script>
+
+<!-- 画像ビューアを表示させるDIV -->
+<div id="contentDiv"></div>
+
+<script type="text/javascript">
+    OpenSeadragon({
+        id:              "contentDiv",
+        prefixUrl: "https://cdnjs.cloudflare.com/ajax/libs/openseadragon/4.0.0/images/",
+        tileSources:     "/static/home/railmap.dzi"
+    });
+</script>
